@@ -10,17 +10,24 @@
 <meta name="theme-color" content="#0f766e">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f766e'/%3E%3Cpath d='M256 88L398 140V252C398 338 338 398 256 428C174 398 114 338 114 252V140Z' fill='%23fff'/%3E%3Crect x='170' y='168' width='172' height='146' rx='24' fill='%230f766e'/%3E%3Cpath d='M188 296L238 236L270 272L294 248L326 296Z' fill='%23fff'/%3E%3Ccircle cx='300' cy='206' r='15' fill='%232dd4bf'/%3E%3C/svg%3E%0A">
+<script>try{var t=localStorage.getItem("keeppix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root{
   --bg:#f6f7f5; --panel:#ffffff; --ink:#1c2321; --muted:#5f6b67; --line:#dfe4e1;
   --accent:#0f766e; --accent-ink:#ffffff; --accent-soft:#e3f2ef; --warn:#b45309; --bad:#b91c1c; --good:#15803d;
   --radius:14px;
 }
+:root{color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}
 @media (prefers-color-scheme: dark){
-  :root{
+  :root:not([data-theme="light"]){
     --bg:#111615; --panel:#1a2120; --ink:#e7ecea; --muted:#9aa6a2; --line:#2c3633;
     --accent:#2dd4bf; --accent-ink:#06201d; --accent-soft:#16312d; --warn:#f59e0b; --bad:#f87171; --good:#4ade80;
   }
+}
+:root[data-theme="dark"]{color-scheme:dark;
+    --bg:#111615; --panel:#1a2120; --ink:#e7ecea; --muted:#9aa6a2; --line:#2c3633;
+    --accent:#2dd4bf; --accent-ink:#06201d; --accent-soft:#16312d; --warn:#f59e0b; --bad:#f87171; --good:#4ade80;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
@@ -75,6 +82,7 @@ footer a{color:inherit}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
 .privacy .btn{padding:6px 12px;font-size:.85rem}
+#themeBtn{min-width:38px;font-size:1rem;line-height:1}
 .tabs{display:flex;gap:4px;margin:0 0 16px;border-bottom:1px solid var(--line)}
 .tab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
@@ -114,6 +122,7 @@ footer a{color:inherit}
       <span class="pill" data-i18n-title="reqTitle" title="Network requests the page made since it loaded"><span id="reqCount">0</span><span data-i18n="reqLabel">network requests</span></span>
       <span class="pill" id="offlineReady" hidden data-i18n-title="offlineTitle" title="The app is saved on this device and opens without internet"><span data-i18n="offlineReady">✓ Available offline</span></span>
       <button class="btn" id="installBtn" hidden data-i18n="install">Install app</button>
+      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic">◐</button>
       <button class="btn ghost" id="langBtn" type="button" lang="el">Ελληνικά</button>
     </div>
   </header>
@@ -248,7 +257,7 @@ footer a{color:inherit}
 
   <footer>
     <span data-i18n="footer">Open source · No cookies · No analytics · No accounts</span>
-    <span><span data-i18n="madeBy">Made by</span> Pnyxus</span>
+    <span><span data-i18n="madeBy">Made by</span> <a href="https://pnyxus.gr" target="_blank" rel="noopener">pnyxus.gr</a></span>
   </footer>
 </div>
 
@@ -296,6 +305,7 @@ footer a{color:inherit}
       how4: "The page’s security policy (CSP) forbids the browser from connecting to any server.",
       how5: "Re-encoding strips EXIF metadata, including your photo’s GPS location.",
       footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
+      themeAuto: "Theme: automatic (follows your device)", themeLight: "Theme: light", themeDark: "Theme: dark",
     },
     el: {
       title: "KeepPix — Εργαλεία εικόνας & PDF χωρίς ανέβασμα αρχείων",
@@ -334,6 +344,7 @@ footer a{color:inherit}
       how4: "Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.",
       how5: "Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.",
       footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:",
+      themeAuto: "Θέμα: αυτόματο (όπως η συσκευή)", themeLight: "Θέμα: φωτεινό", themeDark: "Θέμα: σκοτεινό",
     },
   };
 
@@ -378,6 +389,22 @@ footer a{color:inherit}
   }
 
   // ---------- Apply language ----------
+  // ---------- Theme ----------
+  const themeBtn = $("#themeBtn");
+  const THEMES = ["auto", "light", "dark"], THEME_ICON = { auto: "◐", light: "☀", dark: "☾" };
+  let theme = document.documentElement.dataset.theme || "auto";
+  function applyTheme() {
+    if (theme === "auto") delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = theme;
+    const label = t(theme === "auto" ? "themeAuto" : theme === "light" ? "themeLight" : "themeDark");
+    themeBtn.textContent = THEME_ICON[theme]; themeBtn.title = label; themeBtn.setAttribute("aria-label", label);
+  }
+  themeBtn.addEventListener("click", () => {
+    theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    try { if (theme === "auto") localStorage.removeItem("keeppix-theme"); else localStorage.setItem("keeppix-theme", theme); } catch { /* storage blocked */ }
+    applyTheme();
+  });
+
   const langBtn = $("#langBtn");
   function applyLang() {
     document.documentElement.lang = lang;
@@ -389,6 +416,7 @@ footer a{color:inherit}
     if (!webpOK) el.format.querySelector('option[value="image/webp"]').textContent = t("fWebp") + t("webpUnsupported");
     langBtn.textContent = t("switchTo");
     langBtn.lang = lang === "en" ? "el" : "en";
+    applyTheme();
     updateNet(); updateToolbar();
     dispatchEvent(new Event("keeppix:lang"));
   }
