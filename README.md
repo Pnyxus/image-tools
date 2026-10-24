@@ -15,6 +15,7 @@ Files never leave the user's device.
 - English and Greek UI (auto-detected from the browser, switchable, `?lang=el` / `?lang=en`)
 - No cookies, no analytics, no external scripts or fonts
 - Installable app (PWA): works with no connection at all after the first visit
+- PDF tools (tab or `keeppix.app/#pdf`): images → PDF (A4/Letter/fit, margins), merge PDFs (keeps text), compress PDF (rasterizes pages to JPEG; light/balanced/strong, black & white, max-size target)
 
 ## Project layout
 
@@ -24,6 +25,8 @@ public/
   sw.js                 # service worker: caches the app's own files for offline use
   manifest.webmanifest  # makes it installable
   icons/                # app icons
+  pdf-tools.js          # PDF tools (loaded on demand)
+  vendor/               # pdf-lib 1.17.1 (MIT) and PDF.js 6.2 (Apache-2.0), see THIRD-PARTY-LICENSES.txt
   _headers              # security headers served by Cloudflare
 wrangler.jsonc # Cloudflare Workers static-assets config
 ```
@@ -53,10 +56,10 @@ Or deploy straight from your machine: `npx wrangler login` then `npx wrangler de
 
 ## Releasing a new version
 
-When you change `index.html`, bump `VERSION` in `public/sw.js` (v4 → v5) so installed copies pick up the update.
+When you change any file in `public/`, bump `VERSION` in `public/sw.js` (v5 → v6) so installed copies pick up the update.
 
 ## Roadmap
 
 - Better codecs via WebAssembly (MozJPEG, AVIF)
-- Local PDF tools: compress, merge, images → PDF
+- PDF: split / extract pages, rotate, reorder by thumbnail
 - Manual crop box

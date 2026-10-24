@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
-<title>KeepPix — Resize & compress images without uploading</title>
-<meta name="description" content="Resize, compress, crop and convert images right in your browser. Your photos never leave your device — no uploads, no accounts, works offline.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
+<title>KeepPix — Image & PDF tools that never upload your files</title>
+<meta name="description" content="Resize, compress and convert images, turn photos into PDF, merge and compress PDFs — right in your browser. Your files never leave your device. No uploads, no accounts, works offline.">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -75,6 +75,26 @@ footer a{color:inherit}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
 .privacy .btn{padding:6px 12px;font-size:.85rem}
+.tabs{display:flex;gap:4px;margin:0 0 16px;border-bottom:1px solid var(--line)}
+.tab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px 14px;margin-top:14px}
+.check{display:flex;gap:8px;align-items:center;color:var(--ink);margin-top:12px}
+.check input{accent-color:var(--accent);width:18px;height:18px}
+.flist{list-style:none;margin:14px 0 0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+.flist li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);font-size:.9rem}
+.flist li:first-child{border-top:0}
+.flist li.empty{color:var(--muted);justify-content:center;padding:14px}
+.flist .num{color:var(--muted);width:1.6em;text-align:right;flex:none}
+.flist .fname{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flist .fsize{color:var(--muted);flex:none}
+.flist .acts{display:flex;gap:4px;flex:none}
+.ib{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;width:30px;height:30px;cursor:pointer;font:inherit}
+.ib:disabled{opacity:.35;cursor:default}
+.gobar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0 10px}
+.status.err{color:var(--bad)}
+.pdfcard .meta{padding:14px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -85,7 +105,7 @@ footer a{color:inherit}
       <img class="logo" src="/icons/icon-192.png" alt="" width="36" height="36">
       <div>
         <h1>KeepPix</h1>
-        <p class="sub" data-i18n="tagline">Resize, compress, crop and convert images — all on your device.</p>
+        <p class="sub" data-i18n="tagline">Resize, compress and convert images and PDFs — all on your device.</p>
       </div>
     </div>
     <div class="privacy" aria-live="polite">
@@ -98,6 +118,12 @@ footer a{color:inherit}
     </div>
   </header>
 
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="images" aria-selected="true" data-i18n="tabImages">Images</button>
+    <button class="tab" role="tab" data-tab="pdf" aria-selected="false" data-i18n="tabPdf">PDF</button>
+  </nav>
+
+  <section id="tab-images" role="tabpanel">
   <div class="grid">
     <aside class="panel">
       <h2 data-i18n="presetsTitle">Presets</h2>
@@ -159,7 +185,57 @@ footer a{color:inherit}
       <div class="status" id="status" aria-live="polite"></div>
       <div class="results" id="results"></div>
 
-      <section class="panel how">
+
+    </main>
+  </div>
+
+  </section>
+
+  <section id="tab-pdf" role="tabpanel" hidden>
+    <div class="seg" id="pdfTools">
+      <button class="chip" data-tool="img2pdf" aria-pressed="true" data-pi18n="toolImg">Images → PDF</button>
+      <button class="chip" data-tool="merge" aria-pressed="false" data-pi18n="toolMerge">Merge PDFs</button>
+      <button class="chip" data-tool="compress" aria-pressed="false" data-pi18n="toolCompress">Compress PDF</button>
+    </div>
+
+    <div class="drop" id="pdfDrop" tabindex="0" role="button" aria-label="Choose files">
+      <strong id="pdfDropTitle">Drop images here or click to choose</strong>
+      <span id="pdfDropSub"></span>
+      <input id="pdfFile" class="sr" type="file" multiple>
+    </div>
+
+    <ul class="flist" id="pdfList"></ul>
+
+    <div class="panel" style="margin-top:14px">
+      <div class="opts" data-opts="img2pdf">
+        <div><label for="pdfPage" data-pi18n="pageSize">Page size</label>
+          <select id="pdfPage"><option value="a4" data-pi18n="a4">A4</option><option value="letter" data-pi18n="letter">Letter</option><option value="fit" data-pi18n="fit">Fit to image</option></select></div>
+        <div><label for="pdfMargin" data-pi18n="margin">Margins</label>
+          <select id="pdfMargin"><option value="0" data-pi18n="mNone">None</option><option value="20" selected data-pi18n="mSmall">Small</option><option value="40" data-pi18n="mNormal">Normal</option></select></div>
+        <div><label for="pdfImgQ" data-pi18n="imgQ">Image quality</label>
+          <select id="pdfImgQ"><option value="std" data-pi18n="qStd">Standard</option><option value="high" data-pi18n="qHigh">High</option></select></div>
+      </div>
+      <div class="opts" data-opts="merge" hidden></div>
+      <div data-opts="compress" hidden>
+        <div class="opts" style="margin-top:0">
+          <div><label for="pdfLevel" data-pi18n="level">Compression</label>
+            <select id="pdfLevel"><option value="light" data-pi18n="lLight">Light</option><option value="balanced" selected data-pi18n="lBalanced">Balanced</option><option value="strong" data-pi18n="lStrong">Strong</option></select></div>
+          <div><label for="pdfMax" data-pi18n="maxMB">Max file size (MB)</label>
+            <input id="pdfMax" type="number" min="0.1" step="0.1" placeholder="no limit" data-pi18n-ph="noLimit"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="pdfGray"> <span data-pi18n="gray">Black &amp; white</span></label>
+        <p class="hint" data-pi18n="compressNote"></p>
+      </div>
+      <div class="gobar">
+        <button class="btn" id="pdfGo" disabled>Create PDF</button>
+        <span class="status" id="pdfStatus" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="results" id="pdfResults" style="margin-top:12px"></div>
+  </section>
+
+  <section class="panel how">
         <h2 data-i18n="howTitle">How do I know nothing is uploaded?</h2>
         <ul>
           <li data-i18n="how1">Disconnect from the internet after the page opens — it keeps working normally.</li>
@@ -169,8 +245,6 @@ footer a{color:inherit}
           <li data-i18n="how5">Re-encoding strips EXIF metadata, including your photo’s GPS location.</li>
         </ul>
       </section>
-    </main>
-  </div>
 
   <footer>
     <span data-i18n="footer">Open source · No cookies · No analytics · No accounts</span>
@@ -186,14 +260,14 @@ footer a{color:inherit}
   // ---------- Translations ----------
   const STR = {
     en: {
-      title: "KeepPix — Resize & compress images without uploading",
-      tagline: "Resize, compress, crop and convert images — all on your device.",
+      title: "KeepPix — Image & PDF tools that never upload your files",
+      tagline: "Resize, compress and convert images and PDFs — all on your device.",
       pillLocal: "🔒 Your files never leave your device",
       pillLocalTitle: "Processing happens locally in your browser",
       online: "Online", offline: "Offline — still working",
       reqLabel: "network requests", reqTitle: "Network requests the page made since it loaded",
       offlineReady: "✓ Available offline", offlineTitle: "The app is saved on this device and opens without internet",
-      install: "Install app", switchTo: "Ελληνικά",
+      install: "Install app", switchTo: "Ελληνικά", tabImages: "Images", tabPdf: "PDF",
       presetsTitle: "Presets", pWeb: "For websites", pSocial: "Social media (square)", pPhoto: "ID / passport photo 35×45",
       pDoc: "Document under 2 MB", pEmail: "Email (under 500 KB)", pCustom: "Custom",
       settingsTitle: "Settings", maxW: "Max width (px)", maxH: "Max height (px)", auto: "auto",
@@ -224,14 +298,14 @@ footer a{color:inherit}
       footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
     },
     el: {
-      title: "KeepPix — Συμπίεση & αλλαγή μεγέθους εικόνων χωρίς ανέβασμα",
-      tagline: "Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή — όλα μέσα στη συσκευή σας.",
+      title: "KeepPix — Εργαλεία εικόνας & PDF χωρίς ανέβασμα αρχείων",
+      tagline: "Συμπίεση και μετατροπή εικόνων και PDF — όλα μέσα στη συσκευή σας.",
       pillLocal: "🔒 Τα αρχεία δεν φεύγουν από τη συσκευή",
       pillLocalTitle: "Η επεξεργασία γίνεται τοπικά στον browser σας",
       online: "Συνδεδεμένοι", offline: "Εκτός σύνδεσης — δουλεύει κανονικά",
       reqLabel: "αιτήματα δικτύου", reqTitle: "Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση",
       offlineReady: "✓ Διαθέσιμη εκτός σύνδεσης", offlineTitle: "Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet",
-      install: "Εγκατάσταση εφαρμογής", switchTo: "English",
+      install: "Εγκατάσταση εφαρμογής", switchTo: "English", tabImages: "Εικόνες", tabPdf: "PDF",
       presetsTitle: "Έτοιμες ρυθμίσεις", pWeb: "Για ιστοσελίδα", pSocial: "Social media (τετράγωνο)", pPhoto: "Φωτογραφία αίτησης 3,5×4,5",
       pDoc: "Έγγραφο έως 2 MB", pEmail: "Για email (έως 500 KB)", pCustom: "Δικές μου ρυθμίσεις",
       settingsTitle: "Ρυθμίσεις", maxW: "Μέγ. πλάτος (px)", maxH: "Μέγ. ύψος (px)", auto: "αυτόματο",
@@ -316,6 +390,7 @@ footer a{color:inherit}
     langBtn.textContent = t("switchTo");
     langBtn.lang = lang === "en" ? "el" : "en";
     updateNet(); updateToolbar();
+    dispatchEvent(new Event("keeppix:lang"));
   }
   langBtn.addEventListener("click", () => {
     lang = lang === "en" ? "el" : "en";
@@ -336,7 +411,7 @@ footer a{color:inherit}
   let requests = 0;
   function isAppFile(name) {
     const u = new URL(name, location.href);
-    return u.origin === location.origin && /^\/(sw\.js|manifest\.webmanifest|icons\/[\w-]+\.png)$/.test(u.pathname);
+    return u.origin === location.origin && /^\/(sw\.js|pdf-tools\.js|manifest\.webmanifest|icons\/[\w.-]+|vendor\/[\w.-]+)$/.test(u.pathname);
   }
   try {
     new PerformanceObserver((list) => {
@@ -575,7 +650,7 @@ footer a{color:inherit}
 
   // ---------- Offline app (PWA) ----------
   const offlineReady = $("#offlineReady"), installBtn = $("#installBtn");
-  const canSW = "serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost");
+  const canSW = "serviceWorker" in navigator && window.isSecureContext && location.protocol !== "file:";
   if (canSW) {
     addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch(() => { /* app still works online */ });
@@ -593,9 +668,11 @@ footer a{color:inherit}
   });
   addEventListener("appinstalled", () => { installBtn.hidden = true; });
 
+  window.KeepPix = { lang: () => lang, fmt };
   applyLang();
   applyPreset("web");
 })();
 </script>
+<script src="/pdf-tools.js" defer></script>
 </body>
 </html>

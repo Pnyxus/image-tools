@@ -2,7 +2,7 @@
 // It only ever stores and serves the app's own files (same origin).
 // User images are never seen here: they are processed in the page and never requested over the network.
 
-const VERSION = "v4";
+const VERSION = "v5";
 const CACHE = `keeppix-${VERSION}`;
 const APP_SHELL = [
   "/",
@@ -12,6 +12,10 @@ const APP_SHELL = [
   "/icons/icon-maskable-512.png",
   "/icons/apple-touch-icon.png",
   "/icons/icon.svg",
+  "/pdf-tools.js",
+  "/vendor/pdf-lib.min.js",
+  "/vendor/pdf.min.js",
+  "/vendor/pdf.worker.min.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -47,6 +51,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Icons, manifest: cache first.
+  // App files (icons, manifest, scripts): cache first. Bump VERSION to ship changes.
   event.respondWith(caches.match(req).then((hit) => hit || fetch(req)));
 });
