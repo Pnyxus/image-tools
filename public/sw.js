@@ -2,7 +2,7 @@
 // It only ever stores and serves the app's own files (same origin).
 // User images are never seen here: they are processed in the page and never requested over the network.
 
-const VERSION = "v3";
+const VERSION = "v4";
 const CACHE = `keeppix-${VERSION}`;
 const APP_SHELL = [
   "/",
@@ -11,6 +11,7 @@ const APP_SHELL = [
   "/icons/icon-512.png",
   "/icons/icon-maskable-512.png",
   "/icons/apple-touch-icon.png",
+  "/icons/icon.svg",
 ];
 
 self.addEventListener("install", (event) => {

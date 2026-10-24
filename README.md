@@ -53,7 +53,7 @@ Or deploy straight from your machine: `npx wrangler login` then `npx wrangler de
 
 ## Releasing a new version
 
-When you change `index.html`, bump `VERSION` in `public/sw.js` (v3 → v4) so installed copies pick up the update.
+When you change `index.html`, bump `VERSION` in `public/sw.js` (v4 → v5) so installed copies pick up the update.
 
 ## Roadmap
 
