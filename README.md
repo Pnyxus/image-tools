@@ -56,7 +56,7 @@ Or deploy straight from your machine: `npx wrangler login` then `npx wrangler de
 
 ## Releasing a new version
 
-When you change any file in `public/`, bump `VERSION` in `public/sw.js` (v6 → v7) so installed copies pick up the update.
+When you change any file in `public/`, bump `VERSION` in `public/sw.js` (v7 → v8) so installed copies pick up the update.
 
 ## Roadmap
 
