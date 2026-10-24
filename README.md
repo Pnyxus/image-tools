@@ -13,13 +13,17 @@ Files never leave the user's device.
 - Strips EXIF metadata (including GPS location) on re-encode
 - Privacy proof built in: online/offline indicator, live network-request counter, strict CSP (`connect-src 'none'`)
 - No cookies, no analytics, no external scripts or fonts
+- Installable app (PWA): works with no connection at all after the first visit
 
 ## Project layout
 
 ```
 public/
-  index.html   # the whole app (HTML + CSS + JS, no dependencies)
-  _headers     # security headers served by Cloudflare
+  index.html            # the whole app (HTML + CSS + JS, no dependencies)
+  sw.js                 # service worker: caches the app's own files for offline use
+  manifest.webmanifest  # makes it installable
+  icons/                # app icons
+  _headers              # security headers served by Cloudflare
 wrangler.jsonc # Cloudflare Workers static-assets config
 ```
 
@@ -46,9 +50,12 @@ npx wrangler dev
 
 Or deploy straight from your machine: `npx wrangler login` then `npx wrangler deploy`.
 
+## Releasing a new version
+
+When you change `index.html`, bump `VERSION` in `public/sw.js` (v2 → v3) so installed copies pick up the update.
+
 ## Roadmap
 
-- PWA (manifest + service worker) so it installs and works fully offline
 - Better codecs via WebAssembly (MozJPEG, AVIF)
 - Local PDF tools: compress, merge, images → PDF
 - Manual crop box

@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
 <title>Εικόνες χωρίς ανέβασμα</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0f766e">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="description" content="Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή εικόνων απευθείας στον browser. Τα αρχεία σας δεν ανεβαίνουν ποτέ σε server.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Cpath d='M7 22l6-7 4 5 3-3 5 5z' fill='%23fff'/%3E%3Ccircle cx='21' cy='11' r='2.5' fill='%23fff'/%3E%3C/svg%3E">
 <style>
@@ -68,6 +71,8 @@ footer{margin-top:28px;color:var(--muted);font-size:.85rem;display:flex;flex-wra
 footer a{color:inherit}
 .how{margin-top:18px}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
+[hidden]{display:none!important}
+.privacy .btn{padding:6px 12px;font-size:.85rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -82,6 +87,8 @@ footer a{color:inherit}
       <span class="pill" title="Η επεξεργασία γίνεται τοπικά στον browser σας">🔒 Τα αρχεία δεν φεύγουν από τη συσκευή</span>
       <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Συνδεδεμένοι</span></span>
       <span class="pill" title="Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση"><span id="reqCount">0</span>&nbsp;αιτήματα δικτύου</span>
+      <span class="pill" id="offlineReady" hidden title="Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet">✓ Διαθέσιμη εκτός σύνδεσης</span>
+      <button class="btn" id="installBtn" hidden>Εγκατάσταση εφαρμογής</button>
     </div>
   </header>
 
@@ -150,6 +157,7 @@ footer a{color:inherit}
         <h2>Πώς ξέρω ότι δεν ανεβαίνουν;</h2>
         <ul>
           <li>Αποσυνδεθείτε από το internet αφού ανοίξει η σελίδα — συνεχίζει να δουλεύει κανονικά.</li>
+          <li>Εγκαταστήστε την ως εφαρμογή: ανοίγει και δουλεύει ακόμα και χωρίς καμία σύνδεση.</li>
           <li>Ο μετρητής «αιτήματα δικτύου» πάνω δεξιά δείχνει ότι η σελίδα δεν στέλνει τίποτα.</li>
           <li>Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.</li>
           <li>Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.</li>
@@ -210,10 +218,16 @@ footer a{color:inherit}
   addEventListener("online", updateNet); addEventListener("offline", updateNet); updateNet();
 
   let requests = 0;
+  function isAppFile(name) {
+    const u = new URL(name, location.href);
+    return u.origin === location.origin && /^\/(sw\.js|manifest\.webmanifest|icons\/[\w-]+\.png)$/.test(u.pathname);
+  }
   try {
     new PerformanceObserver((list) => {
       for (const e of list.getEntries()) {
-        if (!/^(blob|data):/.test(e.name)) { requests++; reqCount.textContent = requests; }
+        // Ignore blob:/data: (local) and the app's own files (manifest, icons, service worker), which never carry user data.
+        if (/^(blob|data):/.test(e.name) || isAppFile(e.name)) continue;
+        requests++; reqCount.textContent = requests;
       }
     }).observe({ type: "resource", buffered: false });
   } catch { /* older browsers: counter stays at 0 */ }
@@ -443,6 +457,26 @@ footer a{color:inherit}
     return (b / 1024 / 1024).toFixed(2).replace(".", ",") + " MB";
   }
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+  // ---------- Offline app (PWA) ----------
+  const offlineReady = $("#offlineReady"), installBtn = $("#installBtn");
+  const canSW = "serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost");
+  if (canSW) {
+    addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => { /* app still works online */ });
+    });
+    navigator.serviceWorker.ready.then(() => { offlineReady.hidden = false; });
+  }
+
+  let installEvent = null;
+  addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvent = e; installBtn.hidden = false; });
+  installBtn.addEventListener("click", async () => {
+    if (!installEvent) return;
+    installEvent.prompt();
+    await installEvent.userChoice.catch(() => {});
+    installEvent = null; installBtn.hidden = true;
+  });
+  addEventListener("appinstalled", () => { installBtn.hidden = true; });
 
   applyPreset("web");
 })();
