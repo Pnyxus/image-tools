@@ -157,10 +157,11 @@ footer a{color:inherit}
 
       <h2 data-i18n="settingsTitle">Settings</h2>
       <div class="row">
-        <div><label for="maxW" data-i18n="maxW">Max width (px)</label><input id="maxW" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
-        <div><label for="maxH" data-i18n="maxH">Max height (px)</label><input id="maxH" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
+        <div><label for="maxW" id="maxWLabel">Max width (px)</label><input id="maxW" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
+        <div><label for="maxH" id="maxHLabel">Max height (px)</label><input id="maxH" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
       </div>
-      <p class="hint" data-i18n="noUpscale">Images are only made smaller, never larger.</p>
+      <label class="check" id="keepWrap" hidden><input type="checkbox" id="keepAspect" checked> <span data-i18n="keepAspect">Keep aspect ratio</span></label>
+      <p class="hint" id="sizeHint">Images are only made smaller, never larger.</p>
 
       <label for="aspect" data-i18n="crop">Crop (centered)</label>
       <select id="aspect">
@@ -291,6 +292,8 @@ footer a{color:inherit}
       pDoc: "Document under 2 MB", pEmail: "Email (under 500 KB)", pCustom: "Custom",
       settingsTitle: "Settings", maxW: "Max width (px)", maxH: "Max height (px)", auto: "auto",
       noUpscale: "Images are only made smaller, never larger.",
+      keepAspect: "Keep aspect ratio", wExact: "Width (px)", hExact: "Height (px)",
+      exactHint: "The image is resized to exactly this size and may look stretched. Leave a field empty to keep that side unchanged.",
       crop: "Crop (centered)", cropNone: "No crop", crop11: "1:1 square", crop45: "4:5 portrait (Instagram)",
       crop169: "16:9 landscape", crop32: "3:2 photo", crop3545: "35×45 ID / passport photo",
       format: "File format", fJpeg: "JPEG — works everywhere", fWebp: "WebP — smaller files", fPng: "PNG — lossless",
@@ -330,6 +333,8 @@ footer a{color:inherit}
       pDoc: "Έγγραφο έως 2 MB", pEmail: "Για email (έως 500 KB)", pCustom: "Δικές μου ρυθμίσεις",
       settingsTitle: "Ρυθμίσεις", maxW: "Μέγ. πλάτος (px)", maxH: "Μέγ. ύψος (px)", auto: "αυτόματο",
       noUpscale: "Οι εικόνες μικραίνουν, ποτέ δεν μεγαλώνουν.",
+      keepAspect: "Διατήρηση αναλογιών", wExact: "Πλάτος (px)", hExact: "Ύψος (px)",
+      exactHint: "Η εικόνα παίρνει ακριβώς αυτές τις διαστάσεις και μπορεί να παραμορφωθεί. Αφήστε ένα πεδίο κενό για να μείνει ίδια εκείνη η πλευρά.",
       crop: "Περικοπή (στο κέντρο)", cropNone: "Χωρίς περικοπή", crop11: "1:1 τετράγωνο", crop45: "4:5 κάθετο (Instagram)",
       crop169: "16:9 οριζόντιο", crop32: "3:2 φωτογραφία", crop3545: "3,5×4,5 φωτογραφία ταυτότητας",
       format: "Μορφή αρχείου", fJpeg: "JPEG — συμβατό παντού", fWebp: "WebP — μικρότερα αρχεία", fPng: "PNG — χωρίς απώλειες",
@@ -381,7 +386,8 @@ footer a{color:inherit}
     maxW: $("#maxW"), maxH: $("#maxH"), aspect: $("#aspect"), format: $("#format"),
     quality: $("#quality"), qVal: $("#qVal"), targetKB: $("#targetKB"),
     drop: $("#drop"), file: $("#file"), results: $("#results"), summary: $("#summary"),
-    status: $("#status"), dlAll: $("#dlAll"), clearBtn: $("#clearBtn"), presets: $("#presets"),
+    status: $("#status"), dlAll: $("#dlAll"), clearBtn: $("#clearBtn"), presets: $("#presets"), keepWrap: $("#keepWrap"), keepAspect: $("#keepAspect"),
+    maxWLabel: $("#maxWLabel"), maxHLabel: $("#maxHLabel"), sizeHint: $("#sizeHint"),
   };
 
   let files = [];
@@ -432,7 +438,7 @@ footer a{color:inherit}
     if (!webpOK) el.format.querySelector('option[value="image/webp"]').textContent = t("fWebp") + t("webpUnsupported");
     langBtn.textContent = t("switchTo");
     langBtn.lang = lang === "en" ? "el" : "en";
-    applyTheme();
+    applyTheme(); updateSizeLabels();
     updateNet(); updateToolbar();
     dispatchEvent(new Event("keeppix:lang"));
   }
@@ -473,10 +479,25 @@ footer a{color:inherit}
     return {
       maxW: n(el.maxW.value), maxH: n(el.maxH.value), aspect: el.aspect.value,
       format: el.format.value, quality: +el.quality.value, targetKB: n(el.targetKB.value),
+      keep: el.keepWrap.hidden || el.keepAspect.checked,
     };
   }
+  // The "keep aspect ratio" option only exists in Custom mode; presets always keep proportions.
+  function setCustomMode(on) {
+    el.keepWrap.hidden = !on;
+    if (!on) el.keepAspect.checked = true;
+    updateSizeLabels();
+  }
+  function updateSizeLabels() {
+    const keep = el.keepWrap.hidden || el.keepAspect.checked;
+    el.maxWLabel.textContent = t(keep ? "maxW" : "wExact");
+    el.maxHLabel.textContent = t(keep ? "maxH" : "hExact");
+    el.sizeHint.textContent = t(keep ? "noUpscale" : "exactHint");
+  }
+  el.keepAspect.addEventListener("change", () => { updateSizeLabels(); scheduleRun(); });
   function applyPreset(key) {
     for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === key));
+    setCustomMode(key === "custom");
     const p = PRESETS[key];
     if (!p) return;
     el.maxW.value = p.maxW; el.maxH.value = p.maxH; el.aspect.value = p.aspect;
@@ -489,6 +510,7 @@ footer a{color:inherit}
     el[k].addEventListener("input", () => {
       el.qVal.textContent = el.quality.value;
       for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === "custom"));
+      if (el.keepWrap.hidden) setCustomMode(true);
       scheduleRun();
     });
   }
@@ -607,8 +629,14 @@ footer a{color:inherit}
     const src = await loadImage(file);
     const W = src.width, H = src.height;
     const rect = cropRect(W, H, o.aspect);
-    const scale = Math.min(1, o.maxW ? o.maxW / rect.sw : 1, o.maxH ? o.maxH / rect.sh : 1);
-    let tw = Math.max(1, Math.round(rect.sw * scale)), th = Math.max(1, Math.round(rect.sh * scale));
+    let tw, th;
+    if (o.keep) {
+      const scale = Math.min(1, o.maxW ? o.maxW / rect.sw : 1, o.maxH ? o.maxH / rect.sh : 1);
+      tw = Math.max(1, Math.round(rect.sw * scale)); th = Math.max(1, Math.round(rect.sh * scale));
+    } else {
+      // Exact size: each side becomes what the user typed (an empty field keeps that side as it is).
+      tw = Math.min(16384, o.maxW || Math.round(rect.sw)); th = Math.min(16384, o.maxH || Math.round(rect.sh));
+    }
     const opaque = o.format === "image/jpeg";
     const notes = [];
     let blob, q = o.quality / 100;
