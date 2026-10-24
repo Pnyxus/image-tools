@@ -1,4 +1,4 @@
-# Εικόνες χωρίς ανέβασμα
+# KeepPix — keeppix.app
 
 Privacy-first image tools: resize, compress, crop and convert images entirely in the browser.
 Files never leave the user's device.
@@ -12,6 +12,7 @@ Files never leave the user's device.
 - Batch processing, drag & drop, paste from clipboard
 - Strips EXIF metadata (including GPS location) on re-encode
 - Privacy proof built in: online/offline indicator, live network-request counter, strict CSP (`connect-src 'none'`)
+- English and Greek UI (auto-detected from the browser, switchable, `?lang=el` / `?lang=en`)
 - No cookies, no analytics, no external scripts or fonts
 - Installable app (PWA): works with no connection at all after the first visit
 
@@ -52,11 +53,10 @@ Or deploy straight from your machine: `npx wrangler login` then `npx wrangler de
 
 ## Releasing a new version
 
-When you change `index.html`, bump `VERSION` in `public/sw.js` (v2 → v3) so installed copies pick up the update.
+When you change `index.html`, bump `VERSION` in `public/sw.js` (v3 → v4) so installed copies pick up the update.
 
 ## Roadmap
 
 - Better codecs via WebAssembly (MozJPEG, AVIF)
 - Local PDF tools: compress, merge, images → PDF
 - Manual crop box
-- English version

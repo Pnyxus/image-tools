@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="el">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
-<title>Εικόνες χωρίς ανέβασμα</title>
+<title>KeepPix — Resize & compress images without uploading</title>
+<meta name="description" content="Resize, compress, crop and convert images right in your browser. Your photos never leave your device — no uploads, no accounts, works offline.">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<meta name="description" content="Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή εικόνων απευθείας στον browser. Τα αρχεία σας δεν ανεβαίνουν ποτέ σε server.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Cpath d='M7 22l6-7 4 5 3-3 5 5z' fill='%23fff'/%3E%3Ccircle cx='21' cy='11' r='2.5' fill='%23fff'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -26,9 +26,11 @@
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
 header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:9px;flex:none}
 h1{font-size:1.45rem;margin:0;letter-spacing:-.01em}
 .sub{color:var(--muted);margin:2px 0 0}
-.privacy{display:flex;gap:8px;flex-wrap:wrap}
+.privacy{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;border:1px solid var(--line)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
 .dot.off{background:var(--warn)}
@@ -79,96 +81,100 @@ footer a{color:inherit}
 <body>
 <div class="wrap">
   <header>
-    <div>
-      <h1>Εικόνες χωρίς ανέβασμα</h1>
-      <p class="sub">Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή — όλα μέσα στη συσκευή σας.</p>
+    <div class="brand">
+      <img class="logo" src="/icons/icon-192.png" alt="" width="36" height="36">
+      <div>
+        <h1>KeepPix</h1>
+        <p class="sub" data-i18n="tagline">Resize, compress, crop and convert images — all on your device.</p>
+      </div>
     </div>
     <div class="privacy" aria-live="polite">
-      <span class="pill" title="Η επεξεργασία γίνεται τοπικά στον browser σας">🔒 Τα αρχεία δεν φεύγουν από τη συσκευή</span>
-      <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Συνδεδεμένοι</span></span>
-      <span class="pill" title="Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση"><span id="reqCount">0</span>&nbsp;αιτήματα δικτύου</span>
-      <span class="pill" id="offlineReady" hidden title="Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet">✓ Διαθέσιμη εκτός σύνδεσης</span>
-      <button class="btn" id="installBtn" hidden>Εγκατάσταση εφαρμογής</button>
+      <span class="pill" data-i18n="pillLocal" data-i18n-title="pillLocalTitle" title="Processing happens locally in your browser">🔒 Your files never leave your device</span>
+      <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Online</span></span>
+      <span class="pill" data-i18n-title="reqTitle" title="Network requests the page made since it loaded"><span id="reqCount">0</span><span data-i18n="reqLabel">network requests</span></span>
+      <span class="pill" id="offlineReady" hidden data-i18n-title="offlineTitle" title="The app is saved on this device and opens without internet"><span data-i18n="offlineReady">✓ Available offline</span></span>
+      <button class="btn" id="installBtn" hidden data-i18n="install">Install app</button>
+      <button class="btn ghost" id="langBtn" type="button" lang="el">Ελληνικά</button>
     </div>
   </header>
 
   <div class="grid">
     <aside class="panel">
-      <h2>Έτοιμες ρυθμίσεις</h2>
+      <h2 data-i18n="presetsTitle">Presets</h2>
       <div class="presets" id="presets">
-        <button class="chip" data-preset="web">Για ιστοσελίδα</button>
-        <button class="chip" data-preset="social">Social media (τετράγωνο)</button>
-        <button class="chip" data-preset="photo">Φωτογραφία αίτησης 3,5×4,5</button>
-        <button class="chip" data-preset="doc2mb">Έγγραφο έως 2 MB</button>
-        <button class="chip" data-preset="email">Για email (έως 500 KB)</button>
-        <button class="chip" data-preset="custom">Δικές μου ρυθμίσεις</button>
+        <button class="chip" data-preset="web" data-i18n="pWeb">For websites</button>
+        <button class="chip" data-preset="social" data-i18n="pSocial">Social media (square)</button>
+        <button class="chip" data-preset="photo" data-i18n="pPhoto">ID / passport photo 35×45</button>
+        <button class="chip" data-preset="doc2mb" data-i18n="pDoc">Document under 2 MB</button>
+        <button class="chip" data-preset="email" data-i18n="pEmail">Email (under 500 KB)</button>
+        <button class="chip" data-preset="custom" data-i18n="pCustom">Custom</button>
       </div>
 
-      <h2>Ρυθμίσεις</h2>
+      <h2 data-i18n="settingsTitle">Settings</h2>
       <div class="row">
-        <div><label for="maxW">Μέγ. πλάτος (px)</label><input id="maxW" type="number" min="1" placeholder="αυτόματο"></div>
-        <div><label for="maxH">Μέγ. ύψος (px)</label><input id="maxH" type="number" min="1" placeholder="αυτόματο"></div>
+        <div><label for="maxW" data-i18n="maxW">Max width (px)</label><input id="maxW" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
+        <div><label for="maxH" data-i18n="maxH">Max height (px)</label><input id="maxH" type="number" min="1" placeholder="auto" data-i18n-ph="auto"></div>
       </div>
-      <p class="hint">Οι εικόνες μικραίνουν, ποτέ δεν μεγαλώνουν.</p>
+      <p class="hint" data-i18n="noUpscale">Images are only made smaller, never larger.</p>
 
-      <label for="aspect">Περικοπή (στο κέντρο)</label>
+      <label for="aspect" data-i18n="crop">Crop (centered)</label>
       <select id="aspect">
-        <option value="none">Χωρίς περικοπή</option>
-        <option value="1:1">1:1 τετράγωνο</option>
-        <option value="4:5">4:5 κάθετο (Instagram)</option>
-        <option value="16:9">16:9 οριζόντιο</option>
-        <option value="3:2">3:2 φωτογραφία</option>
-        <option value="35:45">3,5×4,5 φωτογραφία ταυτότητας</option>
+        <option value="none" data-i18n="cropNone">No crop</option>
+        <option value="1:1" data-i18n="crop11">1:1 square</option>
+        <option value="4:5" data-i18n="crop45">4:5 portrait (Instagram)</option>
+        <option value="16:9" data-i18n="crop169">16:9 landscape</option>
+        <option value="3:2" data-i18n="crop32">3:2 photo</option>
+        <option value="35:45" data-i18n="crop3545">35×45 ID / passport photo</option>
       </select>
 
-      <label for="format">Μορφή αρχείου</label>
+      <label for="format" data-i18n="format">File format</label>
       <select id="format">
-        <option value="image/jpeg">JPEG — συμβατό παντού</option>
-        <option value="image/webp">WebP — μικρότερα αρχεία</option>
-        <option value="image/png">PNG — χωρίς απώλειες</option>
+        <option value="image/jpeg" data-i18n="fJpeg">JPEG — works everywhere</option>
+        <option value="image/webp" data-i18n="fWebp">WebP — smaller files</option>
+        <option value="image/png" data-i18n="fPng">PNG — lossless</option>
       </select>
 
-      <label for="quality">Ποιότητα: <span id="qVal">80</span>%</label>
+      <label for="quality"><span data-i18n="quality">Quality</span>: <span id="qVal">80</span>%</label>
       <input id="quality" type="range" min="30" max="100" value="80">
 
-      <label for="targetKB">Μέγιστο μέγεθος αρχείου (KB)</label>
-      <input id="targetKB" type="number" min="10" placeholder="χωρίς όριο">
-      <p class="hint">Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.</p>
+      <label for="targetKB" data-i18n="maxSize">Max file size (KB)</label>
+      <input id="targetKB" type="number" min="10" placeholder="no limit" data-i18n-ph="noLimit">
+      <p class="hint" data-i18n="maxSizeHint">If set, quality (and if needed, dimensions) is lowered until the file fits. Not available for PNG.</p>
     </aside>
 
     <main>
-      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Επιλογή εικόνων">
-        <strong>Σύρετε εικόνες εδώ ή πατήστε για επιλογή</strong>
-        <span>JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί</span>
+      <div class="drop" id="drop" tabindex="0" role="button" data-i18n-aria="chooseImages" aria-label="Choose images">
+        <strong data-i18n="dropTitle">Drop images here or click to choose</strong>
+        <span data-i18n="dropSub">JPEG, PNG, WebP, GIF, AVIF — many files at once</span>
         <input id="file" class="sr" type="file" accept="image/*" multiple>
       </div>
 
       <div class="toolbar">
-        <div class="summary" id="summary">Δεν έχουν επιλεγεί εικόνες.</div>
+        <div class="summary" id="summary">No images selected.</div>
         <div style="display:flex;gap:8px">
-          <button class="btn ghost" id="clearBtn" disabled>Καθαρισμός</button>
-          <button class="btn" id="dlAll" disabled>Λήψη όλων</button>
+          <button class="btn ghost" id="clearBtn" disabled data-i18n="clear">Clear</button>
+          <button class="btn" id="dlAll" disabled data-i18n="dlAll">Download all</button>
         </div>
       </div>
       <div class="status" id="status" aria-live="polite"></div>
       <div class="results" id="results"></div>
 
       <section class="panel how">
-        <h2>Πώς ξέρω ότι δεν ανεβαίνουν;</h2>
+        <h2 data-i18n="howTitle">How do I know nothing is uploaded?</h2>
         <ul>
-          <li>Αποσυνδεθείτε από το internet αφού ανοίξει η σελίδα — συνεχίζει να δουλεύει κανονικά.</li>
-          <li>Εγκαταστήστε την ως εφαρμογή: ανοίγει και δουλεύει ακόμα και χωρίς καμία σύνδεση.</li>
-          <li>Ο μετρητής «αιτήματα δικτύου» πάνω δεξιά δείχνει ότι η σελίδα δεν στέλνει τίποτα.</li>
-          <li>Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.</li>
-          <li>Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.</li>
+          <li data-i18n="how1">Disconnect from the internet after the page opens — it keeps working normally.</li>
+          <li data-i18n="how2">Install it as an app: it opens and works even with no connection at all.</li>
+          <li data-i18n="how3">The “network requests” counter at the top shows the page sends nothing.</li>
+          <li data-i18n="how4">The page’s security policy (CSP) forbids the browser from connecting to any server.</li>
+          <li data-i18n="how5">Re-encoding strips EXIF metadata, including your photo’s GPS location.</li>
         </ul>
       </section>
     </main>
   </div>
 
   <footer>
-    <span>Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics</span>
-    <span>Κατασκευή: Pnyxus</span>
+    <span data-i18n="footer">Open source · No cookies · No analytics · No accounts</span>
+    <span><span data-i18n="madeBy">Made by</span> Pnyxus</span>
   </footer>
 </div>
 
@@ -176,6 +182,96 @@ footer a{color:inherit}
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
+
+  // ---------- Translations ----------
+  const STR = {
+    en: {
+      title: "KeepPix — Resize & compress images without uploading",
+      tagline: "Resize, compress, crop and convert images — all on your device.",
+      pillLocal: "🔒 Your files never leave your device",
+      pillLocalTitle: "Processing happens locally in your browser",
+      online: "Online", offline: "Offline — still working",
+      reqLabel: "network requests", reqTitle: "Network requests the page made since it loaded",
+      offlineReady: "✓ Available offline", offlineTitle: "The app is saved on this device and opens without internet",
+      install: "Install app", switchTo: "Ελληνικά",
+      presetsTitle: "Presets", pWeb: "For websites", pSocial: "Social media (square)", pPhoto: "ID / passport photo 35×45",
+      pDoc: "Document under 2 MB", pEmail: "Email (under 500 KB)", pCustom: "Custom",
+      settingsTitle: "Settings", maxW: "Max width (px)", maxH: "Max height (px)", auto: "auto",
+      noUpscale: "Images are only made smaller, never larger.",
+      crop: "Crop (centered)", cropNone: "No crop", crop11: "1:1 square", crop45: "4:5 portrait (Instagram)",
+      crop169: "16:9 landscape", crop32: "3:2 photo", crop3545: "35×45 ID / passport photo",
+      format: "File format", fJpeg: "JPEG — works everywhere", fWebp: "WebP — smaller files", fPng: "PNG — lossless",
+      webpUnsupported: " (not supported by this browser)",
+      quality: "Quality", maxSize: "Max file size (KB)", noLimit: "no limit",
+      maxSizeHint: "If set, quality (and if needed, dimensions) is lowered until the file fits. Not available for PNG.",
+      chooseImages: "Choose images", dropTitle: "Drop images here or click to choose",
+      dropSub: "JPEG, PNG, WebP, GIF, AVIF — many files at once",
+      none: "No images selected.", clear: "Clear", dlAll: "Download all",
+      ready: (r, n, a, b) => `${r}/${n} ready · ${a} → ${b}`, count: (n) => `${n} images`,
+      processing: (i, n) => `Processing ${i} of ${n}…`, waiting: "Waiting…",
+      errGeneric: "Processing failed", errRead: "This image couldn't be read.",
+      errHeic: "HEIC photos (iPhone) aren't supported by this browser. Try Safari, or set the camera to “Most Compatible”.",
+      errEncode: "Encoding failed", errLimit: "Couldn't reach the size limit.",
+      noteShrunk: "Dimensions were reduced to fit the size limit.", notePng: "The size limit doesn't apply to PNG.",
+      noteFallback: "This browser can't save that format — saved as PNG.",
+      larger: "larger than the original", q: "quality", download: "Download", fallbackName: "image",
+      howTitle: "How do I know nothing is uploaded?",
+      how1: "Disconnect from the internet after the page opens — it keeps working normally.",
+      how2: "Install it as an app: it opens and works even with no connection at all.",
+      how3: "The “network requests” counter at the top shows the page sends nothing.",
+      how4: "The page’s security policy (CSP) forbids the browser from connecting to any server.",
+      how5: "Re-encoding strips EXIF metadata, including your photo’s GPS location.",
+      footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
+    },
+    el: {
+      title: "KeepPix — Συμπίεση & αλλαγή μεγέθους εικόνων χωρίς ανέβασμα",
+      tagline: "Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή — όλα μέσα στη συσκευή σας.",
+      pillLocal: "🔒 Τα αρχεία δεν φεύγουν από τη συσκευή",
+      pillLocalTitle: "Η επεξεργασία γίνεται τοπικά στον browser σας",
+      online: "Συνδεδεμένοι", offline: "Εκτός σύνδεσης — δουλεύει κανονικά",
+      reqLabel: "αιτήματα δικτύου", reqTitle: "Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση",
+      offlineReady: "✓ Διαθέσιμη εκτός σύνδεσης", offlineTitle: "Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet",
+      install: "Εγκατάσταση εφαρμογής", switchTo: "English",
+      presetsTitle: "Έτοιμες ρυθμίσεις", pWeb: "Για ιστοσελίδα", pSocial: "Social media (τετράγωνο)", pPhoto: "Φωτογραφία αίτησης 3,5×4,5",
+      pDoc: "Έγγραφο έως 2 MB", pEmail: "Για email (έως 500 KB)", pCustom: "Δικές μου ρυθμίσεις",
+      settingsTitle: "Ρυθμίσεις", maxW: "Μέγ. πλάτος (px)", maxH: "Μέγ. ύψος (px)", auto: "αυτόματο",
+      noUpscale: "Οι εικόνες μικραίνουν, ποτέ δεν μεγαλώνουν.",
+      crop: "Περικοπή (στο κέντρο)", cropNone: "Χωρίς περικοπή", crop11: "1:1 τετράγωνο", crop45: "4:5 κάθετο (Instagram)",
+      crop169: "16:9 οριζόντιο", crop32: "3:2 φωτογραφία", crop3545: "3,5×4,5 φωτογραφία ταυτότητας",
+      format: "Μορφή αρχείου", fJpeg: "JPEG — συμβατό παντού", fWebp: "WebP — μικρότερα αρχεία", fPng: "PNG — χωρίς απώλειες",
+      webpUnsupported: " (δεν υποστηρίζεται από αυτόν τον browser)",
+      quality: "Ποιότητα", maxSize: "Μέγιστο μέγεθος αρχείου (KB)", noLimit: "χωρίς όριο",
+      maxSizeHint: "Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.",
+      chooseImages: "Επιλογή εικόνων", dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή",
+      dropSub: "JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί",
+      none: "Δεν έχουν επιλεγεί εικόνες.", clear: "Καθαρισμός", dlAll: "Λήψη όλων",
+      ready: (r, n, a, b) => `${r}/${n} έτοιμες · ${a} → ${b}`, count: (n) => `${n} εικόνες`,
+      processing: (i, n) => `Επεξεργασία ${i} από ${n}…`, waiting: "Αναμονή…",
+      errGeneric: "Σφάλμα επεξεργασίας", errRead: "Δεν ήταν δυνατό να διαβαστεί η εικόνα.",
+      errHeic: "Τα αρχεία HEIC (iPhone) δεν υποστηρίζονται από αυτόν τον browser. Δοκιμάστε Safari ή ρυθμίστε την κάμερα σε «Πιο συμβατό».",
+      errEncode: "Αποτυχία κωδικοποίησης", errLimit: "Δεν ήταν δυνατό να φτάσει το όριο μεγέθους.",
+      noteShrunk: "Οι διαστάσεις μειώθηκαν για να χωρέσει στο όριο.", notePng: "Το όριο μεγέθους δεν ισχύει για PNG.",
+      noteFallback: "Ο browser δεν υποστηρίζει αυτή τη μορφή — αποθηκεύτηκε ως PNG.",
+      larger: "μεγαλύτερο από το αρχικό", q: "ποιότητα", download: "Λήψη", fallbackName: "eikona",
+      howTitle: "Πώς ξέρω ότι δεν ανεβαίνουν;",
+      how1: "Αποσυνδεθείτε από το internet αφού ανοίξει η σελίδα — συνεχίζει να δουλεύει κανονικά.",
+      how2: "Εγκαταστήστε την ως εφαρμογή: ανοίγει και δουλεύει ακόμα και χωρίς καμία σύνδεση.",
+      how3: "Ο μετρητής «αιτήματα δικτύου» πάνω δείχνει ότι η σελίδα δεν στέλνει τίποτα.",
+      how4: "Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.",
+      how5: "Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.",
+      footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:",
+    },
+  };
+
+  function detectLang() {
+    const q = new URLSearchParams(location.search).get("lang");
+    if (q === "en" || q === "el") return q;
+    try { const s = localStorage.getItem("keeppix-lang"); if (s === "en" || s === "el") return s; } catch { /* storage blocked */ }
+    const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
+    return langs.some((l) => /^el\b/i.test(l)) ? "el" : "en";
+  }
+  let lang = detectLang();
+  const t = (k, ...a) => { const v = STR[lang][k] ?? STR.en[k]; return typeof v === "function" ? v(...a) : v; };
 
   const PRESETS = {
     web:    { maxW: 1920, maxH: 1920, aspect: "none",  format: "image/webp", quality: 80, targetKB: "" },
@@ -194,7 +290,7 @@ footer a{color:inherit}
   };
 
   let files = [];
-  let outputs = [];      // { url, name, size } per file
+  let outputs = [];      // { url, name, size, ... } per file
   let runId = 0;
 
   // ---------- WebP encode support ----------
@@ -203,19 +299,39 @@ footer a{color:inherit}
     catch { return false; }
   })();
   if (!webpOK) {
-    const opt = el.format.querySelector('option[value="image/webp"]');
-    opt.disabled = true; opt.textContent += " (δεν υποστηρίζεται από αυτόν τον browser)";
+    el.format.querySelector('option[value="image/webp"]').disabled = true;
     PRESETS.web.format = "image/jpeg";
   }
+
+  // ---------- Apply language ----------
+  const langBtn = $("#langBtn");
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.title = t("title");
+    for (const n of document.querySelectorAll("[data-i18n]")) n.textContent = t(n.dataset.i18n);
+    for (const n of document.querySelectorAll("[data-i18n-ph]")) n.placeholder = t(n.dataset.i18nPh);
+    for (const n of document.querySelectorAll("[data-i18n-title]")) n.title = t(n.dataset.i18nTitle);
+    for (const n of document.querySelectorAll("[data-i18n-aria]")) n.setAttribute("aria-label", t(n.dataset.i18nAria));
+    if (!webpOK) el.format.querySelector('option[value="image/webp"]').textContent = t("fWebp") + t("webpUnsupported");
+    langBtn.textContent = t("switchTo");
+    langBtn.lang = lang === "en" ? "el" : "en";
+    updateNet(); updateToolbar();
+  }
+  langBtn.addEventListener("click", () => {
+    lang = lang === "en" ? "el" : "en";
+    try { localStorage.setItem("keeppix-lang", lang); } catch { /* storage blocked */ }
+    applyLang();
+    if (files.length) run();   // re-render result cards in the new language
+  });
 
   // ---------- Privacy indicators ----------
   const netDot = $("#netDot"), netText = $("#netText"), reqCount = $("#reqCount");
   function updateNet() {
     const on = navigator.onLine;
     netDot.classList.toggle("off", !on);
-    netText.textContent = on ? "Συνδεδεμένοι" : "Εκτός σύνδεσης — δουλεύει κανονικά";
+    netText.textContent = on ? t("online") : t("offline");
   }
-  addEventListener("online", updateNet); addEventListener("offline", updateNet); updateNet();
+  addEventListener("online", updateNet); addEventListener("offline", updateNet);
 
   let requests = 0;
   function isAppFile(name) {
@@ -262,8 +378,8 @@ footer a{color:inherit}
   el.drop.addEventListener("click", () => el.file.click());
   el.drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); el.file.click(); } });
   el.file.addEventListener("change", () => { addFiles(el.file.files); el.file.value = ""; });
-  ["dragenter", "dragover"].forEach((t) => el.drop.addEventListener(t, (e) => { e.preventDefault(); el.drop.classList.add("over"); }));
-  ["dragleave", "drop"].forEach((t) => el.drop.addEventListener(t, (e) => { e.preventDefault(); el.drop.classList.remove("over"); }));
+  ["dragenter", "dragover"].forEach((ev) => el.drop.addEventListener(ev, (e) => { e.preventDefault(); el.drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => el.drop.addEventListener(ev, (e) => { e.preventDefault(); el.drop.classList.remove("over"); }));
   el.drop.addEventListener("drop", (e) => addFiles(e.dataTransfer.files));
   addEventListener("paste", (e) => { const f = [...(e.clipboardData?.files || [])]; if (f.length) addFiles(f); });
 
@@ -308,7 +424,7 @@ footer a{color:inherit}
 
     for (let i = 0; i < files.length; i++) {
       if (id !== runId) return;
-      el.status.textContent = `Επεξεργασία ${i + 1} από ${files.length}…`;
+      el.status.textContent = t("processing", i + 1, files.length);
       try {
         const r = await processFile(files[i], opts);
         if (id !== runId) { URL.revokeObjectURL(r.url); return; }
@@ -316,7 +432,7 @@ footer a{color:inherit}
         fillCard(cards[i], files[i], r);
       } catch (err) {
         if (id !== runId) return;
-        cards[i].info.innerHTML = `<span class="err">${escapeHtml(err.message || "Σφάλμα επεξεργασίας")}</span>`;
+        cards[i].info.innerHTML = `<span class="err">${escapeHtml(err.message || t("errGeneric"))}</span>`;
       }
       updateToolbar();
     }
@@ -331,9 +447,7 @@ footer a{color:inherit}
     try {
       const img = new Image(); img.src = url; await img.decode(); return img;
     } catch {
-      throw new Error(/\.(heic|heif)$/i.test(file.name)
-        ? "Τα αρχεία HEIC (iPhone) δεν υποστηρίζονται από αυτόν τον browser. Δοκιμάστε Safari ή ρυθμίστε την κάμερα σε «Πιο συμβατό»."
-        : "Δεν ήταν δυνατό να διαβαστεί η εικόνα.");
+      throw new Error(/\.(heic|heif)$/i.test(file.name) ? t("errHeic") : t("errRead"));
     } finally { URL.revokeObjectURL(url); }
   }
 
@@ -367,7 +481,7 @@ footer a{color:inherit}
   }
 
   function encode(canvas, type, q) {
-    return new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error("Αποτυχία κωδικοποίησης"))), type, q));
+    return new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error(t("errEncode")))), type, q));
   }
 
   async function processFile(file, o) {
@@ -395,20 +509,20 @@ footer a{color:inherit}
         }
         if (best) { done = best; break; }
         tw = Math.max(1, Math.round(tw * 0.85)); th = Math.max(1, Math.round(th * 0.85));
-        if (attempt === 0) notes.push("Οι διαστάσεις μειώθηκαν για να χωρέσει στο όριο.");
+        if (attempt === 0) notes.push("noteShrunk");
       }
-      if (!done) throw new Error("Δεν ήταν δυνατό να φτάσει το όριο μεγέθους.");
+      if (!done) throw new Error(t("errLimit"));
       blob = done.blob; q = done.q;
     } else {
-      if (o.targetKB && o.format === "image/png") notes.push("Το όριο μεγέθους δεν ισχύει για PNG.");
+      if (o.targetKB && o.format === "image/png") notes.push("notePng");
       blob = await encode(render(src, rect, tw, th, opaque), o.format, q);
     }
     if (src.close) src.close();
 
-    let type = blob.type || o.format;
-    if (type !== o.format) notes.push("Ο browser δεν υποστηρίζει αυτή τη μορφή — αποθηκεύτηκε ως PNG.");
+    const type = blob.type || o.format;
+    if (type !== o.format) notes.push("noteFallback");
     const ext = EXT[type] || "png";
-    const base = file.name.replace(/\.[^.]+$/, "") || "eikona";
+    const base = file.name.replace(/\.[^.]+$/, "") || t("fallbackName");
     return {
       url: URL.createObjectURL(blob), name: `${base}-min.${ext}`, size: blob.size,
       w: tw, h: th, W, H, q: Math.round(q * 100), lossy: type !== "image/png", notes,
@@ -418,9 +532,10 @@ footer a{color:inherit}
   // ---------- UI ----------
   function makeCard(file) {
     const root = document.createElement("div"); root.className = "card";
-    root.innerHTML = `<div class="thumb"></div><div class="meta"><div class="name"></div><div class="info"><span class="status">Αναμονή…</span></div></div>`;
+    root.innerHTML = `<div class="thumb"></div><div class="meta"><div class="name"></div><div class="info"><span class="status"></span></div></div>`;
     root.querySelector(".name").textContent = file.name;
     root.querySelector(".name").title = file.name;
+    root.querySelector(".info .status").textContent = t("waiting");
     return { root, thumb: root.querySelector(".thumb"), info: root.querySelector(".info") };
   }
 
@@ -429,13 +544,14 @@ footer a{color:inherit}
     const pct = Math.round((1 - r.size / file.size) * 100);
     const saved = pct >= 0
       ? `<span class="save">−${pct}%</span>`
-      : `<span class="save worse">+${-pct}% (μεγαλύτερο από το αρχικό)</span>`;
+      : `<span class="save worse">+${-pct}% (${escapeHtml(t("larger"))})</span>`;
     card.info.innerHTML = `
       <div class="sizes">${fmt(file.size)} → <b>${fmt(r.size)}</b> ${saved}</div>
-      <div>${r.W}×${r.H} → ${r.w}×${r.h}px${r.lossy ? ` · ποιότητα ${r.q}%` : ""}</div>
-      ${r.notes.map((n) => `<div class="note">${escapeHtml(n)}</div>`).join("")}`;
+      <div>${r.W}×${r.H} → ${r.w}×${r.h}px${r.lossy ? ` · ${escapeHtml(t("q"))} ${r.q}%` : ""}</div>
+      ${r.notes.map((n) => `<div class="note">${escapeHtml(t(n))}</div>`).join("")}`;
     const a = document.createElement("a");
-    a.className = "btn"; a.href = r.url; a.download = r.name; a.textContent = "Λήψη " + r.name.split(".").pop().toUpperCase();
+    a.className = "btn"; a.href = r.url; a.download = r.name;
+    a.textContent = `${t("download")} ${r.name.split(".").pop().toUpperCase()}`;
     card.info.appendChild(a);
   }
 
@@ -443,18 +559,17 @@ footer a{color:inherit}
     const ready = outputs.filter(Boolean);
     el.dlAll.disabled = ready.length < 1;
     el.clearBtn.disabled = files.length === 0;
-    if (!files.length) { el.summary.textContent = "Δεν έχουν επιλεγεί εικόνες."; return; }
+    if (!files.length) { el.summary.textContent = t("none"); return; }
     const before = files.reduce((s, f, i) => s + (outputs[i] ? f.size : 0), 0);
     const after = ready.reduce((s, o) => s + o.size, 0);
-    el.summary.textContent = ready.length
-      ? `${ready.length}/${files.length} έτοιμες · ${fmt(before)} → ${fmt(after)}`
-      : `${files.length} εικόνες`;
+    el.summary.textContent = ready.length ? t("ready", ready.length, files.length, fmt(before), fmt(after)) : t("count", files.length);
   }
 
   function fmt(b) {
     if (b < 1024) return b + " B";
     if (b < 1024 * 1024) return (b / 1024).toFixed(0) + " KB";
-    return (b / 1024 / 1024).toFixed(2).replace(".", ",") + " MB";
+    const mb = (b / 1024 / 1024).toFixed(2);
+    return (lang === "el" ? mb.replace(".", ",") : mb) + " MB";
   }
   function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
@@ -478,6 +593,7 @@ footer a{color:inherit}
   });
   addEventListener("appinstalled", () => { installBtn.hidden = true; });
 
+  applyLang();
   applyPreset("web");
 })();
 </script>

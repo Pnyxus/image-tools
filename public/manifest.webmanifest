@@ -1,16 +1,31 @@
 {
-  "name": "Εικόνες χωρίς ανέβασμα",
-  "short_name": "Εικόνες",
-  "description": "Αλλαγή μεγέθους, συμπίεση, περικοπή και μετατροπή εικόνων τοπικά στη συσκευή σας.",
-  "lang": "el",
+  "name": "KeepPix",
+  "short_name": "KeepPix",
+  "description": "Resize, compress, crop and convert images on your device. Nothing is uploaded.",
+  "lang": "en",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f6f7f5",
   "theme_color": "#0f766e",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
