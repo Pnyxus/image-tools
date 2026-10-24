@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "image-tools",
+  "compatibility_date": "2026-10-13",
+  // Static site only: no Worker code, Cloudflare serves the files in ./public
+  "assets": {
+    "directory": "./public"
+  }
+}

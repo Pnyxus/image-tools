@@ -1,0 +1,55 @@
+# Εικόνες χωρίς ανέβασμα
+
+Privacy-first image tools: resize, compress, crop and convert images entirely in the browser.
+Files never leave the user's device.
+
+## Features (v1)
+
+- Resize (never upscales), center crop to common ratios (1:1, 4:5, 16:9, 3:2, 3.5×4.5 ID photo)
+- Convert to JPEG, WebP or PNG with a quality slider
+- "Max file size" mode: lowers quality, then dimensions, until the file fits (JPEG/WebP)
+- Presets: web, social, application photo, document ≤ 2 MB, email ≤ 500 KB
+- Batch processing, drag & drop, paste from clipboard
+- Strips EXIF metadata (including GPS location) on re-encode
+- Privacy proof built in: online/offline indicator, live network-request counter, strict CSP (`connect-src 'none'`)
+- No cookies, no analytics, no external scripts or fonts
+
+## Project layout
+
+```
+public/
+  index.html   # the whole app (HTML + CSS + JS, no dependencies)
+  _headers     # security headers served by Cloudflare
+wrangler.jsonc # Cloudflare Workers static-assets config
+```
+
+## Run locally
+
+Just open `public/index.html` in a browser. Or:
+
+```bash
+npx wrangler dev
+```
+
+## Deploy to Cloudflare (via GitHub)
+
+1. Create a new GitHub repo (e.g. `image-tools`) and push this folder:
+   ```bash
+   git init && git add . && git commit -m "v1"
+   git branch -M main
+   git remote add origin git@github.com:<you>/image-tools.git
+   git push -u origin main
+   ```
+2. Cloudflare dashboard → **Workers & Pages → Create → Import a repository** → pick the repo.
+   Leave the build command empty; the deploy command is `npx wrangler deploy`.
+3. Every push to `main` redeploys automatically. Add a custom domain under the Worker's **Domains** tab.
+
+Or deploy straight from your machine: `npx wrangler login` then `npx wrangler deploy`.
+
+## Roadmap
+
+- PWA (manifest + service worker) so it installs and works fully offline
+- Better codecs via WebAssembly (MozJPEG, AVIF)
+- Local PDF tools: compress, merge, images → PDF
+- Manual crop box
+- English version
