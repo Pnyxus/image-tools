@@ -1,0 +1,801 @@
+<!doctype html>
+<!-- Generated from public/index.html by tools/build-el.mjs. Do not edit by hand. -->
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
+<title>KeepPix — Συμπίεση εικόνων &amp; PDF χωρίς ανέβασμα αρχείων</title>
+<meta name="description" content="Δωρεάν συμπίεση και σμίκρυνση εικόνων και PDF μέσα στον browser, π.χ. για αιτήσεις στο gov.gr. Τα αρχεία δεν ανεβαίνουν πουθενά. Χωρίς λογαριασμό.">
+<link rel="canonical" href="https://keeppix.app/el/">
+<link rel="alternate" hreflang="en" href="https://keeppix.app/">
+<link rel="alternate" hreflang="el" href="https://keeppix.app/el/">
+<link rel="alternate" hreflang="x-default" href="https://keeppix.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KeepPix">
+<meta property="og:locale" content="el_GR">
+<meta property="og:url" content="https://keeppix.app/el/">
+<meta property="og:title" content="KeepPix — Συμπίεση εικόνων &amp; PDF χωρίς ανέβασμα αρχείων">
+<meta property="og:description" content="Συμπίεση και μετατροπή εικόνων και PDF μέσα στον browser. Τίποτα δεν ανεβαίνει, δουλεύει χωρίς internet, χωρίς λογαριασμό.">
+<meta property="og:image" content="https://keeppix.app/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"KeepPix","inLanguage":"el","url":"https://keeppix.app/el/",
+"description":"Συμπίεση και μετατροπή εικόνων και PDF μέσα στον browser. Τίποτα δεν ανεβαίνει, δουλεύει χωρίς internet, χωρίς λογαριασμό.",
+"applicationCategory":"MultimediaApplication","operatingSystem":"Any","browserRequirements":"Requires a modern web browser",
+"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},
+"image":"https://keeppix.app/og.jpg","publisher":{"@type":"Organization","name":"Pnyxus","url":"https://pnyxus.gr"}}
+</script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0f766e">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f766e'/%3E%3Cpath d='M256 88L398 140V252C398 338 338 398 256 428C174 398 114 338 114 252V140Z' fill='%23fff'/%3E%3Crect x='170' y='168' width='172' height='146' rx='24' fill='%230f766e'/%3E%3Cpath d='M188 296L238 236L270 272L294 248L326 296Z' fill='%23fff'/%3E%3Ccircle cx='300' cy='206' r='15' fill='%232dd4bf'/%3E%3C/svg%3E%0A">
+<script>try{var t=localStorage.getItem("keeppix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+:root{
+  --bg:#f6f7f5; --panel:#ffffff; --ink:#1c2321; --muted:#5f6b67; --line:#dfe4e1;
+  --accent:#0f766e; --accent-ink:#ffffff; --accent-soft:#e3f2ef; --warn:#b45309; --bad:#b91c1c; --good:#15803d;
+  --radius:14px;
+}
+:root{color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111615; --panel:#1a2120; --ink:#e7ecea; --muted:#9aa6a2; --line:#2c3633;
+    --accent:#2dd4bf; --accent-ink:#06201d; --accent-soft:#16312d; --warn:#f59e0b; --bad:#f87171; --good:#4ade80;
+  }
+}
+:root[data-theme="dark"]{color-scheme:dark;
+    --bg:#111615; --panel:#1a2120; --ink:#e7ecea; --muted:#9aa6a2; --line:#2c3633;
+    --accent:#2dd4bf; --accent-ink:#06201d; --accent-soft:#16312d; --warn:#f59e0b; --bad:#f87171; --good:#4ade80;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:9px;flex:none}
+h1{margin:0;font-size:1rem;font-weight:400}
+h1 .name{display:block;font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.sub{display:block;color:var(--muted);margin:2px 0 0}
+.privacy{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;border:1px solid var(--line)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.dot.off{background:var(--warn)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.panel h2{font-size:.95rem;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink);padding:7px 11px;border-radius:999px;cursor:pointer;font:inherit;font-size:.86rem}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+label{display:block;font-size:.86rem;color:var(--muted);margin:10px 0 4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=number],select{width:100%;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.hint{font-size:.8rem;color:var(--muted);margin:4px 0 0}
+.drop{border:2px dashed var(--line);border-radius:var(--radius);padding:34px 16px;text-align:center;background:var(--panel);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop strong{display:block;font-size:1.1rem;margin-bottom:4px}
+.drop span{color:var(--muted);font-size:.9rem}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:14px 0 10px}
+.btn{border:0;border-radius:10px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.summary{color:var(--muted);font-size:.9rem}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.thumb{aspect-ratio:4/3;background:repeating-conic-gradient(var(--line) 0 25%,transparent 0 50%) 0 0/16px 16px;display:flex;align-items:center;justify-content:center}
+.thumb img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.meta{padding:10px 12px 12px;display:flex;flex-direction:column;gap:3px;font-size:.85rem}
+.name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sizes b{font-size:.95rem}
+.save{color:var(--good);font-weight:600}
+.save.worse{color:var(--warn)}
+.err{color:var(--bad)}
+.note{color:var(--warn)}
+.card .btn{margin-top:8px;text-align:center;text-decoration:none;display:block}
+.status{font-size:.85rem;color:var(--muted)}
+footer{margin-top:28px;color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
+footer a{color:inherit}
+.how{margin-top:18px}
+.faq h3{font-size:1rem;margin:14px 0 4px}
+.faq p{margin:0;color:var(--muted);font-size:.9rem}
+.how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
+[hidden]{display:none!important}
+.privacy .btn{padding:6px 12px;font-size:.85rem}
+#themeBtn{min-width:38px;display:inline-flex;align-items:center;justify-content:center}
+.tabs{display:flex;gap:4px;margin:0 0 16px;border-bottom:1px solid var(--line)}
+.tab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px 14px;margin-top:14px}
+.check{display:flex;gap:8px;align-items:center;color:var(--ink);margin-top:12px}
+.check input{accent-color:var(--accent);width:18px;height:18px}
+.flist{list-style:none;margin:14px 0 0;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+.flist li{display:flex;align-items:center;gap:10px;padding:8px 12px;border-top:1px solid var(--line);font-size:.9rem}
+.flist li:first-child{border-top:0}
+.flist li.empty{color:var(--muted);justify-content:center;padding:14px}
+.flist .num{color:var(--muted);width:1.6em;text-align:right;flex:none}
+.flist .fname{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flist .fsize{color:var(--muted);flex:none}
+.flist .acts{display:flex;gap:4px;flex:none}
+.ib{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;width:30px;height:30px;cursor:pointer;font:inherit}
+.ib:disabled{opacity:.35;cursor:default}
+.gobar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0 10px}
+.status.err{color:var(--bad)}
+.pdfcard .meta{padding:14px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img class="logo" src="/icons/icon-192.png" alt="" width="36" height="36">
+      <div>
+        <h1><span class="name">KeepPix</span> <span class="sub" data-i18n="tagline">Συμπίεση και μετατροπή εικόνων και PDF — όλα μέσα στη συσκευή σας.</span></h1>
+      </div>
+    </div>
+    <div class="privacy" aria-live="polite">
+      <span class="pill" data-i18n="pillLocal" data-i18n-title="pillLocalTitle" title="Η επεξεργασία γίνεται τοπικά στον browser σας">🔒 Τα αρχεία δεν φεύγουν από τη συσκευή</span>
+      <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Online</span></span>
+      <span class="pill" data-i18n-title="reqTitle" title="Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση"><span id="reqCount">0</span><span data-i18n="reqLabel">αιτήματα δικτύου</span></span>
+      <span class="pill" id="offlineReady" hidden data-i18n-title="offlineTitle" title="Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet"><span data-i18n="offlineReady">✓ Διαθέσιμη εκτός σύνδεσης</span></span>
+      <button class="btn" id="installBtn" hidden data-i18n="install">Εγκατάσταση εφαρμογής</button>
+      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic"></button>
+      <button class="btn ghost" id="langBtn" type="button" lang="en">English</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="images" aria-selected="true" data-i18n="tabImages">Εικόνες</button>
+    <button class="tab" role="tab" data-tab="pdf" aria-selected="false" data-i18n="tabPdf">PDF</button>
+  </nav>
+
+  <section id="tab-images" role="tabpanel">
+  <div class="grid">
+    <aside class="panel">
+      <h2 data-i18n="presetsTitle">Έτοιμες ρυθμίσεις</h2>
+      <div class="presets" id="presets">
+        <button class="chip" data-preset="web" data-i18n="pWeb">Για ιστοσελίδα</button>
+        <button class="chip" data-preset="social" data-i18n="pSocial">Social media (τετράγωνο)</button>
+        <button class="chip" data-preset="photo" data-i18n="pPhoto">Φωτογραφία αίτησης 3,5×4,5</button>
+        <button class="chip" data-preset="doc2mb" data-i18n="pDoc">Έγγραφο έως 2 MB</button>
+        <button class="chip" data-preset="email" data-i18n="pEmail">Για email (έως 500 KB)</button>
+        <button class="chip" data-preset="custom" data-i18n="pCustom">Δικές μου ρυθμίσεις</button>
+      </div>
+
+      <h2 data-i18n="settingsTitle">Ρυθμίσεις</h2>
+      <div class="row">
+        <div><label for="maxW" id="maxWLabel">Max width (px)</label><input id="maxW" type="number" min="1" placeholder="αυτόματο" data-i18n-ph="auto"></div>
+        <div><label for="maxH" id="maxHLabel">Max height (px)</label><input id="maxH" type="number" min="1" placeholder="αυτόματο" data-i18n-ph="auto"></div>
+      </div>
+      <label class="check" id="keepWrap" hidden><input type="checkbox" id="keepAspect" checked> <span data-i18n="keepAspect">Διατήρηση αναλογιών</span></label>
+      <p class="hint" id="sizeHint">Images are only made smaller, never larger.</p>
+
+      <label for="aspect" data-i18n="crop">Περικοπή (στο κέντρο)</label>
+      <select id="aspect">
+        <option value="none" data-i18n="cropNone">Χωρίς περικοπή</option>
+        <option value="1:1" data-i18n="crop11">1:1 τετράγωνο</option>
+        <option value="4:5" data-i18n="crop45">4:5 κάθετο (Instagram)</option>
+        <option value="16:9" data-i18n="crop169">16:9 οριζόντιο</option>
+        <option value="3:2" data-i18n="crop32">3:2 φωτογραφία</option>
+        <option value="35:45" data-i18n="crop3545">3,5×4,5 φωτογραφία ταυτότητας</option>
+      </select>
+
+      <label for="format" data-i18n="format">Μορφή αρχείου</label>
+      <select id="format">
+        <option value="image/jpeg" data-i18n="fJpeg">JPEG — συμβατό παντού</option>
+        <option value="image/webp" data-i18n="fWebp">WebP — μικρότερα αρχεία</option>
+        <option value="image/png" data-i18n="fPng">PNG — χωρίς απώλειες</option>
+      </select>
+
+      <label for="quality"><span data-i18n="quality">Ποιότητα</span>: <span id="qVal">80</span>%</label>
+      <input id="quality" type="range" min="30" max="100" value="80">
+
+      <label for="targetKB" data-i18n="maxSize">Μέγιστο μέγεθος αρχείου (KB)</label>
+      <input id="targetKB" type="number" min="10" placeholder="χωρίς όριο" data-i18n-ph="noLimit">
+      <p class="hint" data-i18n="maxSizeHint">Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.</p>
+    </aside>
+
+    <main>
+      <div class="drop" id="drop" tabindex="0" role="button" data-i18n-aria="chooseImages" aria-label="Επιλογή εικόνων">
+        <strong data-i18n="dropTitle">Σύρετε εικόνες εδώ ή πατήστε για επιλογή</strong>
+        <span data-i18n="dropSub">JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί</span>
+        <input id="file" class="sr" type="file" accept="image/*" multiple>
+      </div>
+
+      <div class="toolbar">
+        <div class="summary" id="summary">No images selected.</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn ghost" id="clearBtn" disabled data-i18n="clear">Καθαρισμός</button>
+          <button class="btn" id="dlAll" disabled data-i18n="dlAll">Λήψη όλων</button>
+        </div>
+      </div>
+      <div class="status" id="status" aria-live="polite"></div>
+      <div class="results" id="results"></div>
+
+
+    </main>
+  </div>
+
+  </section>
+
+  <section id="tab-pdf" role="tabpanel" hidden>
+    <div class="seg" id="pdfTools">
+      <button class="chip" data-tool="img2pdf" aria-pressed="true" data-pi18n="toolImg">Images → PDF</button>
+      <button class="chip" data-tool="merge" aria-pressed="false" data-pi18n="toolMerge">Merge PDFs</button>
+      <button class="chip" data-tool="compress" aria-pressed="false" data-pi18n="toolCompress">Compress PDF</button>
+    </div>
+
+    <div class="drop" id="pdfDrop" tabindex="0" role="button" aria-label="Choose files">
+      <strong id="pdfDropTitle">Drop images here or click to choose</strong>
+      <span id="pdfDropSub"></span>
+      <input id="pdfFile" class="sr" type="file" multiple>
+    </div>
+
+    <ul class="flist" id="pdfList"></ul>
+
+    <div class="panel" style="margin-top:14px">
+      <div class="opts" data-opts="img2pdf">
+        <div><label for="pdfPage" data-pi18n="pageSize">Page size</label>
+          <select id="pdfPage"><option value="a4" data-pi18n="a4">A4</option><option value="letter" data-pi18n="letter">Letter</option><option value="fit" data-pi18n="fit">Fit to image</option></select></div>
+        <div><label for="pdfMargin" data-pi18n="margin">Margins</label>
+          <select id="pdfMargin"><option value="0" data-pi18n="mNone">None</option><option value="20" selected data-pi18n="mSmall">Small</option><option value="40" data-pi18n="mNormal">Normal</option></select></div>
+        <div><label for="pdfImgQ" data-pi18n="imgQ">Image quality</label>
+          <select id="pdfImgQ"><option value="std" data-pi18n="qStd">Standard</option><option value="high" data-pi18n="qHigh">High</option></select></div>
+      </div>
+      <div class="opts" data-opts="merge" hidden></div>
+      <div data-opts="compress" hidden>
+        <div class="opts" style="margin-top:0">
+          <div><label for="pdfLevel" data-pi18n="level">Compression</label>
+            <select id="pdfLevel"><option value="light" data-pi18n="lLight">Light</option><option value="balanced" selected data-pi18n="lBalanced">Balanced</option><option value="strong" data-pi18n="lStrong">Strong</option></select></div>
+          <div><label for="pdfMax" data-pi18n="maxMB">Max file size (MB)</label>
+            <input id="pdfMax" type="number" min="0.1" step="0.1" placeholder="no limit" data-pi18n-ph="noLimit"></div>
+        </div>
+        <label class="check"><input type="checkbox" id="pdfGray"> <span data-pi18n="gray">Black &amp; white</span></label>
+        <p class="hint" data-pi18n="compressNote"></p>
+      </div>
+      <div class="gobar">
+        <button class="btn" id="pdfGo" disabled>Create PDF</button>
+        <span class="status" id="pdfStatus" aria-live="polite"></span>
+      </div>
+    </div>
+
+    <div class="results" id="pdfResults" style="margin-top:12px"></div>
+  </section>
+
+  <section class="panel how">
+        <h2 data-i18n="howTitle">Πώς ξέρω ότι δεν ανεβαίνουν;</h2>
+        <ul>
+          <li data-i18n="how1">Αποσυνδεθείτε από το internet αφού ανοίξει η σελίδα — συνεχίζει να δουλεύει κανονικά.</li>
+          <li data-i18n="how2">Εγκαταστήστε την ως εφαρμογή: ανοίγει και δουλεύει ακόμα και χωρίς καμία σύνδεση.</li>
+          <li data-i18n="how3">Ο μετρητής «αιτήματα δικτύου» πάνω δείχνει ότι η σελίδα δεν στέλνει τίποτα.</li>
+          <li data-i18n="how4">Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.</li>
+          <li data-i18n="how5">Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.</li>
+        </ul>
+      </section>
+
+  <section class="panel how faq">
+    <h2 data-i18n="faqTitle">Τι μπορώ να κάνω με το KeepPix;</h2>
+    <h3 data-i18n="q1">Πώς συμπιέζω μια φωτογραφία ή μικραίνω το μέγεθος του αρχείου;</h3>
+    <p data-i18n="a1">Προσθέστε την εικόνα, ορίστε «Μέγιστο μέγεθος αρχείου (KB)» ή διαλέξτε μια έτοιμη ρύθμιση όπως «Για email (έως 500 KB)» και κατεβάστε τη. Στα JPEG και WebP το KeepPix μειώνει την ποιότητα, και αν χρειαστεί τις διαστάσεις, μέχρι να χωρέσει το αρχείο.</p>
+    <h3 data-i18n="q2">Πώς αλλάζω το μέγεθος μιας εικόνας;</h3>
+    <p data-i18n="a2">Γράψτε μέγιστο πλάτος ή ύψος σε pixel. Η εικόνα κρατά τις αναλογίες της και δεν μεγαλώνει ποτέ. Μπορείτε επίσης να την περικόψετε σε 1:1, 4:5, 16:9 ή 3:2.</p>
+    <h3 data-i18n="q3">Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);</h3>
+    <p data-i18n="a3">Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.</p>
+    <h3 data-i18n="q4">Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;</h3>
+    <p data-i18n="a4">Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF ή να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο.</p>
+    <h3 data-i18n="q5">Είναι δωρεάν και δουλεύει στο κινητό;</h3>
+    <p data-i18n="a5">Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.</p>
+  </section>
+
+  <footer>
+    <span data-i18n="footer">Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό</span>
+    <span><span data-i18n="madeBy">Κατασκευή:</span> <a href="https://pnyxus.gr" target="_blank" rel="noopener">pnyxus.gr</a></span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+
+  // ---------- Translations ----------
+  const STR = {
+    en: {
+      title: "KeepPix — Image & PDF tools that never upload your files",
+      tagline: "Resize, compress and convert images and PDFs — all on your device.",
+      pillLocal: "🔒 Your files never leave your device",
+      pillLocalTitle: "Processing happens locally in your browser",
+      online: "Online", offline: "Offline — still working",
+      reqLabel: "network requests", reqTitle: "Network requests the page made since it loaded",
+      offlineReady: "✓ Available offline", offlineTitle: "The app is saved on this device and opens without internet",
+      install: "Install app", switchTo: "Ελληνικά", tabImages: "Images", tabPdf: "PDF",
+      presetsTitle: "Presets", pWeb: "For websites", pSocial: "Social media (square)", pPhoto: "ID / passport photo 35×45",
+      pDoc: "Document under 2 MB", pEmail: "Email (under 500 KB)", pCustom: "Custom",
+      settingsTitle: "Settings", maxW: "Max width (px)", maxH: "Max height (px)", auto: "auto",
+      noUpscale: "Images are only made smaller, never larger.",
+      keepAspect: "Keep aspect ratio", wExact: "Width (px)", hExact: "Height (px)",
+      exactHint: "The image is resized to exactly this size and may look stretched. Leave a field empty to keep that side unchanged.",
+      crop: "Crop (centered)", cropNone: "No crop", crop11: "1:1 square", crop45: "4:5 portrait (Instagram)",
+      crop169: "16:9 landscape", crop32: "3:2 photo", crop3545: "35×45 ID / passport photo",
+      format: "File format", fJpeg: "JPEG — works everywhere", fWebp: "WebP — smaller files", fPng: "PNG — lossless",
+      webpUnsupported: " (not supported by this browser)",
+      quality: "Quality", maxSize: "Max file size (KB)", noLimit: "no limit",
+      maxSizeHint: "If set, quality (and if needed, dimensions) is lowered until the file fits. Not available for PNG.",
+      chooseImages: "Choose images", dropTitle: "Drop images here or click to choose",
+      dropSub: "JPEG, PNG, WebP, GIF, AVIF — many files at once",
+      none: "No images selected.", clear: "Clear", dlAll: "Download all",
+      ready: (r, n, a, b) => `${r}/${n} ready · ${a} → ${b}`, count: (n) => `${n} images`,
+      processing: (i, n) => `Processing ${i} of ${n}…`, waiting: "Waiting…",
+      errGeneric: "Processing failed", errRead: "This image couldn't be read.",
+      errHeic: "HEIC photos (iPhone) aren't supported by this browser. Try Safari, or set the camera to “Most Compatible”.",
+      errEncode: "Encoding failed", errLimit: "Couldn't reach the size limit.",
+      noteShrunk: "Dimensions were reduced to fit the size limit.", notePng: "The size limit doesn't apply to PNG.",
+      noteFallback: "This browser can't save that format — saved as PNG.",
+      larger: "larger than the original", q: "quality", download: "Download", fallbackName: "image",
+      howTitle: "How do I know nothing is uploaded?",
+      how1: "Disconnect from the internet after the page opens — it keeps working normally.",
+      how2: "Install it as an app: it opens and works even with no connection at all.",
+      how3: "The “network requests” counter at the top shows the page sends nothing.",
+      how4: "The page’s security policy (CSP) forbids the browser from connecting to any server.",
+      how5: "Re-encoding strips EXIF metadata, including your photo’s GPS location.",
+      faqTitle: "What can I do with KeepPix?",
+      q1: "How do I compress a photo or reduce its file size?",
+      a1: "Add the image, set “Max file size (KB)” or pick a preset like “Email (under 500 KB)”, then download it. For JPEG and WebP, KeepPix lowers the quality, and if needed the dimensions, until the file fits.",
+      q2: "How do I resize an image?",
+      a2: "Enter a max width or height in pixels. The image keeps its proportions and is never made larger. You can also crop it to 1:1, 4:5, 16:9 or 3:2.",
+      q3: "Can I make a passport or ID photo (35×45)?",
+      a3: "Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.",
+      q4: "How do I compress a PDF or turn photos into a PDF?",
+      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, or compress a PDF to a target size, in color or black and white.",
+      q5: "Is it free, and does it work on my phone?",
+      a5: "Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.",
+      footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
+      themeAuto: "Theme: automatic (follows your device)", themeLight: "Theme: light", themeDark: "Theme: dark",
+    },
+    el: {
+      title: "KeepPix — Συμπίεση εικόνων & PDF χωρίς ανέβασμα αρχείων",
+      tagline: "Συμπίεση και μετατροπή εικόνων και PDF — όλα μέσα στη συσκευή σας.",
+      pillLocal: "🔒 Τα αρχεία δεν φεύγουν από τη συσκευή",
+      pillLocalTitle: "Η επεξεργασία γίνεται τοπικά στον browser σας",
+      online: "Συνδεδεμένοι", offline: "Εκτός σύνδεσης — δουλεύει κανονικά",
+      reqLabel: "αιτήματα δικτύου", reqTitle: "Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση",
+      offlineReady: "✓ Διαθέσιμη εκτός σύνδεσης", offlineTitle: "Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet",
+      install: "Εγκατάσταση εφαρμογής", switchTo: "English", tabImages: "Εικόνες", tabPdf: "PDF",
+      presetsTitle: "Έτοιμες ρυθμίσεις", pWeb: "Για ιστοσελίδα", pSocial: "Social media (τετράγωνο)", pPhoto: "Φωτογραφία αίτησης 3,5×4,5",
+      pDoc: "Έγγραφο έως 2 MB", pEmail: "Για email (έως 500 KB)", pCustom: "Δικές μου ρυθμίσεις",
+      settingsTitle: "Ρυθμίσεις", maxW: "Μέγ. πλάτος (px)", maxH: "Μέγ. ύψος (px)", auto: "αυτόματο",
+      noUpscale: "Οι εικόνες μικραίνουν, ποτέ δεν μεγαλώνουν.",
+      keepAspect: "Διατήρηση αναλογιών", wExact: "Πλάτος (px)", hExact: "Ύψος (px)",
+      exactHint: "Η εικόνα παίρνει ακριβώς αυτές τις διαστάσεις και μπορεί να παραμορφωθεί. Αφήστε ένα πεδίο κενό για να μείνει ίδια εκείνη η πλευρά.",
+      crop: "Περικοπή (στο κέντρο)", cropNone: "Χωρίς περικοπή", crop11: "1:1 τετράγωνο", crop45: "4:5 κάθετο (Instagram)",
+      crop169: "16:9 οριζόντιο", crop32: "3:2 φωτογραφία", crop3545: "3,5×4,5 φωτογραφία ταυτότητας",
+      format: "Μορφή αρχείου", fJpeg: "JPEG — συμβατό παντού", fWebp: "WebP — μικρότερα αρχεία", fPng: "PNG — χωρίς απώλειες",
+      webpUnsupported: " (δεν υποστηρίζεται από αυτόν τον browser)",
+      quality: "Ποιότητα", maxSize: "Μέγιστο μέγεθος αρχείου (KB)", noLimit: "χωρίς όριο",
+      maxSizeHint: "Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.",
+      chooseImages: "Επιλογή εικόνων", dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή",
+      dropSub: "JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί",
+      none: "Δεν έχουν επιλεγεί εικόνες.", clear: "Καθαρισμός", dlAll: "Λήψη όλων",
+      ready: (r, n, a, b) => `${r}/${n} έτοιμες · ${a} → ${b}`, count: (n) => `${n} εικόνες`,
+      processing: (i, n) => `Επεξεργασία ${i} από ${n}…`, waiting: "Αναμονή…",
+      errGeneric: "Σφάλμα επεξεργασίας", errRead: "Δεν ήταν δυνατό να διαβαστεί η εικόνα.",
+      errHeic: "Τα αρχεία HEIC (iPhone) δεν υποστηρίζονται από αυτόν τον browser. Δοκιμάστε Safari ή ρυθμίστε την κάμερα σε «Πιο συμβατό».",
+      errEncode: "Αποτυχία κωδικοποίησης", errLimit: "Δεν ήταν δυνατό να φτάσει το όριο μεγέθους.",
+      noteShrunk: "Οι διαστάσεις μειώθηκαν για να χωρέσει στο όριο.", notePng: "Το όριο μεγέθους δεν ισχύει για PNG.",
+      noteFallback: "Ο browser δεν υποστηρίζει αυτή τη μορφή — αποθηκεύτηκε ως PNG.",
+      larger: "μεγαλύτερο από το αρχικό", q: "ποιότητα", download: "Λήψη", fallbackName: "eikona",
+      howTitle: "Πώς ξέρω ότι δεν ανεβαίνουν;",
+      how1: "Αποσυνδεθείτε από το internet αφού ανοίξει η σελίδα — συνεχίζει να δουλεύει κανονικά.",
+      how2: "Εγκαταστήστε την ως εφαρμογή: ανοίγει και δουλεύει ακόμα και χωρίς καμία σύνδεση.",
+      how3: "Ο μετρητής «αιτήματα δικτύου» πάνω δείχνει ότι η σελίδα δεν στέλνει τίποτα.",
+      how4: "Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.",
+      how5: "Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.",
+      faqTitle: "Τι μπορώ να κάνω με το KeepPix;",
+      q1: "Πώς συμπιέζω μια φωτογραφία ή μικραίνω το μέγεθος του αρχείου;",
+      a1: "Προσθέστε την εικόνα, ορίστε «Μέγιστο μέγεθος αρχείου (KB)» ή διαλέξτε μια έτοιμη ρύθμιση όπως «Για email (έως 500 KB)» και κατεβάστε τη. Στα JPEG και WebP το KeepPix μειώνει την ποιότητα, και αν χρειαστεί τις διαστάσεις, μέχρι να χωρέσει το αρχείο.",
+      q2: "Πώς αλλάζω το μέγεθος μιας εικόνας;",
+      a2: "Γράψτε μέγιστο πλάτος ή ύψος σε pixel. Η εικόνα κρατά τις αναλογίες της και δεν μεγαλώνει ποτέ. Μπορείτε επίσης να την περικόψετε σε 1:1, 4:5, 16:9 ή 3:2.",
+      q3: "Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);",
+      a3: "Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.",
+      q4: "Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;",
+      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF ή να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο.",
+      q5: "Είναι δωρεάν και δουλεύει στο κινητό;",
+      a5: "Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.",
+      footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:",
+      themeAuto: "Θέμα: αυτόματο (όπως η συσκευή)", themeLight: "Θέμα: φωτεινό", themeDark: "Θέμα: σκοτεινό",
+    },
+  };
+
+  function detectLang() {
+    const q = new URLSearchParams(location.search).get("lang");
+    if (q === "en" || q === "el") return q;
+    if (location.pathname.startsWith("/el/")) return "el";   // the Greek page (keeppix.app/el/) is always Greek
+    try { const s = localStorage.getItem("keeppix-lang"); if (s === "en" || s === "el") return s; } catch { /* storage blocked */ }
+    const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
+    return langs.some((l) => /^el\b/i.test(l)) ? "el" : "en";
+  }
+  let lang = detectLang();
+  const t = (k, ...a) => { const v = STR[lang][k] ?? STR.en[k]; return typeof v === "function" ? v(...a) : v; };
+
+  const PRESETS = {
+    web:    { maxW: 1920, maxH: 1920, aspect: "none",  format: "image/webp", quality: 80, targetKB: "" },
+    social: { maxW: 1080, maxH: 1080, aspect: "1:1",   format: "image/jpeg", quality: 85, targetKB: "" },
+    photo:  { maxW: 413,  maxH: 531,  aspect: "35:45", format: "image/jpeg", quality: 92, targetKB: "" },
+    doc2mb: { maxW: 2480, maxH: 3508, aspect: "none",  format: "image/jpeg", quality: 85, targetKB: 2000 },
+    email:  { maxW: 1280, maxH: 1280, aspect: "none",  format: "image/jpeg", quality: 80, targetKB: 500 },
+  };
+  const EXT = { "image/jpeg": "jpg", "image/webp": "webp", "image/png": "png" };
+
+  const el = {
+    maxW: $("#maxW"), maxH: $("#maxH"), aspect: $("#aspect"), format: $("#format"),
+    quality: $("#quality"), qVal: $("#qVal"), targetKB: $("#targetKB"),
+    drop: $("#drop"), file: $("#file"), results: $("#results"), summary: $("#summary"),
+    status: $("#status"), dlAll: $("#dlAll"), clearBtn: $("#clearBtn"), presets: $("#presets"), keepWrap: $("#keepWrap"), keepAspect: $("#keepAspect"),
+    maxWLabel: $("#maxWLabel"), maxHLabel: $("#maxHLabel"), sizeHint: $("#sizeHint"),
+  };
+
+  let files = [];
+  let outputs = [];      // { url, name, size, ... } per file
+  let runId = 0;
+
+  // ---------- WebP encode support ----------
+  const webpOK = (() => {
+    try { const c = document.createElement("canvas"); c.width = c.height = 1; return c.toDataURL("image/webp").startsWith("data:image/webp"); }
+    catch { return false; }
+  })();
+  if (!webpOK) {
+    el.format.querySelector('option[value="image/webp"]').disabled = true;
+    PRESETS.web.format = "image/jpeg";
+  }
+
+  // ---------- Apply language ----------
+  // ---------- Theme ----------
+  const themeBtn = $("#themeBtn");
+  const THEMES = ["auto", "light", "dark"];
+  const SVG = (b) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${b}</svg>`;
+  const THEME_ICON = {
+    auto: SVG('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>'),
+    light: SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+    dark: SVG('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
+  };
+  let theme = document.documentElement.dataset.theme || "auto";
+  function applyTheme() {
+    if (theme === "auto") delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = theme;
+    const label = t(theme === "auto" ? "themeAuto" : theme === "light" ? "themeLight" : "themeDark");
+    themeBtn.innerHTML = THEME_ICON[theme]; themeBtn.title = label; themeBtn.setAttribute("aria-label", label);
+  }
+  themeBtn.addEventListener("click", () => {
+    theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    try { if (theme === "auto") localStorage.removeItem("keeppix-theme"); else localStorage.setItem("keeppix-theme", theme); } catch { /* storage blocked */ }
+    applyTheme();
+  });
+
+  const langBtn = $("#langBtn");
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.title = t("title");
+    for (const n of document.querySelectorAll("[data-i18n]")) n.textContent = t(n.dataset.i18n);
+    for (const n of document.querySelectorAll("[data-i18n-ph]")) n.placeholder = t(n.dataset.i18nPh);
+    for (const n of document.querySelectorAll("[data-i18n-title]")) n.title = t(n.dataset.i18nTitle);
+    for (const n of document.querySelectorAll("[data-i18n-aria]")) n.setAttribute("aria-label", t(n.dataset.i18nAria));
+    if (!webpOK) el.format.querySelector('option[value="image/webp"]').textContent = t("fWebp") + t("webpUnsupported");
+    langBtn.textContent = t("switchTo");
+    langBtn.lang = lang === "en" ? "el" : "en";
+    applyTheme(); updateSizeLabels();
+    updateNet(); updateToolbar();
+    dispatchEvent(new Event("keeppix:lang"));
+  }
+  langBtn.addEventListener("click", () => {
+    lang = lang === "en" ? "el" : "en";
+    try { localStorage.setItem("keeppix-lang", lang); } catch { /* storage blocked */ }
+    applyLang();
+    if (files.length) run();   // re-render result cards in the new language
+  });
+
+  // ---------- Privacy indicators ----------
+  const netDot = $("#netDot"), netText = $("#netText"), reqCount = $("#reqCount");
+  function updateNet() {
+    const on = navigator.onLine;
+    netDot.classList.toggle("off", !on);
+    netText.textContent = on ? t("online") : t("offline");
+  }
+  addEventListener("online", updateNet); addEventListener("offline", updateNet);
+
+  let requests = 0;
+  function isAppFile(name) {
+    const u = new URL(name, location.href);
+    return u.origin === location.origin && /^\/(sw\.js|pdf-tools\.js|manifest\.webmanifest|icons\/[\w.-]+|vendor\/[\w.-]+)$/.test(u.pathname);
+  }
+  try {
+    new PerformanceObserver((list) => {
+      for (const e of list.getEntries()) {
+        // Ignore blob:/data: (local) and the app's own files (manifest, icons, service worker), which never carry user data.
+        if (/^(blob|data):/.test(e.name) || isAppFile(e.name)) continue;
+        requests++; reqCount.textContent = requests;
+      }
+    }).observe({ type: "resource", buffered: false });
+  } catch { /* older browsers: counter stays at 0 */ }
+
+  // ---------- Settings ----------
+  function getOpts() {
+    const n = (v) => { const x = parseInt(v, 10); return Number.isFinite(x) && x > 0 ? x : 0; };
+    return {
+      maxW: n(el.maxW.value), maxH: n(el.maxH.value), aspect: el.aspect.value,
+      format: el.format.value, quality: +el.quality.value, targetKB: n(el.targetKB.value),
+      keep: el.keepWrap.hidden || el.keepAspect.checked,
+    };
+  }
+  // The "keep aspect ratio" option only exists in Custom mode; presets always keep proportions.
+  function setCustomMode(on) {
+    el.keepWrap.hidden = !on;
+    if (!on) el.keepAspect.checked = true;
+    updateSizeLabels();
+  }
+  function updateSizeLabels() {
+    const keep = el.keepWrap.hidden || el.keepAspect.checked;
+    el.maxWLabel.textContent = t(keep ? "maxW" : "wExact");
+    el.maxHLabel.textContent = t(keep ? "maxH" : "hExact");
+    el.sizeHint.textContent = t(keep ? "noUpscale" : "exactHint");
+  }
+  el.keepAspect.addEventListener("change", () => { updateSizeLabels(); scheduleRun(); });
+  function applyPreset(key) {
+    for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === key));
+    setCustomMode(key === "custom");
+    const p = PRESETS[key];
+    if (!p) return;
+    el.maxW.value = p.maxW; el.maxH.value = p.maxH; el.aspect.value = p.aspect;
+    el.format.value = p.format; el.quality.value = p.quality; el.qVal.textContent = p.quality;
+    el.targetKB.value = p.targetKB;
+    scheduleRun();
+  }
+  el.presets.addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (b) applyPreset(b.dataset.preset); });
+  for (const k of ["maxW", "maxH", "aspect", "format", "quality", "targetKB"]) {
+    el[k].addEventListener("input", () => {
+      el.qVal.textContent = el.quality.value;
+      for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === "custom"));
+      if (el.keepWrap.hidden) setCustomMode(true);
+      scheduleRun();
+    });
+  }
+
+  // ---------- File input ----------
+  el.drop.addEventListener("click", () => el.file.click());
+  el.drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); el.file.click(); } });
+  el.file.addEventListener("change", () => { addFiles(el.file.files); el.file.value = ""; });
+  ["dragenter", "dragover"].forEach((ev) => el.drop.addEventListener(ev, (e) => { e.preventDefault(); el.drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => el.drop.addEventListener(ev, (e) => { e.preventDefault(); el.drop.classList.remove("over"); }));
+  el.drop.addEventListener("drop", (e) => addFiles(e.dataTransfer.files));
+  addEventListener("paste", (e) => { const f = [...(e.clipboardData?.files || [])]; if (f.length) addFiles(f); });
+
+  function addFiles(list) {
+    const imgs = [...list].filter((f) => f.type.startsWith("image/") || /\.(heic|heif|avif)$/i.test(f.name));
+    if (!imgs.length) return;
+    files = files.concat(imgs);
+    run();
+  }
+
+  el.clearBtn.addEventListener("click", () => {
+    runId++; files = []; revokeAll(); outputs = [];
+    el.results.innerHTML = ""; el.status.textContent = ""; updateToolbar();
+  });
+
+  el.dlAll.addEventListener("click", async () => {
+    for (const o of outputs) {
+      if (!o) continue;
+      triggerDownload(o.url, o.name);
+      await new Promise((r) => setTimeout(r, 350));
+    }
+  });
+
+  function triggerDownload(url, name) {
+    const a = document.createElement("a"); a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  // ---------- Processing ----------
+  let timer = 0;
+  function scheduleRun() { if (!files.length) return; clearTimeout(timer); timer = setTimeout(run, 300); }
+
+  function revokeAll() { for (const o of outputs) if (o) URL.revokeObjectURL(o.url); }
+
+  async function run() {
+    const id = ++runId;
+    const opts = getOpts();
+    revokeAll(); outputs = new Array(files.length).fill(null);
+    el.results.innerHTML = "";
+    const cards = files.map((f) => { const c = makeCard(f); el.results.appendChild(c.root); return c; });
+    updateToolbar();
+
+    for (let i = 0; i < files.length; i++) {
+      if (id !== runId) return;
+      el.status.textContent = t("processing", i + 1, files.length);
+      try {
+        const r = await processFile(files[i], opts);
+        if (id !== runId) { URL.revokeObjectURL(r.url); return; }
+        outputs[i] = r;
+        fillCard(cards[i], files[i], r);
+      } catch (err) {
+        if (id !== runId) return;
+        cards[i].info.innerHTML = `<span class="err">${escapeHtml(err.message || t("errGeneric"))}</span>`;
+      }
+      updateToolbar();
+    }
+    if (id === runId) el.status.textContent = "";
+  }
+
+  async function loadImage(file) {
+    if ("createImageBitmap" in window) {
+      try { return await createImageBitmap(file, { imageOrientation: "from-image" }); } catch { /* fall through */ }
+    }
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image(); img.src = url; await img.decode(); return img;
+    } catch {
+      throw new Error(/\.(heic|heif)$/i.test(file.name) ? t("errHeic") : t("errRead"));
+    } finally { URL.revokeObjectURL(url); }
+  }
+
+  function cropRect(w, h, aspect) {
+    if (aspect === "none") return { sx: 0, sy: 0, sw: w, sh: h };
+    const [a, b] = aspect.split(":").map(Number);
+    const r = a / b;
+    let sw = w, sh = w / r;
+    if (sh > h) { sh = h; sw = h * r; }
+    return { sx: (w - sw) / 2, sy: (h - sh) / 2, sw, sh };
+  }
+
+  function makeCanvas(w, h) {
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const ctx = c.getContext("2d"); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    return [c, ctx];
+  }
+
+  // Downscale in halving steps for sharper results on big reductions.
+  function render(src, rect, tw, th, opaque) {
+    let cur = src, cx = rect.sx, cy = rect.sy, cw = rect.sw, ch = rect.sh;
+    while (cw / 2 > tw && ch / 2 > th) {
+      const [c, ctx] = makeCanvas(Math.round(cw / 2), Math.round(ch / 2));
+      ctx.drawImage(cur, cx, cy, cw, ch, 0, 0, c.width, c.height);
+      cur = c; cx = 0; cy = 0; cw = c.width; ch = c.height;
+    }
+    const [out, ctx] = makeCanvas(tw, th);
+    if (opaque) { ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, tw, th); }
+    ctx.drawImage(cur, cx, cy, cw, ch, 0, 0, tw, th);
+    return out;
+  }
+
+  function encode(canvas, type, q) {
+    return new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error(t("errEncode")))), type, q));
+  }
+
+  async function processFile(file, o) {
+    const src = await loadImage(file);
+    const W = src.width, H = src.height;
+    const rect = cropRect(W, H, o.aspect);
+    let tw, th;
+    if (o.keep) {
+      const scale = Math.min(1, o.maxW ? o.maxW / rect.sw : 1, o.maxH ? o.maxH / rect.sh : 1);
+      tw = Math.max(1, Math.round(rect.sw * scale)); th = Math.max(1, Math.round(rect.sh * scale));
+    } else {
+      // Exact size: each side becomes what the user typed (an empty field keeps that side as it is).
+      tw = Math.min(16384, o.maxW || Math.round(rect.sw)); th = Math.min(16384, o.maxH || Math.round(rect.sh));
+    }
+    const opaque = o.format === "image/jpeg";
+    const notes = [];
+    let blob, q = o.quality / 100;
+
+    if (o.targetKB && o.format !== "image/png") {
+      const limit = o.targetKB * 1024;
+      let done = null;
+      for (let attempt = 0; attempt < 10 && !done; attempt++) {
+        const c = render(src, rect, tw, th, opaque);
+        const top = await encode(c, o.format, q);
+        if (top.size <= limit) { done = { blob: top, q }; break; }
+        let lo = 0.3, hi = q, best = null;
+        for (let i = 0; i < 7; i++) {
+          const mid = (lo + hi) / 2;
+          const b = await encode(c, o.format, mid);
+          if (b.size <= limit) { best = { blob: b, q: mid }; lo = mid; } else hi = mid;
+        }
+        if (best) { done = best; break; }
+        tw = Math.max(1, Math.round(tw * 0.85)); th = Math.max(1, Math.round(th * 0.85));
+        if (attempt === 0) notes.push("noteShrunk");
+      }
+      if (!done) throw new Error(t("errLimit"));
+      blob = done.blob; q = done.q;
+    } else {
+      if (o.targetKB && o.format === "image/png") notes.push("notePng");
+      blob = await encode(render(src, rect, tw, th, opaque), o.format, q);
+    }
+    if (src.close) src.close();
+
+    const type = blob.type || o.format;
+    if (type !== o.format) notes.push("noteFallback");
+    const ext = EXT[type] || "png";
+    const base = file.name.replace(/\.[^.]+$/, "") || t("fallbackName");
+    return {
+      url: URL.createObjectURL(blob), name: `${base}-min.${ext}`, size: blob.size,
+      w: tw, h: th, W, H, q: Math.round(q * 100), lossy: type !== "image/png", notes,
+    };
+  }
+
+  // ---------- UI ----------
+  function makeCard(file) {
+    const root = document.createElement("div"); root.className = "card";
+    root.innerHTML = `<div class="thumb"></div><div class="meta"><div class="name"></div><div class="info"><span class="status"></span></div></div>`;
+    root.querySelector(".name").textContent = file.name;
+    root.querySelector(".name").title = file.name;
+    root.querySelector(".info .status").textContent = t("waiting");
+    return { root, thumb: root.querySelector(".thumb"), info: root.querySelector(".info") };
+  }
+
+  function fillCard(card, file, r) {
+    const img = new Image(); img.src = r.url; img.alt = r.name; card.thumb.appendChild(img);
+    const pct = Math.round((1 - r.size / file.size) * 100);
+    const saved = pct >= 0
+      ? `<span class="save">−${pct}%</span>`
+      : `<span class="save worse">+${-pct}% (${escapeHtml(t("larger"))})</span>`;
+    card.info.innerHTML = `
+      <div class="sizes">${fmt(file.size)} → <b>${fmt(r.size)}</b> ${saved}</div>
+      <div>${r.W}×${r.H} → ${r.w}×${r.h}px${r.lossy ? ` · ${escapeHtml(t("q"))} ${r.q}%` : ""}</div>
+      ${r.notes.map((n) => `<div class="note">${escapeHtml(t(n))}</div>`).join("")}`;
+    const a = document.createElement("a");
+    a.className = "btn"; a.href = r.url; a.download = r.name;
+    a.textContent = `${t("download")} ${r.name.split(".").pop().toUpperCase()}`;
+    card.info.appendChild(a);
+  }
+
+  function updateToolbar() {
+    const ready = outputs.filter(Boolean);
+    el.dlAll.disabled = ready.length < 1;
+    el.clearBtn.disabled = files.length === 0;
+    if (!files.length) { el.summary.textContent = t("none"); return; }
+    const before = files.reduce((s, f, i) => s + (outputs[i] ? f.size : 0), 0);
+    const after = ready.reduce((s, o) => s + o.size, 0);
+    el.summary.textContent = ready.length ? t("ready", ready.length, files.length, fmt(before), fmt(after)) : t("count", files.length);
+  }
+
+  function fmt(b) {
+    if (b < 1024) return b + " B";
+    if (b < 1024 * 1024) return (b / 1024).toFixed(0) + " KB";
+    const mb = (b / 1024 / 1024).toFixed(2);
+    return (lang === "el" ? mb.replace(".", ",") : mb) + " MB";
+  }
+  function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+  // ---------- Offline app (PWA) ----------
+  const offlineReady = $("#offlineReady"), installBtn = $("#installBtn");
+  const canSW = "serviceWorker" in navigator && window.isSecureContext && location.protocol !== "file:";
+  if (canSW) {
+    addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch(() => { /* app still works online */ });
+    });
+    navigator.serviceWorker.ready.then(() => { offlineReady.hidden = false; });
+  }
+
+  let installEvent = null;
+  addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvent = e; installBtn.hidden = false; });
+  installBtn.addEventListener("click", async () => {
+    if (!installEvent) return;
+    installEvent.prompt();
+    await installEvent.userChoice.catch(() => {});
+    installEvent = null; installBtn.hidden = true;
+  });
+  addEventListener("appinstalled", () => { installBtn.hidden = true; });
+
+  window.KeepPix = { lang: () => lang, fmt };
+  applyLang();
+  applyPreset("web");
+})();
+</script>
+<script src="/pdf-tools.js" defer></script>
+</body>
+</html>

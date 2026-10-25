@@ -7,8 +7,12 @@
 <title>KeepPix — Image & PDF tools that never upload your files</title>
 <meta name="description" content="Free tools to compress, resize and convert images and PDFs in your browser. Your files never leave your device: no uploads, no account, works offline.">
 <link rel="canonical" href="https://keeppix.app/">
+<link rel="alternate" hreflang="en" href="https://keeppix.app/">
+<link rel="alternate" hreflang="el" href="https://keeppix.app/el/">
+<link rel="alternate" hreflang="x-default" href="https://keeppix.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KeepPix">
+<meta property="og:locale" content="en_US">
 <meta property="og:url" content="https://keeppix.app/">
 <meta property="og:title" content="KeepPix — Image & PDF tools that never upload your files">
 <meta property="og:description" content="Resize, compress and convert images and PDFs right in your browser. Nothing is uploaded, works offline, no accounts.">
@@ -355,7 +359,7 @@ footer a{color:inherit}
       themeAuto: "Theme: automatic (follows your device)", themeLight: "Theme: light", themeDark: "Theme: dark",
     },
     el: {
-      title: "KeepPix — Εργαλεία εικόνας & PDF χωρίς ανέβασμα αρχείων",
+      title: "KeepPix — Συμπίεση εικόνων & PDF χωρίς ανέβασμα αρχείων",
       tagline: "Συμπίεση και μετατροπή εικόνων και PDF — όλα μέσα στη συσκευή σας.",
       pillLocal: "🔒 Τα αρχεία δεν φεύγουν από τη συσκευή",
       pillLocalTitle: "Η επεξεργασία γίνεται τοπικά στον browser σας",
@@ -411,6 +415,7 @@ footer a{color:inherit}
   function detectLang() {
     const q = new URLSearchParams(location.search).get("lang");
     if (q === "en" || q === "el") return q;
+    if (location.pathname.startsWith("/el/")) return "el";   // the Greek page (keeppix.app/el/) is always Greek
     try { const s = localStorage.getItem("keeppix-lang"); if (s === "en" || s === "el") return s; } catch { /* storage blocked */ }
     const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
     return langs.some((l) => /^el\b/i.test(l)) ? "el" : "en";

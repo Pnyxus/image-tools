@@ -2,10 +2,11 @@
 // It only ever stores and serves the app's own files (same origin).
 // User images are never seen here: they are processed in the page and never requested over the network.
 
-const VERSION = "v10";
+const VERSION = "v11";
 const CACHE = `keeppix-${VERSION}`;
 const APP_SHELL = [
   "/",
+  "/el/",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -37,16 +38,17 @@ self.addEventListener("fetch", (event) => {
 
   // Page: try the network first (to pick up new versions), fall back to the cached copy offline.
   if (req.mode === "navigate") {
+    const page = url.pathname.startsWith("/el/") ? "/el/" : "/";   // English or Greek page
     event.respondWith(
       fetch(req)
         .then((res) => {
           if (res.ok && !res.redirected) {
             const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put("/", copy));
+            caches.open(CACHE).then((c) => c.put(page, copy));
           }
           return res;
         })
-        .catch(() => caches.match("/"))
+        .catch(() => caches.match(page).then((hit) => hit || caches.match("/")))
     );
     return;
   }
