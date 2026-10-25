@@ -128,6 +128,22 @@ footer a{color:inherit}
 .gobar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0 10px}
 .status.err{color:var(--bad)}
 .pdfcard .meta{padding:14px}
+.editor{margin-top:14px}
+.edbar{position:sticky;top:0;z-index:5;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.edtools{display:flex;flex-wrap:wrap;gap:6px}
+.edopts{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.edlab{display:flex;align-items:center;gap:6px;margin:0;color:var(--ink)}
+.edlab select{width:auto;padding:5px 8px}
+.edlab input[type=color]{width:38px;height:30px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.edbar .hint{margin:0}
+.edpages{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:12px}
+.edpage{position:relative;width:100%;max-width:860px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.edpage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.edpage .ov{touch-action:auto}
+.editor[data-tool] .edpage .ov{touch-action:none;cursor:crosshair}
+.editor[data-tool="erase"] .edpage .ov{cursor:pointer}
+.edpage .pno{position:absolute;right:6px;bottom:4px;font-size:.75rem;color:#666;pointer-events:none}
+.edpage textarea{position:absolute;margin:0;padding:0;border:1px dashed var(--accent);background:rgba(255,255,255,.85);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;line-height:1.25;resize:none;overflow:hidden;outline:none;min-width:4em;white-space:pre;z-index:2}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -230,6 +246,7 @@ footer a{color:inherit}
       <button class="chip" data-tool="img2pdf" aria-pressed="true" data-pi18n="toolImg">Images → PDF</button>
       <button class="chip" data-tool="merge" aria-pressed="false" data-pi18n="toolMerge">Merge PDFs</button>
       <button class="chip" data-tool="compress" aria-pressed="false" data-pi18n="toolCompress">Compress PDF</button>
+      <button class="chip" data-tool="edit" aria-pressed="false" data-pi18n="toolEdit">Edit PDF</button>
     </div>
 
     <div class="drop" id="pdfDrop" tabindex="0" role="button" aria-label="Choose files">
@@ -239,6 +256,28 @@ footer a{color:inherit}
     </div>
 
     <ul class="flist" id="pdfList"></ul>
+
+    <div id="pdfEditor" class="editor" hidden>
+      <div class="edbar" id="edBar">
+        <div class="edtools" id="edTools">
+          <button class="chip" data-ed="text" aria-pressed="false" data-pi18n="edText">Text</button>
+          <button class="chip" data-ed="highlight" aria-pressed="false" data-pi18n="edHighlight">Highlight</button>
+          <button class="chip" data-ed="draw" aria-pressed="false" data-pi18n="edDraw">Draw</button>
+          <button class="chip" data-ed="whiteout" aria-pressed="false" data-pi18n="edWhite">White-out</button>
+          <button class="chip" data-ed="blackout" aria-pressed="false" data-pi18n="edBlack">Black out</button>
+          <button class="chip" data-ed="blur" aria-pressed="false" data-pi18n="edBlur">Blur</button>
+          <button class="chip" data-ed="erase" aria-pressed="false" data-pi18n="edErase">Remove</button>
+        </div>
+        <div class="edopts">
+          <label class="edlab"><span data-pi18n="edColor">Color</span> <input type="color" id="edColor" value="#d32f2f"></label>
+          <label class="edlab"><span data-pi18n="edSize">Size</span>
+            <select id="edSize"><option value="s" data-pi18n="szS">Small</option><option value="m" selected data-pi18n="szM">Medium</option><option value="l" data-pi18n="szL">Large</option></select></label>
+          <button class="btn ghost" id="edUndo" type="button" data-pi18n="edUndo">Undo</button>
+        </div>
+        <p class="hint" id="edHint"></p>
+      </div>
+      <div class="edpages" id="edPages"></div>
+    </div>
 
     <div class="panel" style="margin-top:14px">
       <div class="opts" data-opts="img2pdf">
@@ -259,6 +298,9 @@ footer a{color:inherit}
         </div>
         <label class="check"><input type="checkbox" id="pdfGray"> <span data-pi18n="gray">Black &amp; white</span></label>
         <p class="hint" data-pi18n="compressNote"></p>
+      </div>
+      <div data-opts="edit" hidden>
+        <p class="hint" data-pi18n="editNote"></p>
       </div>
       <div class="gobar">
         <button class="btn" id="pdfGo" disabled>Create PDF</button>
@@ -289,7 +331,7 @@ footer a{color:inherit}
     <h3 data-i18n="q3">Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);</h3>
     <p data-i18n="a3">Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.</p>
     <h3 data-i18n="q4">Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;</h3>
-    <p data-i18n="a4">Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF ή να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο.</p>
+    <p data-i18n="a4">Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF, να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο, ή να επεξεργαστείτε ένα PDF: να προσθέσετε κείμενο, να επισημάνετε, να σχεδιάσετε, να σβήσετε με λευκό, να μαυρίσετε ή να θολώσετε σημεία μιας σελίδας.</p>
     <h3 data-i18n="q5">Είναι δωρεάν και δουλεύει στο κινητό;</h3>
     <p data-i18n="a5">Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.</p>
   </section>
@@ -353,7 +395,7 @@ footer a{color:inherit}
       q3: "Can I make a passport or ID photo (35×45)?",
       a3: "Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.",
       q4: "How do I compress a PDF or turn photos into a PDF?",
-      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, or compress a PDF to a target size, in color or black and white.",
+      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, compress a PDF to a target size, in color or black and white, or edit a PDF: add text, highlight, draw, white-out, black out or blur parts of a page.",
       q5: "Is it free, and does it work on my phone?",
       a5: "Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.",
       footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
@@ -405,7 +447,7 @@ footer a{color:inherit}
       q3: "Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);",
       a3: "Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.",
       q4: "Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;",
-      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF ή να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο.",
+      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF, να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο, ή να επεξεργαστείτε ένα PDF: να προσθέσετε κείμενο, να επισημάνετε, να σχεδιάσετε, να σβήσετε με λευκό, να μαυρίσετε ή να θολώσετε σημεία μιας σελίδας.",
       q5: "Είναι δωρεάν και δουλεύει στο κινητό;",
       a5: "Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.",
       footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:",

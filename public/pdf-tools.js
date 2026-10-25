@@ -1,4 +1,4 @@
-// KeepPix PDF tools: images → PDF, merge PDFs, compress PDF.
+// KeepPix PDF tools: images → PDF, merge PDFs, compress PDF, edit PDF.
 // Everything runs in the browser. Libraries (pdf-lib, PDF.js) are served from this site
 // and only loaded when the PDF tab is opened. No file is ever sent anywhere.
 (() => {
@@ -35,6 +35,22 @@
       noteNoFit: "Couldn’t get under the size limit even at the strongest setting — this is the smallest version.",
       noteBigger: "This PDF was already well optimized: the original is smaller, keep that one.",
       noteLevel: (l) => `Used “${l}” compression to fit the size limit.`,
+      toolEdit: "Edit PDF", dropPdf1: "Drop a PDF here or click to choose", dropSubEdit: "Open one PDF, then add text, highlights, drawings, or hide parts of a page.",
+      goEdit: "Save PDF", edText: "Text", edHighlight: "Highlight", edDraw: "Draw", edWhite: "White-out",
+      edBlack: "Black out", edBlur: "Blur", edErase: "Remove", edColor: "Color", edSize: "Size",
+      szS: "Small", szM: "Medium", szL: "Large", edUndo: "Undo",
+      hintNone: "Pick a tool, then click or drag on a page.",
+      hint_text: "Click where the text should go, type, then press Enter. Shift+Enter starts a new line.",
+      hint_highlight: "Drag over the text you want to highlight.",
+      hint_draw: "Draw with the mouse or your finger.",
+      hint_whiteout: "Drag a box to cover something with white.",
+      hint_blackout: "Drag a box over what you want to hide.",
+      hint_blur: "Drag a box over what you want to blur.",
+      hint_erase: "Click a mark to remove it.",
+      editNote: "White-out, black out and blur really remove what’s underneath: those pages are saved as images, so their text can’t be selected or copied afterwards. Other pages stay as they were.",
+      noteFlat: (n) => (n === 1 ? "1 page with hidden areas was saved as an image. The hidden content is gone from the file." : `${n} pages with hidden areas were saved as images. The hidden content is gone from the file.`),
+      noEdits: "Add at least one change before saving.",
+      rendering: (p, n) => `Loading page ${p} of ${n}…`,
     },
     el: {
       toolImg: "Εικόνες → PDF", toolMerge: "Ένωση PDF", toolCompress: "Συμπίεση PDF",
@@ -63,6 +79,22 @@
       noteNoFit: "Δεν χώρεσε στο όριο ούτε με την ισχυρότερη ρύθμιση — αυτή είναι η μικρότερη εκδοχή.",
       noteBigger: "Αυτό το PDF ήταν ήδη βελτιστοποιημένο: το αρχικό είναι μικρότερο, κρατήστε εκείνο.",
       noteLevel: (l) => `Χρησιμοποιήθηκε συμπίεση «${l}» για να χωρέσει στο όριο.`,
+      toolEdit: "Επεξεργασία PDF", dropPdf1: "Σύρετε ένα PDF εδώ ή πατήστε για επιλογή", dropSubEdit: "Ανοίξτε ένα PDF και προσθέστε κείμενο, επισήμανση, σχέδιο ή κρύψτε σημεία μιας σελίδας.",
+      goEdit: "Αποθήκευση PDF", edText: "Κείμενο", edHighlight: "Επισήμανση", edDraw: "Σχέδιο", edWhite: "Λευκό",
+      edBlack: "Μαύρισμα", edBlur: "Θόλωμα", edErase: "Αφαίρεση", edColor: "Χρώμα", edSize: "Μέγεθος",
+      szS: "Μικρό", szM: "Μεσαίο", szL: "Μεγάλο", edUndo: "Αναίρεση",
+      hintNone: "Διαλέξτε εργαλείο και πατήστε ή σύρετε πάνω στη σελίδα.",
+      hint_text: "Πατήστε εκεί που θέλετε το κείμενο, γράψτε και πατήστε Enter. Με Shift+Enter αλλάζετε γραμμή.",
+      hint_highlight: "Σύρετε πάνω στο κείμενο που θέλετε να επισημάνετε.",
+      hint_draw: "Σχεδιάστε με το ποντίκι ή με το δάχτυλο.",
+      hint_whiteout: "Σύρετε ένα πλαίσιο για να καλύψετε κάτι με λευκό.",
+      hint_blackout: "Σύρετε ένα πλαίσιο πάνω σε ό,τι θέλετε να κρύψετε.",
+      hint_blur: "Σύρετε ένα πλαίσιο πάνω σε ό,τι θέλετε να θολώσετε.",
+      hint_erase: "Πατήστε ένα σημάδι για να το αφαιρέσετε.",
+      editNote: "Το λευκό, το μαύρισμα και το θόλωμα αφαιρούν πραγματικά ό,τι υπάρχει από κάτω: αυτές οι σελίδες αποθηκεύονται ως εικόνες, οπότε το κείμενό τους δεν θα επιλέγεται μετά. Οι υπόλοιπες σελίδες μένουν όπως ήταν.",
+      noteFlat: (n) => (n === 1 ? "1 σελίδα με κρυμμένα σημεία αποθηκεύτηκε ως εικόνα. Το κρυμμένο περιεχόμενο δεν υπάρχει πια στο αρχείο." : `${n} σελίδες με κρυμμένα σημεία αποθηκεύτηκαν ως εικόνες. Το κρυμμένο περιεχόμενο δεν υπάρχει πια στο αρχείο.`),
+      noEdits: "Κάντε τουλάχιστον μία αλλαγή πριν την αποθήκευση.",
+      rendering: (p, n) => `Φόρτωση σελίδας ${p} από ${n}…`,
     },
   };
   const t = (k, ...a) => { const v = S[KP.lang()][k] ?? S.en[k]; return typeof v === "function" ? v(...a) : v; };
@@ -106,6 +138,7 @@
     img2pdf:  { accept: "image/*", filter: isImg, min: 1, drop: "dropImg", sub: "dropSubImg", go: "goImg", order: true },
     merge:    { accept: "application/pdf,.pdf", filter: isPdf, min: 2, drop: "dropPdf", sub: "dropSubMerge", go: "goMerge", order: true },
     compress: { accept: "application/pdf,.pdf", filter: isPdf, min: 1, drop: "dropPdf", sub: "dropSubCompress", go: "goCompress", order: false },
+    edit:     { accept: "application/pdf,.pdf", filter: isPdf, min: 1, drop: "dropPdf1", sub: "dropSubEdit", go: "goEdit", order: false, single: true },
   };
   let tool = "img2pdf", items = [], busy = false, resultUrls = [];
 
@@ -115,10 +148,11 @@
   };
 
   function setTool(name) {
-    tool = name; items = []; clearResults(); setStatus("");
+    tool = name; items = []; clearResults(); setStatus(""); closeEditor();
     for (const b of el.tools.querySelectorAll("[data-tool]")) b.setAttribute("aria-pressed", String(b.dataset.tool === name));
     for (const o of document.querySelectorAll("[data-opts]")) o.hidden = o.dataset.opts !== name;
     el.file.accept = TOOLS[name].accept;
+    el.file.multiple = !TOOLS[name].single;
     applyLang();
   }
   el.tools.addEventListener("click", (e) => { const b = e.target.closest("[data-tool]"); if (b && !busy) setTool(b.dataset.tool); });
@@ -135,9 +169,10 @@
     if (busy) return;
     const ok = [...list].filter(TOOLS[tool].filter);
     if (!ok.length) return;
-    items = items.concat(ok);
+    items = TOOLS[tool].single ? [ok[0]] : items.concat(ok);
     clearResults(); setStatus("");
     renderList(); updateGo();
+    if (tool === "edit") openEditor(items[0]);
   }
 
   el.list.addEventListener("click", (e) => {
@@ -145,7 +180,7 @@
     const i = +b.dataset.i;
     if (b.dataset.act === "up" && i > 0) [items[i - 1], items[i]] = [items[i], items[i - 1]];
     if (b.dataset.act === "down" && i < items.length - 1) [items[i + 1], items[i]] = [items[i], items[i + 1]];
-    if (b.dataset.act === "rm") items.splice(i, 1);
+    if (b.dataset.act === "rm") { items.splice(i, 1); if (tool === "edit") closeEditor(); }
     renderList(); updateGo();
   });
 
@@ -167,7 +202,7 @@
 
   function updateGo() {
     el.go.textContent = t(TOOLS[tool].go);
-    el.go.disabled = busy || items.length < TOOLS[tool].min;
+    el.go.disabled = busy || items.length < TOOLS[tool].min || (tool === "edit" && !ED.doc);
   }
 
   function applyLang() {
@@ -176,6 +211,7 @@
     el.dropTitle.textContent = t(TOOLS[tool].drop);
     el.dropSub.textContent = t(TOOLS[tool].sub);
     el.drop.setAttribute("aria-label", t(TOOLS[tool].drop));
+    edHint();
     renderList(); updateGo();
   }
   addEventListener("keeppix:lang", () => { applyLang(); clearResults(); setStatus(""); });
@@ -190,6 +226,7 @@
       await loadLibs();
       if (tool === "img2pdf") await imagesToPdf();
       else if (tool === "merge") await mergePdfs();
+      else if (tool === "edit") await saveEdited();
       else await compressPdfs();
       setStatus(t("done"));
     } catch (e) {
@@ -327,6 +364,324 @@
     ctx.putImageData(d, 0, 0);
   }
 
+  // ---------- Edit PDF ----------
+  // Marks are stored in page units (PDF points, top-left origin, as the page is shown).
+  // On save, pages with white-out / black out / blur are re-drawn as images, so whatever was
+  // underneath is really gone. Other pages are copied as they are, with the marks added on top.
+  const REDACT = new Set(["whiteout", "blackout", "blur"]);
+  const SIZES = { text: { s: 11, m: 16, l: 26 }, draw: { s: 1.5, m: 3, l: 6 } };
+  const FONT = 'system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif';
+  const ED = { doc: null, task: null, file: null, pages: [], hist: [], tool: "", gen: 0, io: null };
+  const ed = {
+    root: $("#pdfEditor"), tools: $("#edTools"), pages: $("#edPages"), color: $("#edColor"), size: $("#edSize"),
+    undo: $("#edUndo"), hint: $("#edHint"),
+  };
+
+  function edHint() { ed.hint.textContent = t(ED.tool ? "hint_" + ED.tool : "hintNone"); }
+  function setEdTool(name) {
+    commitText();
+    ED.tool = ED.tool === name ? "" : name;
+    for (const b of ed.tools.querySelectorAll("[data-ed]")) b.setAttribute("aria-pressed", String(b.dataset.ed === ED.tool));
+    if (ED.tool) ed.root.dataset.tool = ED.tool; else delete ed.root.dataset.tool;
+    edHint();
+  }
+  ed.tools.addEventListener("click", (e) => { const b = e.target.closest("[data-ed]"); if (b && !busy) setEdTool(b.dataset.ed); });
+  ed.undo.addEventListener("click", () => {
+    if (busy) return;
+    commitText();
+    while (ED.hist.length) {
+      const a = ED.hist.pop(), pg = ED.pages[a.page], i = pg.anns.indexOf(a);
+      if (i >= 0) { pg.anns.splice(i, 1); drawOverlay(pg); break; }
+    }
+    edButtons();
+  });
+  function edButtons() { ed.undo.disabled = !ED.pages.some((p) => p.anns.length); }
+
+  function closeEditor() {
+    commitText(true);
+    ED.gen++;
+    if (ED.io) ED.io.disconnect();
+    for (const p of ED.pages) { if (p.pc) p.pc.width = p.pc.height = 0; if (p.ov) p.ov.width = p.ov.height = 0; }
+    if (ED.task) ED.task.destroy();
+    Object.assign(ED, { doc: null, task: null, file: null, pages: [], hist: [], io: null });
+    ed.pages.innerHTML = "";
+    ed.root.hidden = true;
+    updateGo();
+  }
+
+  async function openEditor(f) {
+    closeEditor();
+    const gen = ED.gen;
+    try {
+      setStatus(t("loading"));
+      await loadLibs();
+      const data = new Uint8Array(await f.arrayBuffer());
+      const task = pdfjs.getDocument({ data, isEvalSupported: false, useSystemFonts: true });
+      let doc;
+      try { doc = await task.promise; }
+      catch (e) {
+        task.destroy();
+        if (e && e.name === "PasswordException") throw new Error(t("errLocked", f.name));
+        throw new Error(t("errBadPdf", f.name));
+      }
+      if (gen !== ED.gen) { task.destroy(); return; }
+      Object.assign(ED, { doc, task, file: f });
+      for (let p = 1; p <= doc.numPages; p++) {
+        setStatus(t("rendering", p, doc.numPages));
+        const page = await doc.getPage(p);
+        if (gen !== ED.gen) return;
+        const vp = page.getViewport({ scale: 1 });
+        const box = document.createElement("div");
+        box.className = "edpage";
+        box.style.aspectRatio = `${vp.width} / ${vp.height}`;
+        box.innerHTML = `<span class="pno">${p}</span>`;
+        const pg = { i: p - 1, page, vp, rot: page.rotate || 0, box, pc: null, ov: null, anns: [], drawn: false };
+        box.dataset.i = p - 1;
+        ed.pages.appendChild(box);
+        ED.pages.push(pg);
+      }
+      ed.root.hidden = false;
+      ED.io = new IntersectionObserver((ents) => {
+        for (const en of ents) if (en.isIntersecting) renderPage(ED.pages[+en.target.dataset.i], gen);
+      }, { rootMargin: "600px 0px" });
+      for (const pg of ED.pages) ED.io.observe(pg.box);
+      setStatus(""); edHint(); edButtons(); updateGo();
+    } catch (e) {
+      if (gen === ED.gen) setStatus(e && e.message ? e.message : t("errGeneric"), true);
+    }
+  }
+
+  async function renderPage(pg, gen) {
+    if (pg.drawn) return;
+    pg.drawn = true;
+    const css = pg.box.clientWidth || 800;
+    const scale = Math.min(css * Math.min(devicePixelRatio || 1, 2), 2400) / pg.vp.width;
+    const vp = pg.page.getViewport({ scale });
+    const pc = canvas(Math.ceil(vp.width), Math.ceil(vp.height));
+    const ov = canvas(pc.width, pc.height);
+    ov.className = "ov";
+    const ctx = pc.getContext("2d");
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, pc.width, pc.height);
+    try { await pg.page.render({ canvas: pc, canvasContext: ctx, viewport: vp, background: "#ffffff" }).promise; }
+    catch { pg.drawn = false; return; }
+    if (gen !== ED.gen) return;
+    pg.pc = pc; pg.ov = ov; pg.k = pc.width / pg.vp.width;
+    pg.box.prepend(pc); pg.box.appendChild(ov);
+    bindOverlay(pg);
+    drawOverlay(pg);
+  }
+
+  // Draw the marks of one page onto ctx. k = pixels per page unit. src = canvas with the page image (for blur).
+  function paintAnn(ctx, a, k, src) {
+    ctx.save();
+    if (a.type === "highlight") {
+      ctx.globalCompositeOperation = "multiply";
+      ctx.fillStyle = "rgba(255,226,0,.45)";
+      ctx.fillRect(a.x * k, a.y * k, a.w * k, a.h * k);
+    } else if (a.type === "whiteout" || a.type === "blackout") {
+      ctx.fillStyle = a.type === "whiteout" ? "#fff" : "#000";
+      ctx.fillRect(a.x * k, a.y * k, a.w * k, a.h * k);
+    } else if (a.type === "blur") {
+      const x = Math.max(0, Math.floor(a.x * k)), y = Math.max(0, Math.floor(a.y * k));
+      const w = Math.min(src.width - x, Math.ceil(a.w * k)), h = Math.min(src.height - y, Math.ceil(a.h * k));
+      if (w > 0 && h > 0) {
+        // Shrink to ~7-point blocks and scale back up smoothly: the detail is thrown away, not just softened.
+        const block = Math.max(2, 7 * k);
+        const sw = Math.max(1, Math.round(w / block)), sh = Math.max(1, Math.round(h / block));
+        const tiny = canvas(sw, sh), tc = tiny.getContext("2d");
+        tc.imageSmoothingQuality = "high";
+        tc.drawImage(src, x, y, w, h, 0, 0, sw, sh);
+        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+        ctx.drawImage(tiny, 0, 0, sw, sh, x, y, w, h);
+      }
+    } else if (a.type === "draw") {
+      ctx.strokeStyle = a.color; ctx.lineWidth = a.lw * k; ctx.lineCap = ctx.lineJoin = "round";
+      ctx.beginPath();
+      a.pts.forEach(([px, py], i) => (i ? ctx.lineTo(px * k, py * k) : ctx.moveTo(px * k, py * k)));
+      if (a.pts.length === 1) ctx.lineTo(a.pts[0][0] * k + 0.01, a.pts[0][1] * k);
+      ctx.stroke();
+    } else if (a.type === "text") {
+      ctx.fillStyle = a.color; ctx.textBaseline = "top"; ctx.font = `${a.size * k}px ${FONT}`;
+      a.text.split("\n").forEach((ln, i) => ctx.fillText(ln, a.x * k, (a.y + i * a.size * 1.25 + a.size * 0.1) * k));
+    }
+    ctx.restore();
+  }
+
+  function drawOverlay(pg, extra) {
+    if (!pg.ov) return;
+    const ctx = pg.ov.getContext("2d");
+    ctx.clearRect(0, 0, pg.ov.width, pg.ov.height);
+    for (const a of extra ? pg.anns.concat(extra) : pg.anns) {
+      if (a.type === "blur") {
+        // Preview blur from the page image (what's under it); mark the box so it's visible.
+        paintAnn(ctx, a, pg.k, pg.pc);
+        ctx.save(); ctx.strokeStyle = "rgba(15,118,110,.6)"; ctx.setLineDash([4, 3]);
+        ctx.strokeRect(a.x * pg.k, a.y * pg.k, a.w * pg.k, a.h * pg.k); ctx.restore();
+      } else paintAnn(ctx, a, pg.k, pg.pc);
+    }
+  }
+
+  function measureText(text, size) {
+    const c = measureText.c || (measureText.c = canvas(1, 1).getContext("2d"));
+    c.font = `${size}px ${FONT}`;
+    const lines = text.split("\n");
+    return { w: Math.max(...lines.map((l) => c.measureText(l).width)) + size * 0.1, h: lines.length * size * 1.25 };
+  }
+
+  function bbox(a) {
+    if (a.type === "draw") {
+      const xs = a.pts.map((p) => p[0]), ys = a.pts.map((p) => p[1]), m = a.lw / 2 + 3;
+      return { x: Math.min(...xs) - m, y: Math.min(...ys) - m, w: Math.max(...xs) - Math.min(...xs) + 2 * m, h: Math.max(...ys) - Math.min(...ys) + 2 * m };
+    }
+    return a;
+  }
+
+  function addAnn(pg, a) { a.page = pg.i; pg.anns.push(a); ED.hist.push(a); drawOverlay(pg); edButtons(); }
+
+  function bindOverlay(pg) {
+    const ov = pg.ov;
+    const pos = (e) => { const r = ov.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * pg.vp.width, (e.clientY - r.top) / r.height * pg.vp.height]; };
+    let drag = null;
+    ov.addEventListener("pointerdown", (e) => {
+      if (!ED.tool || busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+      const [x, y] = pos(e);
+      if (ED.tool === "text") { e.preventDefault(); startText(pg, x, y); return; }
+      if (ED.tool === "erase") {
+        for (let i = pg.anns.length - 1; i >= 0; i--) {
+          const b = bbox(pg.anns[i]);
+          if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { pg.anns.splice(i, 1); drawOverlay(pg); edButtons(); break; }
+        }
+        return;
+      }
+      commitText();
+      e.preventDefault();
+      ov.setPointerCapture(e.pointerId);
+      drag = ED.tool === "draw"
+        ? { type: "draw", pts: [[x, y]], color: ed.color.value, lw: SIZES.draw[ed.size.value] }
+        : { type: ED.tool, x0: x, y0: y, x, y, w: 0, h: 0 };
+      drawOverlay(pg, drag);
+    });
+    ov.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const [x, y] = pos(e);
+      if (drag.type === "draw") drag.pts.push([x, y]);
+      else Object.assign(drag, { x: Math.min(x, drag.x0), y: Math.min(y, drag.y0), w: Math.abs(x - drag.x0), h: Math.abs(y - drag.y0) });
+      drawOverlay(pg, drag);
+    });
+    const end = () => {
+      if (!drag) return;
+      const a = drag; drag = null;
+      if (a.type === "draw") {
+        a.pts = a.pts.map(([x, y]) => [+x.toFixed(2), +y.toFixed(2)]);
+        addAnn(pg, a);
+      } else if (a.w >= 2 && a.h >= 2) {
+        delete a.x0; delete a.y0;
+        addAnn(pg, a);
+      } else drawOverlay(pg);
+    };
+    ov.addEventListener("pointerup", end);
+    ov.addEventListener("pointercancel", end);
+  }
+
+  // Text: a small box appears where you click; Enter adds it to the page.
+  let typing = null;
+  function startText(pg, x, y) {
+    commitText();
+    const size = SIZES.text[ed.size.value], color = ed.color.value;
+    const ta = document.createElement("textarea");
+    ta.rows = 1; ta.spellcheck = false;
+    ta.setAttribute("aria-label", t("edText"));
+    const scale = () => pg.box.clientWidth / pg.vp.width;
+    Object.assign(ta.style, {
+      left: (x / pg.vp.width * 100) + "%", top: (y / pg.vp.height * 100) + "%",
+      fontSize: size * scale() + "px", color, height: size * 1.25 * scale() + 4 + "px", width: "8em",
+    });
+    const fit = () => {
+      const m = measureText(ta.value || "M", size), s = scale();
+      ta.style.width = Math.max(m.w * s + 12, 60) + "px";
+      ta.style.height = m.h * s + 4 + "px";
+    };
+    ta.addEventListener("input", fit);
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitText(); }
+      else if (e.key === "Escape") { e.preventDefault(); commitText(true); }
+    });
+    ta.addEventListener("blur", () => setTimeout(() => { if (typing && typing.ta === ta) commitText(); }, 0));
+    pg.box.appendChild(ta);
+    typing = { pg, ta, x, y, size, color };
+    fit();
+    ta.focus();
+  }
+  function commitText(cancel) {
+    if (!typing) return;
+    const { pg, ta, x, y, size, color } = typing;
+    typing = null;
+    const text = ta.value.replace(/\s+$/, "");
+    ta.remove();
+    if (cancel || !text.trim()) return;
+    const m = measureText(text, size);
+    addAnn(pg, { type: "text", text, x, y, size, color, w: m.w, h: m.h });
+  }
+
+  // ---------- Save ----------
+  function hexRgb(h) { const n = parseInt(h.slice(1), 16); return window.PDFLib.rgb((n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255); }
+
+  async function saveEdited() {
+    commitText();
+    if (!ED.doc) throw new Error(t("errGeneric"));
+    if (!ED.pages.some((p) => p.anns.length)) throw new Error(t("noEdits"));
+    const { PDFDocument, degrees, BlendMode } = window.PDFLib;
+    const f = ED.file;
+    const src = await loadPdfLib(f);
+    const out = await PDFDocument.create();
+    let flat = 0;
+    for (const pg of ED.pages) {
+      setStatus(t("pageOf", f.name, pg.i + 1, ED.pages.length));
+      const anns = pg.anns;
+      if (anns.some((a) => REDACT.has(a.type))) {
+        // Re-draw the whole page as one image: nothing from the original page is kept.
+        flat++;
+        const k = Math.min(200 / 72, 4000 / Math.max(pg.vp.width, pg.vp.height));
+        const vp = pg.page.getViewport({ scale: k });
+        const c = canvas(Math.ceil(vp.width), Math.ceil(vp.height)), ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+        await pg.page.render({ canvas: c, canvasContext: ctx, viewport: vp, background: "#ffffff" }).promise;
+        for (const a of anns) paintAnn(ctx, a, c.width / pg.vp.width, c);
+        const img = await out.embedJpg(await canvasBytes(c, "image/jpeg", 0.9));
+        out.addPage([pg.vp.width, pg.vp.height]).drawImage(img, { x: 0, y: 0, width: pg.vp.width, height: pg.vp.height });
+        c.width = c.height = 0;
+        continue;
+      }
+      const [page] = await out.copyPages(src, [pg.i]);
+      out.addPage(page);
+      const P = (x, y) => { const [px, py] = pg.vp.convertToPdfPoint(x, y); return { x: px, y: py }; };
+      for (const a of anns) {
+        if (a.type === "highlight") {
+          const p1 = P(a.x, a.y), p2 = P(a.x + a.w, a.y + a.h);
+          page.drawRectangle({
+            x: Math.min(p1.x, p2.x), y: Math.min(p1.y, p2.y), width: Math.abs(p2.x - p1.x), height: Math.abs(p2.y - p1.y),
+            color: window.PDFLib.rgb(1, 0.886, 0), opacity: 0.45, blendMode: BlendMode.Multiply,
+          });
+        } else if (a.type === "draw") {
+          const pts = a.pts.length === 1 ? [a.pts[0], [a.pts[0][0] + 0.01, a.pts[0][1]]] : a.pts;
+          const path = pts.map(([x, y], i) => { const p = P(x, y); return `${i ? "L" : "M"}${p.x.toFixed(2)} ${(-p.y).toFixed(2)}`; }).join(" ");
+          page.drawSvgPath(path, { x: 0, y: 0, borderColor: hexRgb(a.color), borderWidth: a.lw, borderLineCap: 1 });
+        } else if (a.type === "text") {
+          // Text is placed as a sharp image so every language (Greek included) shows correctly.
+          const k = 4, c = canvas(Math.ceil(a.w * k) + 2, Math.ceil(a.h * k) + 2);
+          paintAnn(c.getContext("2d"), { ...a, x: 0, y: 0 }, k);
+          const img = await out.embedPng(await canvasBytes(c, "image/png"));
+          const w = c.width / k, h = c.height / k, p = P(a.x, a.y + h);
+          page.drawImage(img, { x: p.x, y: p.y, width: w, height: h, rotate: degrees(pg.rot) });
+          c.width = c.height = 0;
+        }
+      }
+    }
+    setStatus(t("saving"));
+    const bytes = await out.save({ useObjectStreams: true });
+    addResult(base(f.name) + "-edited.pdf", bytes, f.size, out.getPageCount(), flat ? [t("noteFlat", flat)] : [], true);
+  }
+
   // ---------- Helpers ----------
   function canvas(w, h) { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; }
   function canvasBytes(c, type, q) {
@@ -349,16 +704,16 @@
     for (const u of resultUrls) URL.revokeObjectURL(u);
     resultUrls = []; el.results.innerHTML = "";
   }
-  function addResult(name, bytes, before, pages, notes) {
+  function addResult(name, bytes, before, pages, notes, noChange) {
     const blob = new Blob([bytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob); resultUrls.push(url);
     const pct = Math.round((1 - blob.size / before) * 100);
-    const change = pct >= 0 ? `<span class="save">−${pct}%</span>` : `<span class="save worse">+${-pct}%</span>`;
+    const change = noChange ? "" : pct >= 0 ? `<span class="save">−${pct}%</span>` : `<span class="save worse">+${-pct}%</span>`;
     const card = document.createElement("div"); card.className = "card pdfcard";
     card.innerHTML = `
       <div class="meta">
         <div class="name" title="${esc(name)}">📄 ${esc(name)}</div>
-        <div class="sizes">${KP.fmt(before)} → <b>${KP.fmt(blob.size)}</b> ${change}</div>
+        <div class="sizes">${noChange ? `<b>${KP.fmt(blob.size)}</b>` : `${KP.fmt(before)} → <b>${KP.fmt(blob.size)}</b> ${change}`}</div>
         <div>${esc(t("pages", pages))}</div>
         ${notes.map((n) => `<div class="note">${esc(n)}</div>`).join("")}
       </div>`;
