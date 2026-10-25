@@ -491,11 +491,6 @@ footer a{color:inherit}
     applyTheme(); updateSizeLabels();
     updateNet(); updateToolbar();
     dispatchEvent(new Event("keeppix:lang"));
-    // Keep the address in step with the language: keeppix.app/ (English) or keeppix.app/el/ (Greek)
-    const path = lang === "el" ? "/el/" : "/";
-    if (/^\/(el\/|index\.html)?$/.test(location.pathname) && (location.pathname !== path || location.search)) {
-      try { history.replaceState(null, "", path + location.hash); } catch { /* ignore */ }
-    }
   }
   langBtn.addEventListener("click", () => {
     lang = lang === "en" ? "el" : "en";
