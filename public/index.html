@@ -106,8 +106,11 @@ footer a{color:inherit}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
 .privacy .btn{padding:6px 12px;font-size:.85rem}
-#themeBtn{min-width:38px;display:inline-flex;align-items:center;justify-content:center}
-.tabs{display:flex;gap:4px;margin:0 0 16px;border-bottom:1px solid var(--line)}
+#themeBtn{min-width:44px;min-height:32px;display:inline-flex;align-items:center;justify-content:center}
+.tabbar{display:flex;flex-wrap:wrap;align-items:stretch;gap:4px 8px;margin:0 0 16px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:4px}
+#installBtn{margin-left:auto;align-self:center;padding:6px 12px;font-size:.85rem;white-space:nowrap}
+.pending{visibility:hidden}
 .tab{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;padding:10px 16px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
 .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
@@ -150,7 +153,7 @@ footer a{color:inherit}
 <div class="wrap">
   <header>
     <div class="brand">
-      <img class="logo" src="/icons/icon-192.png" alt="" width="36" height="36">
+      <img class="logo" src="/icons/icon.svg" alt="" width="36" height="36">
       <div>
         <h1><span class="name">KeepPix</span> <span class="sub" data-i18n="tagline">Resize, compress and convert images and PDFs — all on your device.</span></h1>
       </div>
@@ -159,17 +162,19 @@ footer a{color:inherit}
       <span class="pill" data-i18n="pillLocal" data-i18n-title="pillLocalTitle" title="Processing happens locally in your browser">🔒 Your files never leave your device</span>
       <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Online</span></span>
       <span class="pill" data-i18n-title="reqTitle" title="Network requests the page made since it loaded"><span id="reqCount">0</span><span data-i18n="reqLabel">network requests</span></span>
-      <span class="pill" id="offlineReady" hidden data-i18n-title="offlineTitle" title="The app is saved on this device and opens without internet"><span data-i18n="offlineReady">✓ Available offline</span></span>
-      <button class="btn" id="installBtn" hidden data-i18n="install">Install app</button>
-      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic"></button>
+      <span class="pill pending" id="offlineReady" data-i18n-title="offlineTitle" title="The app is saved on this device and opens without internet"><span data-i18n="offlineReady">✓ Available offline</span></span>
+      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
       <button class="btn ghost" id="langBtn" type="button" lang="el">Ελληνικά</button>
     </div>
   </header>
 
-  <nav class="tabs" role="tablist">
-    <button class="tab" role="tab" data-tab="images" aria-selected="true" data-i18n="tabImages">Images</button>
-    <button class="tab" role="tab" data-tab="pdf" aria-selected="false" data-i18n="tabPdf">PDF</button>
-  </nav>
+  <div class="tabbar">
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="images" aria-selected="true" data-i18n="tabImages">Images</button>
+      <button class="tab" role="tab" data-tab="pdf" aria-selected="false" data-i18n="tabPdf">PDF</button>
+    </nav>
+    <button class="btn" id="installBtn" type="button" hidden data-i18n="install">Install app</button>
+  </div>
 
   <section id="tab-images" role="tabpanel">
   <div class="grid">
@@ -218,10 +223,10 @@ footer a{color:inherit}
     </aside>
 
     <main>
-      <div class="drop" id="drop" tabindex="0" role="button" data-i18n-aria="chooseImages" aria-label="Choose images">
+      <div class="drop" id="drop" tabindex="0" role="button">
         <strong data-i18n="dropTitle">Drop images here or click to choose</strong>
         <span data-i18n="dropSub">JPEG, PNG, WebP, GIF, AVIF — many files at once</span>
-        <input id="file" class="sr" type="file" accept="image/*" multiple>
+        <input id="file" class="sr" type="file" accept="image/*" multiple tabindex="-1" aria-hidden="true">
       </div>
 
       <div class="toolbar">
@@ -248,10 +253,10 @@ footer a{color:inherit}
       <button class="chip" data-tool="edit" aria-pressed="false" data-pi18n="toolEdit">Edit PDF</button>
     </div>
 
-    <div class="drop" id="pdfDrop" tabindex="0" role="button" aria-label="Choose files">
+    <div class="drop" id="pdfDrop" tabindex="0" role="button">
       <strong id="pdfDropTitle">Drop images here or click to choose</strong>
       <span id="pdfDropSub"></span>
-      <input id="pdfFile" class="sr" type="file" multiple>
+      <input id="pdfFile" class="sr" type="file" multiple tabindex="-1" aria-hidden="true">
     </div>
 
     <ul class="flist" id="pdfList"></ul>
@@ -369,7 +374,7 @@ footer a{color:inherit}
       webpUnsupported: " (not supported by this browser)",
       quality: "Quality", maxSize: "Max file size (KB)", noLimit: "no limit",
       maxSizeHint: "If set, quality (and if needed, dimensions) is lowered until the file fits. Not available for PNG.",
-      chooseImages: "Choose images", dropTitle: "Drop images here or click to choose",
+      dropTitle: "Drop images here or click to choose",
       dropSub: "JPEG, PNG, WebP, GIF, AVIF — many files at once",
       none: "No images selected.", clear: "Clear", dlAll: "Download all",
       ready: (r, n, a, b) => `${r}/${n} ready · ${a} → ${b}`, count: (n) => `${n} images`,
@@ -421,7 +426,7 @@ footer a{color:inherit}
       webpUnsupported: " (δεν υποστηρίζεται από αυτόν τον browser)",
       quality: "Ποιότητα", maxSize: "Μέγιστο μέγεθος αρχείου (KB)", noLimit: "χωρίς όριο",
       maxSizeHint: "Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.",
-      chooseImages: "Επιλογή εικόνων", dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή",
+      dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή",
       dropSub: "JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί",
       none: "Δεν έχουν επιλεγεί εικόνες.", clear: "Καθαρισμός", dlAll: "Λήψη όλων",
       ready: (r, n, a, b) => `${r}/${n} έτοιμες · ${a} → ${b}`, count: (n) => `${n} εικόνες`,
@@ -844,8 +849,9 @@ footer a{color:inherit}
     addEventListener("load", () => {
       navigator.serviceWorker.register("/sw.js").catch(() => { /* app still works online */ });
     });
-    navigator.serviceWorker.ready.then(() => { offlineReady.hidden = false; });
-  }
+    // The pill keeps its space from the start (invisible) so showing it does not move the page.
+    navigator.serviceWorker.ready.then(() => { offlineReady.classList.remove("pending"); });
+  } else offlineReady.hidden = true;
 
   let installEvent = null;
   addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); installEvent = e; installBtn.hidden = false; });
