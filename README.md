@@ -22,6 +22,8 @@ Files never leave the user's device.
 ```
 public/
   index.html            # the whole app (HTML + CSS + JS, no dependencies)
+  el/index.html         # Greek page for Google (keeppix.app/el/), GENERATED: run `node tools/build-el.mjs` after editing index.html
+  sitemap.xml, robots.txt  # for Google Search Console
   sw.js                 # service worker: caches the app's own files for offline use
   manifest.webmanifest  # makes it installable
   icons/                # app icons
