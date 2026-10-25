@@ -549,7 +549,23 @@ footer a{color:inherit}
     el.maxHLabel.textContent = t(keep ? "maxH" : "hExact");
     el.sizeHint.textContent = t(keep ? "noUpscale" : "exactHint");
   }
-  el.keepAspect.addEventListener("change", () => { updateSizeLabels(); scheduleRun(); });
+  // Custom + "Keep aspect ratio": typing one side fills in the other from the image's proportions
+  // (the first image in a batch, or the crop ratio when a crop is chosen).
+  let firstDims = null;
+  function currentRatio() {
+    if (el.aspect.value !== "none") { const [a, b] = el.aspect.value.split(":").map(Number); return a / b; }
+    return firstDims ? firstDims.w / firstDims.h : 0;
+  }
+  function syncOtherSide(from) {
+    if (el.keepWrap.hidden || !el.keepAspect.checked) return;
+    const r = currentRatio(); if (!r) return;
+    const src = from === "maxH" ? el.maxH : el.maxW, dst = from === "maxH" ? el.maxW : el.maxH;
+    const v = parseInt(src.value, 10);
+    if (!(v > 0)) return;
+    dst.value = Math.max(1, Math.round(from === "maxH" ? v * r : v / r));
+  }
+  function resyncSides() { syncOtherSide(parseInt(el.maxW.value, 10) > 0 ? "maxW" : "maxH"); }
+  el.keepAspect.addEventListener("change", () => { updateSizeLabels(); resyncSides(); scheduleRun(); });
   function applyPreset(key) {
     for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === key));
     setCustomMode(key === "custom");
@@ -566,6 +582,8 @@ footer a{color:inherit}
       el.qVal.textContent = el.quality.value;
       for (const b of el.presets.querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.preset === "custom"));
       if (el.keepWrap.hidden) setCustomMode(true);
+      if (k === "maxW" || k === "maxH") syncOtherSide(k);
+      else if (k === "aspect") resyncSides();
       scheduleRun();
     });
   }
@@ -582,12 +600,13 @@ footer a{color:inherit}
   function addFiles(list) {
     const imgs = [...list].filter((f) => f.type.startsWith("image/") || /\.(heic|heif|avif)$/i.test(f.name));
     if (!imgs.length) return;
+    if (!files.length) firstDims = null;
     files = files.concat(imgs);
     run();
   }
 
   el.clearBtn.addEventListener("click", () => {
-    runId++; files = []; revokeAll(); outputs = [];
+    runId++; files = []; firstDims = null; revokeAll(); outputs = [];
     el.results.innerHTML = ""; el.status.textContent = ""; updateToolbar();
   });
 
@@ -683,6 +702,7 @@ footer a{color:inherit}
   async function processFile(file, o) {
     const src = await loadImage(file);
     const W = src.width, H = src.height;
+    if (file === files[0] && !firstDims) { firstDims = { w: W, h: H }; resyncSides(); }
     const rect = cropRect(W, H, o.aspect);
     let tw, th;
     if (o.keep) {
