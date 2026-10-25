@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
 <title>KeepPix — Image & PDF tools that never upload your files</title>
-<meta name="description" content="Resize, compress and convert images, turn photos into PDF, merge and compress PDFs — right in your browser. Your files never leave your device. No uploads, no accounts, works offline.">
+<meta name="description" content="Free tools to compress, resize and convert images and PDFs in your browser. Your files never leave your device: no uploads, no account, works offline.">
 <link rel="canonical" href="https://keeppix.app/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KeepPix">
@@ -16,6 +16,13 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"KeepPix","url":"https://keeppix.app/",
+"description":"Free tools to compress, resize and convert images and PDFs in your browser. Files never leave your device.",
+"applicationCategory":"MultimediaApplication","operatingSystem":"Any","browserRequirements":"Requires a modern web browser",
+"inLanguage":["en","el"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},
+"image":"https://keeppix.app/og.jpg","publisher":{"@type":"Organization","name":"Pnyxus","url":"https://pnyxus.gr"}}
+</script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -45,8 +52,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-app
 header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
 .brand{display:flex;align-items:center;gap:10px}
 .logo{width:36px;height:36px;border-radius:9px;flex:none}
-h1{font-size:1.45rem;margin:0;letter-spacing:-.01em}
-.sub{color:var(--muted);margin:2px 0 0}
+h1{margin:0;font-size:1rem;font-weight:400}
+h1 .name{display:block;font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.sub{display:block;color:var(--muted);margin:2px 0 0}
 .privacy{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:var(--accent-soft);color:var(--ink);font-size:.85rem;border:1px solid var(--line)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--good)}
@@ -89,6 +97,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 footer{margin-top:28px;color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
 footer a{color:inherit}
 .how{margin-top:18px}
+.faq h3{font-size:1rem;margin:14px 0 4px}
+.faq p{margin:0;color:var(--muted);font-size:.9rem}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
 .privacy .btn{padding:6px 12px;font-size:.85rem}
@@ -122,8 +132,7 @@ footer a{color:inherit}
     <div class="brand">
       <img class="logo" src="/icons/icon-192.png" alt="" width="36" height="36">
       <div>
-        <h1>KeepPix</h1>
-        <p class="sub" data-i18n="tagline">Resize, compress and convert images and PDFs — all on your device.</p>
+        <h1><span class="name">KeepPix</span> <span class="sub" data-i18n="tagline">Resize, compress and convert images and PDFs — all on your device.</span></h1>
       </div>
     </div>
     <div class="privacy" aria-live="polite">
@@ -266,6 +275,20 @@ footer a{color:inherit}
         </ul>
       </section>
 
+  <section class="panel how faq">
+    <h2 data-i18n="faqTitle">What can I do with KeepPix?</h2>
+    <h3 data-i18n="q1">How do I compress a photo or reduce its file size?</h3>
+    <p data-i18n="a1">Add the image, set “Max file size (KB)” or pick a preset like “Email (under 500 KB)”, then download it. For JPEG and WebP, KeepPix lowers the quality, and if needed the dimensions, until the file fits.</p>
+    <h3 data-i18n="q2">How do I resize an image?</h3>
+    <p data-i18n="a2">Enter a max width or height in pixels. The image keeps its proportions and is never made larger. You can also crop it to 1:1, 4:5, 16:9 or 3:2.</p>
+    <h3 data-i18n="q3">Can I make a passport or ID photo (35×45)?</h3>
+    <p data-i18n="a3">Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.</p>
+    <h3 data-i18n="q4">How do I compress a PDF or turn photos into a PDF?</h3>
+    <p data-i18n="a4">Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, or compress a PDF to a target size, in color or black and white.</p>
+    <h3 data-i18n="q5">Is it free, and does it work on my phone?</h3>
+    <p data-i18n="a5">Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.</p>
+  </section>
+
   <footer>
     <span data-i18n="footer">Open source · No cookies · No analytics · No accounts</span>
     <span><span data-i18n="madeBy">Made by</span> <a href="https://pnyxus.gr" target="_blank" rel="noopener">pnyxus.gr</a></span>
@@ -317,6 +340,17 @@ footer a{color:inherit}
       how3: "The “network requests” counter at the top shows the page sends nothing.",
       how4: "The page’s security policy (CSP) forbids the browser from connecting to any server.",
       how5: "Re-encoding strips EXIF metadata, including your photo’s GPS location.",
+      faqTitle: "What can I do with KeepPix?",
+      q1: "How do I compress a photo or reduce its file size?",
+      a1: "Add the image, set “Max file size (KB)” or pick a preset like “Email (under 500 KB)”, then download it. For JPEG and WebP, KeepPix lowers the quality, and if needed the dimensions, until the file fits.",
+      q2: "How do I resize an image?",
+      a2: "Enter a max width or height in pixels. The image keeps its proportions and is never made larger. You can also crop it to 1:1, 4:5, 16:9 or 3:2.",
+      q3: "Can I make a passport or ID photo (35×45)?",
+      a3: "Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.",
+      q4: "How do I compress a PDF or turn photos into a PDF?",
+      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, or compress a PDF to a target size, in color or black and white.",
+      q5: "Is it free, and does it work on my phone?",
+      a5: "Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.",
       footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by",
       themeAuto: "Theme: automatic (follows your device)", themeLight: "Theme: light", themeDark: "Theme: dark",
     },
@@ -358,6 +392,17 @@ footer a{color:inherit}
       how3: "Ο μετρητής «αιτήματα δικτύου» πάνω δείχνει ότι η σελίδα δεν στέλνει τίποτα.",
       how4: "Η πολιτική ασφαλείας (CSP) της σελίδας απαγορεύει στον browser κάθε σύνδεση προς server.",
       how5: "Η επανακωδικοποίηση αφαιρεί τα μεταδεδομένα EXIF, μαζί και την τοποθεσία GPS της φωτογραφίας.",
+      faqTitle: "Τι μπορώ να κάνω με το KeepPix;",
+      q1: "Πώς συμπιέζω μια φωτογραφία ή μικραίνω το μέγεθος του αρχείου;",
+      a1: "Προσθέστε την εικόνα, ορίστε «Μέγιστο μέγεθος αρχείου (KB)» ή διαλέξτε μια έτοιμη ρύθμιση όπως «Για email (έως 500 KB)» και κατεβάστε τη. Στα JPEG και WebP το KeepPix μειώνει την ποιότητα, και αν χρειαστεί τις διαστάσεις, μέχρι να χωρέσει το αρχείο.",
+      q2: "Πώς αλλάζω το μέγεθος μιας εικόνας;",
+      a2: "Γράψτε μέγιστο πλάτος ή ύψος σε pixel. Η εικόνα κρατά τις αναλογίες της και δεν μεγαλώνει ποτέ. Μπορείτε επίσης να την περικόψετε σε 1:1, 4:5, 16:9 ή 3:2.",
+      q3: "Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);",
+      a3: "Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.",
+      q4: "Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;",
+      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF ή να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο.",
+      q5: "Είναι δωρεάν και δουλεύει στο κινητό;",
+      a5: "Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.",
       footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:",
       themeAuto: "Θέμα: αυτόματο (όπως η συσκευή)", themeLight: "Θέμα: φωτεινό", themeDark: "Θέμα: σκοτεινό",
     },
