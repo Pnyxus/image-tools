@@ -12,7 +12,7 @@ let html = readFileSync(SRC, "utf8");
 // Greek texts that exist only in <head> (the rest come from the STR table in index.html)
 const DESC = "Δωρεάν συμπίεση και σμίκρυνση εικόνων και PDF μέσα στον browser, π.χ. για αιτήσεις στο gov.gr. Τα αρχεία δεν ανεβαίνουν πουθενά. Χωρίς λογαριασμό.";
 const OG_DESC = "Συμπίεση και μετατροπή εικόνων και PDF μέσα στον browser. Τίποτα δεν ανεβαίνει, δουλεύει χωρίς internet, χωρίς λογαριασμό.";
-const URL_EL = "https://keeppix.app/el/";
+const URL_EL = "https://kratopix.app/el/";
 
 const strSrc = html.match(/const STR = (\{[\s\S]*?\n  \});/);
 if (!strSrc) throw new Error("STR table not found in index.html");
@@ -34,8 +34,8 @@ swap(/(<meta property="og:url" content=")[^"]*/, (_, a) => a + URL_EL);
 swap(/(<meta property="og:locale" content=")[^"]*/, (_, a) => a + "el_GR");
 swap(/(<meta property="og:title" content=")[^"]*/, (_, a) => a + esc(EL.title));
 swap(/(<meta property="og:description" content=")[^"]*/, (_, a) => a + esc(OG_DESC));
-swap(/("url":")https:\/\/keeppix\.app\/(")/, (_, a, b) => a + URL_EL + b);
-swap(/("@type":"WebApplication","name":"KeepPix",)/, (m) => m + '"inLanguage":"el",');
+swap(/("url":")https:\/\/kratopix\.app\/(")/, (_, a, b) => a + URL_EL + b);
+swap(/("@type":"WebApplication","name":"Kratopix",)/, (m) => m + '"inLanguage":"el",');
 html = html.replace(/"inLanguage":\["en","el"\],/, "");
 swap(/("description":")Free tools[^"]*/, (_, d) => d + esc(OG_DESC));
 

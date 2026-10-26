@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# KeepPix: apply the newest image-tools*.zip from ~/Downloads to this repo and publish it.
+# Kratopix: apply the newest image-tools*.zip from ~/Downloads to this repo and publish it.
 # Usage:  ./update.sh                 (automatic commit message)
 #         ./update.sh "what changed"  (your own message)
 # Wrapped in main() so bash reads the whole script before the zip overwrites it.
@@ -21,6 +21,6 @@ main() {
   git --no-pager diff --cached --stat | tail -n1
   git commit -q -m "${1:-Update $(date '+%Y-%m-%d %H:%M')}"
   git push -q
-  echo "✓ Published. Live on https://keeppix.app in about a minute."
+  echo "✓ Published. Live on https://kratopix.app in about a minute."
 }
 main "$@"; exit
