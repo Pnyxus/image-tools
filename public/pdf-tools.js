@@ -1,9 +1,9 @@
-// KeepPix PDF tools: images → PDF, merge PDFs, compress PDF, edit PDF.
+// Kratopix PDF tools: images → PDF, merge PDFs, compress PDF, edit PDF.
 // Everything runs in the browser. Libraries (pdf-lib, PDF.js) are served from this site
 // and only loaded when the PDF tab is opened. No file is ever sent anywhere.
 (() => {
   "use strict";
-  const KP = window.KeepPix;
+  const KP = window.Kratopix;
   const $ = (s) => document.querySelector(s);
 
   // ---------- Strings ----------
@@ -214,7 +214,7 @@
     edHint();
     renderList(); updateGo();
   }
-  addEventListener("keeppix:lang", () => { applyLang(); clearResults(); setStatus(""); });
+  addEventListener("kratopix:lang", () => { applyLang(); clearResults(); setStatus(""); });
 
   // ---------- Run ----------
   el.go.addEventListener("click", run);

@@ -1,7 +1,9 @@
-# KeepPix — keeppix.app
+# Kratopix — kratopix.app
 
 Privacy-first image tools: resize, compress, crop and convert images entirely in the browser.
 Files never leave the user's device.
+
+Formerly **KeepPix** (keeppix.app), renamed 26 Oct 2026. The name comes from Greek κρατάω, "I keep".
 
 ## Features (v1)
 
@@ -15,14 +17,14 @@ Files never leave the user's device.
 - English and Greek UI (auto-detected from the browser, switchable, `?lang=el` / `?lang=en`)
 - No cookies, no analytics, no external scripts or fonts
 - Installable app (PWA): works with no connection at all after the first visit
-- PDF tools (tab or `keeppix.app/#pdf`): images → PDF (A4/Letter/fit, margins), merge PDFs (keeps text), compress PDF (rasterizes pages to JPEG; light/balanced/strong, black & white, max-size target)
+- PDF tools (tab or `kratopix.app/#pdf`): images → PDF (A4/Letter/fit, margins), merge PDFs (keeps text), compress PDF (rasterizes pages to JPEG; light/balanced/strong, black & white, max-size target)
 
 ## Project layout
 
 ```
 public/
   index.html            # the whole app (HTML + CSS + JS, no dependencies)
-  el/index.html         # Greek page for Google (keeppix.app/el/), GENERATED: run `node tools/build-el.mjs` after editing index.html
+  el/index.html         # Greek page for Google (kratopix.app/el/), GENERATED: run `node tools/build-el.mjs` after editing index.html
   sitemap.xml, robots.txt  # for Google Search Console
   sw.js                 # service worker: caches the app's own files for offline use
   manifest.webmanifest  # makes it installable
@@ -55,6 +57,13 @@ npx wrangler dev
 3. Every push to `main` redeploys automatically. Add a custom domain under the Worker's **Domains** tab.
 
 Or deploy straight from your machine: `npx wrangler login` then `npx wrangler deploy`.
+
+## Old address (keeppix.app)
+
+keeppix.app stays registered and redirects to kratopix.app:
+- Cloudflare Redirect Rule on the keeppix.app zone: 301 to `https://kratopix.app` + same path, query kept, for every path **except `/sw.js`**.
+- `/sw.js` is still served on keeppix.app so installed copies of the old app update to a worker that clears the old offline copy, unregisters itself and reloads into the redirect (see the top of `public/sw.js`).
+- `index.html` also sends keeppix.app visitors to kratopix.app with JavaScript, as a fallback.
 
 ## Releasing a new version
 

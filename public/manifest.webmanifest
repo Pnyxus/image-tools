@@ -1,6 +1,6 @@
 {
-  "name": "KeepPix",
-  "short_name": "KeepPix",
+  "name": "Kratopix",
+  "short_name": "Kratopix",
   "description": "Resize, compress, crop and convert images on your device. Nothing is uploaded.",
   "lang": "en",
   "start_url": "/",
