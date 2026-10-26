@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.kratopix.twa",
+      "sha256_cert_fingerprints": [
+        "C2:AA:25:97:92:9A:07:20:CB:41:A1:5F:BE:B4:D2:BE:4A:45:F6:DF:E8:E2:F1:5C:B5:60:DF:4B:8B:63:55:2A",
+        "AC:DA:C1:B1:D6:8A:28:F9:84:82:13:55:17:7B:96:40:28:B4:E4:AC:64:A8:F7:8D:4D:05:B9:43:8A:24:8F:BD"
+      ]
+    }
+  }
+]
