@@ -10,3 +10,7 @@
 /sw.js
   ! Content-Security-Policy
   Cache-Control: no-cache
+
+# Android app (Google Play) ownership proof
+/.well-known/assetlinks.json
+  Content-Type: application/json
