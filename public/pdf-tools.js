@@ -199,14 +199,79 @@
     el.list.innerHTML = items.map((f, i) => `
       <li>
         <span class="num">${i + 1}</span>
-        <span class="fname" title="${esc(f.name)}">${esc(f.name)}</span>
-        <span class="fsize">${KP.fmt(f.size)}</span>
+        ${thumbHtml(f)}
+        <span class="finfo">
+          <span class="fname" title="${esc(f.name)}">${esc(f.name)}</span>
+          <span class="fsize">${KP.fmt(f.size)}${thumbs.get(f)?.pages ? " · " + esc(t("pages", thumbs.get(f).pages)) : ""}</span>
+        </span>
         <span class="acts">
           ${order ? `<button class="ib" data-act="up" data-i="${i}" aria-label="${esc(t("up"))}" title="${esc(t("up"))}" ${i === 0 ? "disabled" : ""}>↑</button>
           <button class="ib" data-act="down" data-i="${i}" aria-label="${esc(t("down"))}" title="${esc(t("down"))}" ${i === items.length - 1 ? "disabled" : ""}>↓</button>` : ""}
           <button class="ib" data-act="rm" data-i="${i}" aria-label="${esc(t("remove"))}" title="${esc(t("remove"))}">✕</button>
         </span>
       </li>`).join("");
+  }
+
+  // ---------- Previews ----------
+  // Small first-page (PDF) or picture (image) previews for the file list, made on this device.
+  const thumbs = new WeakMap(); // File -> { url, pages } (url "" = no preview possible)
+  const thumbQueue = [];
+  let thumbBusy = false;
+  const THUMB_PX = 112; // ~56 CSS px at 2x
+
+  function thumbHtml(f) {
+    if (tool === "edit") return "";
+    const th = thumbs.get(f);
+    if (!th) { queueThumb(f); return `<span class="thumb wait" aria-hidden="true"></span>`; }
+    if (!th.url) return `<span class="thumb none" aria-hidden="true">${isPdf(f) ? "PDF" : ""}</span>`;
+    return `<span class="thumb" aria-hidden="true"><img src="${th.url}" alt=""></span>`;
+  }
+  function queueThumb(f) {
+    if (thumbQueue.includes(f)) return;
+    thumbQueue.push(f);
+    if (!thumbBusy) drainThumbs();
+  }
+  async function drainThumbs() {
+    thumbBusy = true;
+    while (thumbQueue.length) {
+      const f = thumbQueue.shift();
+      if (thumbs.has(f) || !items.includes(f)) continue;
+      let th = { url: "", pages: 0 };
+      try { th = isPdf(f) ? await pdfThumb(f) : await imgThumb(f); } catch {}
+      thumbs.set(f, th);
+      if (items.includes(f) && !busy) renderList();
+    }
+    thumbBusy = false;
+  }
+  function canvasUrl(c) {
+    return new Promise((res) => c.toBlob((b) => res(b ? URL.createObjectURL(b) : ""), "image/jpeg", 0.8));
+  }
+  async function pdfThumb(f) {
+    await loadLibs();
+    const task = pdfjs.getDocument({ data: new Uint8Array(await f.arrayBuffer()), isEvalSupported: false, useSystemFonts: true });
+    try {
+      const doc = await task.promise;
+      const page = await doc.getPage(1);
+      const v1 = page.getViewport({ scale: 1 });
+      const vp = page.getViewport({ scale: THUMB_PX / Math.max(v1.width, v1.height) });
+      const c = document.createElement("canvas");
+      c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      return { url: await canvasUrl(c), pages: doc.numPages };
+    } finally { task.destroy(); }
+  }
+  async function imgThumb(f) {
+    const bmp = await createImageBitmap(f, { imageOrientation: "from-image" });
+    const k = THUMB_PX / Math.max(bmp.width, bmp.height);
+    const c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+    const ctx = c.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(bmp, 0, 0, c.width, c.height);
+    bmp.close?.();
+    return { url: await canvasUrl(c), pages: 0 };
   }
 
   function updateGo() {
