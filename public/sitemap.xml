@@ -14,4 +14,8 @@
     <xhtml:link rel="alternate" hreflang="el" href="https://kratopix.app/el/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kratopix.app/"/>
   </url>
+  <url>
+    <loc>https://kratopix.app/privacy/</loc>
+    <lastmod>2026-10-26</lastmod>
+  </url>
 </urlset>

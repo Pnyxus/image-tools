@@ -2,11 +2,12 @@
 // It only ever stores and serves the app's own files (same origin).
 // User images are never seen here: they are processed in the page and never requested over the network.
 
-const VERSION = "v18";
+const VERSION = "v20";
 const CACHE = `kratopix-${VERSION}`;
 const APP_SHELL = [
   "/",
   "/el/",
+  "/privacy/",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -55,7 +56,9 @@ self.addEventListener("fetch", (event) => {
 
   // Page: try the network first (to pick up new versions), fall back to the cached copy offline.
   if (req.mode === "navigate") {
-    const page = url.pathname.startsWith("/el/") ? "/el/" : "/";   // English or Greek page
+    // The app is "/" (English) or "/el/" (Greek); other pages (like /privacy/) are cached under their own address.
+    const p = url.pathname;
+    const page = /^\/el\/(index\.html)?$/.test(p) ? "/el/" : /^\/(index\.html)?$/.test(p) ? "/" : p;
     event.respondWith(
       fetch(req)
         .then((res) => {
