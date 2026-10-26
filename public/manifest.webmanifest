@@ -1,13 +1,18 @@
 {
+  "id": "/",
   "name": "Kratopix",
   "short_name": "Kratopix",
-  "description": "Resize, compress, crop and convert images on your device. Nothing is uploaded.",
+  "description": "Resize, compress, crop and convert images and PDFs on your device. Nothing is uploaded.",
   "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "launch_handler": { "client_mode": "navigate-existing" },
   "background_color": "#f6f7f5",
   "theme_color": "#0f766e",
+  "categories": ["photo", "productivity", "utilities"],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -27,5 +32,26 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Compress images",
+      "short_name": "Images",
+      "url": "/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "PDF tools",
+      "short_name": "PDF",
+      "url": "/#pdf",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ],
+  "screenshots": [
+    { "src": "/screenshots/phone-images.png", "sizes": "1080x2340", "type": "image/png", "form_factor": "narrow", "label": "Compress and resize photos on your phone" },
+    { "src": "/screenshots/phone-pdf.png", "sizes": "1080x2340", "type": "image/png", "form_factor": "narrow", "label": "Turn photos into a PDF, merge, compress or edit PDFs" },
+    { "src": "/screenshots/phone-privacy.png", "sizes": "1080x2340", "type": "image/png", "form_factor": "narrow", "label": "Your files never leave your device" },
+    { "src": "/screenshots/wide-images.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Image tools on a computer" },
+    { "src": "/screenshots/wide-pdf.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "PDF tools on a computer" }
   ]
 }

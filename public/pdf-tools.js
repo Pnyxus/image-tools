@@ -11,6 +11,7 @@
     en: {
       toolImg: "Images → PDF", toolMerge: "Merge PDFs", toolCompress: "Compress PDF",
       dropImg: "Drop images here or click to choose", dropPdf: "Drop PDF files here or click to choose",
+      dropImgTap: "Tap to choose images", dropPdfTap: "Tap to choose PDF files", dropPdf1Tap: "Tap to choose a PDF",
       dropSubImg: "Each image becomes one page. Drag to reorder below.",
       dropSubMerge: "Files are merged in the order listed below.",
       dropSubCompress: "Each PDF is compressed separately.",
@@ -55,6 +56,7 @@
     el: {
       toolImg: "Εικόνες → PDF", toolMerge: "Ένωση PDF", toolCompress: "Συμπίεση PDF",
       dropImg: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή", dropPdf: "Σύρετε αρχεία PDF εδώ ή πατήστε για επιλογή",
+      dropImgTap: "Πατήστε για να επιλέξετε εικόνες", dropPdfTap: "Πατήστε για να επιλέξετε αρχεία PDF", dropPdf1Tap: "Πατήστε για να επιλέξετε ένα PDF",
       dropSubImg: "Κάθε εικόνα γίνεται μία σελίδα. Αλλάξτε τη σειρά παρακάτω.",
       dropSubMerge: "Τα αρχεία ενώνονται με τη σειρά της λίστας.",
       dropSubCompress: "Κάθε PDF συμπιέζεται ξεχωριστά.",
@@ -108,9 +110,16 @@
       document.getElementById("tab-" + b.dataset.tab).hidden = !on;
     }
     if (name === "pdf") loadLibs().catch(() => {});
-    try { history.replaceState(null, "", name === "pdf" ? "#pdf" : location.pathname + location.search); } catch { /* ignore */ }
+    try { history.replaceState(null, "", name === "images" ? location.pathname + location.search : "#" + name); } catch { /* ignore */ }
   }
-  tabBtns.forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+  tabBtns.forEach((b) => b.addEventListener("click", () => {
+    const same = b.getAttribute("aria-selected") === "true";
+    showTab(b.dataset.tab);
+    if (!same && MOBILE.matches) scrollTo(0, 0);   // app-style: each tab opens at its top
+  }));
+  // On wide screens there is no About tab (that text is always shown below), so fall back to Images.
+  const MOBILE = matchMedia("(max-width: 700px)");
+  MOBILE.addEventListener?.("change", () => { if (!MOBILE.matches && location.hash === "#about") showTab("images"); });
 
   // ---------- Libraries (lazy) ----------
   let libsPromise = null, pdfjs = null;
@@ -208,7 +217,7 @@
   function applyLang() {
     for (const n of document.querySelectorAll("[data-pi18n]")) n.textContent = t(n.dataset.pi18n);
     for (const n of document.querySelectorAll("[data-pi18n-ph]")) n.placeholder = t(n.dataset.pi18nPh);
-    el.dropTitle.textContent = t(TOOLS[tool].drop);
+    el.dropTitle.textContent = t(TOOLS[tool].drop + (KP.touch ? "Tap" : ""));
     el.dropSub.textContent = t(TOOLS[tool].sub);
     el.drop.setAttribute("aria-label", t(TOOLS[tool].drop));
     edHint();
@@ -725,5 +734,5 @@
 
   // ---------- Init ----------
   setTool("img2pdf");
-  showTab(location.hash === "#pdf" ? "pdf" : "images");
+  showTab(location.hash === "#pdf" ? "pdf" : location.hash === "#about" && MOBILE.matches ? "about" : "images");
 })();

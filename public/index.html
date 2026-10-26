@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <script>/* KeepPix is now Kratopix: send visitors of the old address to the new one */if(/(^|\.)keeppix\.app$/.test(location.hostname))location.replace("https://kratopix.app"+location.pathname+location.search+location.hash);</script>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
 <title>Kratopix — Image & PDF tools that never upload your files</title>
 <meta name="description" content="Free tools to compress, resize and convert images and PDFs in your browser. Your files never leave your device: no uploads, no account, works offline.">
@@ -29,7 +29,11 @@
 "image":"https://kratopix.app/og.jpg","publisher":{"@type":"Organization","name":"Pnyxus","url":"https://pnyxus.gr"}}
 </script>
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#0f766e" id="themeColor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kratopix">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%230f766e'/%3E%3Cpath d='M256 88L398 140V252C398 338 338 398 256 428C174 398 114 338 114 252V140Z' fill='%23fff'/%3E%3Crect x='170' y='168' width='172' height='146' rx='24' fill='%230f766e'/%3E%3Cpath d='M188 296L238 236L270 272L294 248L326 296Z' fill='%23fff'/%3E%3Ccircle cx='300' cy='206' r='15' fill='%232dd4bf'/%3E%3C/svg%3E%0A">
 <script>try{var t=localStorage.getItem("kratopix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
@@ -106,7 +110,7 @@ footer a{color:inherit}
 .faq p{margin:0;color:var(--muted);font-size:.9rem}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
-.privacy .btn{padding:6px 12px;font-size:.85rem}
+.privacy .btn,.hbtns .btn{padding:6px 12px;font-size:.85rem}
 #themeBtn{min-width:44px;min-height:32px;display:inline-flex;align-items:center;justify-content:center}
 .tabbar{display:flex;flex-wrap:wrap;align-items:stretch;gap:4px 8px;margin:0 0 16px;border-bottom:1px solid var(--line)}
 .tabs{display:flex;gap:4px}
@@ -148,33 +152,109 @@ footer a{color:inherit}
 .edpage .pno{position:absolute;right:6px;bottom:4px;font-size:.75rem;color:#666;pointer-events:none}
 .edpage textarea{position:absolute;margin:0;padding:0;border:1px dashed var(--accent);background:rgba(255,255,255,.85);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;line-height:1.25;resize:none;overflow:hidden;outline:none;min-width:4em;white-space:pre;z-index:2}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* Header: the app bar (logo, theme, language) and the privacy pills */
+.appbar{display:contents}
+.hbtns{display:flex;gap:8px;order:2}
+.privacy{order:1;margin-left:auto}
+.ti,.tab.mob,#installBtn .is,.dicon{display:none}
+@media (min-width:701px){#tab-about[hidden]{display:block!important}}
+
+/* Phones: looks and behaves like an app (top app bar, bottom navigation) */
+@media (max-width:700px){
+  body{-webkit-tap-highlight-color:transparent}
+  .wrap{padding:0 12px calc(84px + env(safe-area-inset-bottom))}
+  header{display:block;margin:0 -12px 12px}
+  .appbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:#0f766e;color:#fff;padding:calc(8px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) 8px calc(12px + env(safe-area-inset-left));min-height:56px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+  header{position:sticky;top:0;z-index:30}
+  .logo{width:32px;height:32px}
+  h1 .name{font-size:1.25rem}
+  h1 .sub{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .appbar .btn.ghost{color:#fff;border-color:rgba(255,255,255,.4);min-height:36px;padding:6px 10px}
+  .privacy{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:8px 12px;margin:0;background:var(--bg);border-bottom:1px solid var(--line)}
+  .privacy::-webkit-scrollbar{display:none}
+  .pill{white-space:nowrap;font-size:.78rem;padding:4px 10px;flex:none}
+  /* Bottom navigation */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;flex-wrap:nowrap;gap:0;background:var(--panel);border-top:1px solid var(--line);border-bottom:0;
+    padding:6px calc(4px + env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) calc(4px + env(safe-area-inset-left));box-shadow:0 -1px 4px rgba(0,0,0,.06)}
+  .tabs{flex:1;gap:0}
+  .tab,#installBtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 2px;margin:0;border:0;font-size:.75rem;font-weight:600;color:var(--muted);background:transparent;min-width:0;white-space:nowrap}
+  #installBtn{flex:0 1 25%;margin:0;align-self:stretch;border-radius:0}
+  #installBtn[hidden]{display:none}
+  #installBtn .il{display:none} #installBtn .is{display:inline}
+  .tab.mob{display:flex}
+  .ti{display:block;box-sizing:content-box;padding:4px 18px;border-radius:16px;transition:background .15s}
+  .tab[aria-selected="true"]{color:var(--ink)}
+  .tab[aria-selected="true"] .ti{background:var(--accent-soft);color:var(--accent)}
+  /* While typing, the keyboard needs the room */
+  body:has(input[type=number]:focus,textarea:focus) .tabbar{display:none}
+  /* Images: choose files first, settings below */
+  .grid{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+  .grid main{order:-1}
+  .grid>*{min-width:0}
+  .drop{padding:22px 16px;border-style:solid;border-width:1.5px;background:var(--accent-soft);border-color:transparent}
+  .dicon{display:block;margin:0 auto 6px;color:var(--accent)}
+  .drop strong{font-size:1.05rem}
+  .drop span{font-size:.82rem}
+  .edtools{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .edtools .chip{padding:7px 12px}
+  .presets,.seg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px 2px}
+  .seg{margin-left:-12px;margin-right:-12px;padding:0 12px 2px}
+  .presets::-webkit-scrollbar,.seg::-webkit-scrollbar{display:none}
+  .chip{flex:none;white-space:nowrap;padding:9px 14px}
+  input[type=number],select,textarea{font-size:16px}
+  .results{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .meta{padding:8px 10px 10px;font-size:.8rem}
+  .toolbar{margin:12px 0 8px}
+  .toolbar:has(#clearBtn:disabled){display:none}
+  .edbar{top:var(--hdr,96px)}
+  .how{margin-top:0}
+  .how + .faq{margin-top:12px}
+  footer{margin-top:16px;justify-content:center;text-align:center}
+}
+@media (max-width:700px) and (hover:none){.drop:hover{background:var(--accent-soft)}}
+:root[data-theme="dark"] .appbar{background:#1a2120;box-shadow:0 1px 0 #2c3633}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .appbar{background:#1a2120;box-shadow:0 1px 0 #2c3633}}
+
+/* Installed app: no browser-page habits */
+@media (display-mode: standalone), (display-mode: fullscreen){
+  body{overscroll-behavior-y:none}
+  #offlineReady,#installBtn{display:none!important}
+  .tab,.chip,.btn,.pill,.appbar,.drop,label{-webkit-user-select:none;user-select:none}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
+    <div class="appbar">
     <div class="brand">
       <img class="logo" src="/icons/icon.svg" alt="" width="36" height="36">
       <div>
         <h1><span class="name">Kratopix</span> <span class="sub" data-i18n="tagline">Resize, compress and convert images and PDFs — all on your device.</span></h1>
       </div>
     </div>
+    <div class="hbtns">
+      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
+      <button class="btn ghost" id="langBtn" type="button" lang="el">Ελληνικά</button>
+    </div>
+    </div>
     <div class="privacy" aria-live="polite">
       <span class="pill" data-i18n="pillLocal" data-i18n-title="pillLocalTitle" title="Processing happens locally in your browser">🔒 Your files never leave your device</span>
       <span class="pill"><span class="dot" id="netDot"></span><span id="netText">Online</span></span>
       <span class="pill" data-i18n-title="reqTitle" title="Network requests the page made since it loaded"><span id="reqCount">0</span><span data-i18n="reqLabel">network requests</span></span>
       <span class="pill pending" id="offlineReady" data-i18n-title="offlineTitle" title="The app is saved on this device and opens without internet"><span data-i18n="offlineReady">✓ Available offline</span></span>
-      <button class="btn ghost" id="themeBtn" type="button" title="Theme: automatic" aria-label="Theme: automatic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button>
-      <button class="btn ghost" id="langBtn" type="button" lang="el">Ελληνικά</button>
+
     </div>
   </header>
 
   <div class="tabbar">
     <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" data-tab="images" aria-selected="true" data-i18n="tabImages">Images</button>
-      <button class="tab" role="tab" data-tab="pdf" aria-selected="false" data-i18n="tabPdf">PDF</button>
+      <button class="tab" role="tab" data-tab="images" aria-selected="true"><svg class="ti" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-9 9"/></svg><span data-i18n="tabImages">Images</span></button>
+      <button class="tab" role="tab" data-tab="pdf" aria-selected="false"><svg class="ti" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span data-i18n="tabPdf">PDF</span></button>
+      <button class="tab mob" role="tab" data-tab="about" aria-selected="false"><svg class="ti" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M12 11v5M12 8h.01"/></svg><span data-i18n="tabAbout">About</span></button>
     </nav>
-    <button class="btn" id="installBtn" type="button" hidden data-i18n="install">Install app</button>
+    <button class="btn" id="installBtn" type="button" hidden><svg class="ti" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span class="il" data-i18n="install">Install app</span><span class="is" data-i18n="installShort">Install</span></button>
   </div>
 
   <section id="tab-images" role="tabpanel">
@@ -225,7 +305,8 @@ footer a{color:inherit}
 
     <main>
       <div class="drop" id="drop" tabindex="0" role="button">
-        <strong data-i18n="dropTitle">Drop images here or click to choose</strong>
+        <svg class="dicon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></svg>
+        <strong id="dropTitle" data-i18n="dropTitle">Drop images here or click to choose</strong>
         <span data-i18n="dropSub">JPEG, PNG, WebP, GIF, AVIF — many files at once</span>
         <input id="file" class="sr" type="file" accept="image/*" multiple tabindex="-1" aria-hidden="true">
       </div>
@@ -255,6 +336,7 @@ footer a{color:inherit}
     </div>
 
     <div class="drop" id="pdfDrop" tabindex="0" role="button">
+      <svg class="dicon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></svg>
       <strong id="pdfDropTitle">Drop images here or click to choose</strong>
       <span id="pdfDropSub"></span>
       <input id="pdfFile" class="sr" type="file" multiple tabindex="-1" aria-hidden="true">
@@ -316,6 +398,7 @@ footer a{color:inherit}
     <div class="results" id="pdfResults" style="margin-top:12px"></div>
   </section>
 
+  <div id="tab-about" role="tabpanel">
   <section class="panel how">
         <h2 data-i18n="howTitle">How do I know nothing is uploaded?</h2>
         <ul>
@@ -347,6 +430,7 @@ footer a{color:inherit}
     <span data-i18n="footer">Open source · No cookies · No analytics · No accounts</span>
     <span><span data-i18n="madeBy">Made by</span> <a href="https://pnyxus.gr" target="_blank" rel="noopener">pnyxus.gr</a></span>
   </footer>
+  </div>
 </div>
 
 <script>
@@ -364,7 +448,7 @@ footer a{color:inherit}
       online: "Online", offline: "Offline — still working",
       reqLabel: "network requests", reqTitle: "Network requests the page made since it loaded",
       offlineReady: "✓ Available offline", offlineTitle: "The app is saved on this device and opens without internet",
-      install: "Install app", switchTo: "Ελληνικά", tabImages: "Images", tabPdf: "PDF",
+      install: "Install app", installShort: "Install", switchTo: "Ελληνικά", tabImages: "Images", tabPdf: "PDF", tabAbout: "About",
       presetsTitle: "Presets", pWeb: "For websites", pSocial: "Social media (square)", pPhoto: "ID / passport photo 35×45",
       pDoc: "Document under 2 MB", pEmail: "Email (under 500 KB)", pCustom: "Custom",
       settingsTitle: "Settings", maxW: "Max width (px)", maxH: "Max height (px)", auto: "auto",
@@ -377,7 +461,7 @@ footer a{color:inherit}
       webpUnsupported: " (not supported by this browser)",
       quality: "Quality", maxSize: "Max file size (KB)", noLimit: "no limit",
       maxSizeHint: "If set, quality (and if needed, dimensions) is lowered until the file fits. Not available for PNG.",
-      dropTitle: "Drop images here or click to choose",
+      dropTitle: "Drop images here or click to choose", dropTap: "Tap to choose images",
       dropSub: "JPEG, PNG, WebP, GIF, AVIF — many files at once",
       none: "No images selected.", clear: "Clear", dlAll: "Download all",
       ready: (r, n, a, b) => `${r}/${n} ready · ${a} → ${b}`, count: (n) => `${n} images`,
@@ -418,7 +502,7 @@ footer a{color:inherit}
       online: "Συνδεδεμένοι", offline: "Εκτός σύνδεσης — δουλεύει κανονικά",
       reqLabel: "αιτήματα δικτύου", reqTitle: "Αιτήματα δικτύου που έκανε η σελίδα μετά τη φόρτωση",
       offlineReady: "✓ Διαθέσιμη εκτός σύνδεσης", offlineTitle: "Η εφαρμογή είναι αποθηκευμένη στη συσκευή και ανοίγει χωρίς internet",
-      install: "Εγκατάσταση εφαρμογής", switchTo: "English", tabImages: "Εικόνες", tabPdf: "PDF",
+      install: "Εγκατάσταση εφαρμογής", installShort: "Εγκατάσταση", switchTo: "English", tabImages: "Εικόνες", tabPdf: "PDF", tabAbout: "Σχετικά",
       presetsTitle: "Έτοιμες ρυθμίσεις", pWeb: "Για ιστοσελίδα", pSocial: "Social media (τετράγωνο)", pPhoto: "Φωτογραφία αίτησης 3,5×4,5",
       pDoc: "Έγγραφο έως 2 MB", pEmail: "Για email (έως 500 KB)", pCustom: "Δικές μου ρυθμίσεις",
       settingsTitle: "Ρυθμίσεις", maxW: "Μέγ. πλάτος (px)", maxH: "Μέγ. ύψος (px)", auto: "αυτόματο",
@@ -431,7 +515,7 @@ footer a{color:inherit}
       webpUnsupported: " (δεν υποστηρίζεται από αυτόν τον browser)",
       quality: "Ποιότητα", maxSize: "Μέγιστο μέγεθος αρχείου (KB)", noLimit: "χωρίς όριο",
       maxSizeHint: "Αν οριστεί, η ποιότητα (και αν χρειαστεί οι διαστάσεις) μειώνονται μέχρι το αρχείο να χωρέσει. Δεν ισχύει για PNG.",
-      dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή",
+      dropTitle: "Σύρετε εικόνες εδώ ή πατήστε για επιλογή", dropTap: "Πατήστε για να επιλέξετε εικόνες",
       dropSub: "JPEG, PNG, WebP, GIF, AVIF — πολλά αρχεία μαζί",
       none: "Δεν έχουν επιλεγεί εικόνες.", clear: "Καθαρισμός", dlAll: "Λήψη όλων",
       ready: (r, n, a, b) => `${r}/${n} έτοιμες · ${a} → ${b}`, count: (n) => `${n} εικόνες`,
@@ -475,6 +559,8 @@ footer a{color:inherit}
     return langs.some((l) => /^el\b/i.test(l)) ? "el" : "en";
   }
   let lang = detectLang();
+  // Phones and tablets: "Tap to choose" instead of "Drop here or click"
+  const TOUCH = matchMedia("(pointer: coarse)").matches;
   const t = (k, ...a) => { const v = STR[lang][k] ?? STR.en[k]; return typeof v === "function" ? v(...a) : v; };
 
   const PRESETS = {
@@ -524,7 +610,12 @@ footer a{color:inherit}
     else document.documentElement.dataset.theme = theme;
     const label = t(theme === "auto" ? "themeAuto" : theme === "light" ? "themeLight" : "themeDark");
     themeBtn.innerHTML = THEME_ICON[theme]; themeBtn.title = label; themeBtn.setAttribute("aria-label", label);
+    // Phone status bar matches the app bar: teal in light mode, dark in dark mode
+    const dark = theme === "dark" || (theme === "auto" && darkMQ.matches);
+    $("#themeColor").content = dark ? "#1a2120" : "#0f766e";
   }
+  const darkMQ = matchMedia("(prefers-color-scheme: dark)");
+  darkMQ.addEventListener?.("change", () => { if (theme === "auto") applyTheme(); });
   themeBtn.addEventListener("click", () => {
     theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
     try { if (theme === "auto") localStorage.removeItem("kratopix-theme"); else localStorage.setItem("kratopix-theme", theme); } catch { /* storage blocked */ }
@@ -539,6 +630,7 @@ footer a{color:inherit}
     for (const n of document.querySelectorAll("[data-i18n-ph]")) n.placeholder = t(n.dataset.i18nPh);
     for (const n of document.querySelectorAll("[data-i18n-title]")) n.title = t(n.dataset.i18nTitle);
     for (const n of document.querySelectorAll("[data-i18n-aria]")) n.setAttribute("aria-label", t(n.dataset.i18nAria));
+    if (TOUCH) $("#dropTitle").textContent = t("dropTap");
     if (!webpOK) el.format.querySelector('option[value="image/webp"]').textContent = t("fWebp") + t("webpUnsupported");
     langBtn.textContent = t("switchTo");
     langBtn.lang = lang === "en" ? "el" : "en";
@@ -570,7 +662,7 @@ footer a{color:inherit}
   let requests = 0;
   function isAppFile(name) {
     const u = new URL(name, location.href);
-    return u.origin === location.origin && /^\/(sw\.js|pdf-tools\.js|manifest\.webmanifest|icons\/[\w.-]+|vendor\/[\w.-]+)$/.test(u.pathname);
+    return u.origin === location.origin && /^\/(sw\.js|pdf-tools\.js|manifest\.webmanifest|icons\/[\w.-]+|screenshots\/[\w.-]+|vendor\/[\w.-]+)$/.test(u.pathname);
   }
   try {
     new PerformanceObserver((list) => {
@@ -870,7 +962,11 @@ footer a{color:inherit}
   });
   addEventListener("appinstalled", () => { installBtn.hidden = true; });
 
-  window.Kratopix = { lang: () => lang, fmt };
+  // The PDF editor toolbar sticks just below the phone header, so it needs the header's height.
+  const hdr = document.querySelector("header");
+  if ("ResizeObserver" in window) new ResizeObserver(() => document.documentElement.style.setProperty("--hdr", hdr.offsetHeight + "px")).observe(hdr);
+
+  window.Kratopix = { lang: () => lang, fmt, touch: TOUCH };
   applyLang();
   applyPreset("web");
 })();
