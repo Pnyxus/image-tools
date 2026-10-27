@@ -151,10 +151,12 @@ footer a{color:inherit}
 .edlab input[type=color]{width:38px;height:30px;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 .edbar .hint{margin:0}
 .edpages{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:12px}
-.edpage{position:relative;width:100%;max-width:860px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.edpages{touch-action:pan-x pan-y;overflow-x:auto}
+.edpages.zoomed{align-items:flex-start}
+.edpage{position:relative;width:calc(100% * var(--z,1));max-width:calc(860px * var(--z,1));flex:none;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .edpage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .edpage .ov{touch-action:auto}
-.editor[data-tool] .edpage .ov{touch-action:pinch-zoom;cursor:crosshair}
+.editor[data-tool] .edpage .ov{touch-action:none;cursor:crosshair}
 .editor[data-tool="erase"] .edpage .ov{cursor:pointer}
 .edpage .pno{position:absolute;right:6px;bottom:4px;font-size:.75rem;color:#666;pointer-events:none}
 .edpage textarea{position:absolute;margin:0;padding:0;border:1px dashed var(--accent);background:rgba(255,255,255,.85);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;line-height:1.25;resize:none;overflow:hidden;outline:none;min-width:4em;white-space:pre;z-index:2}

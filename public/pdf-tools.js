@@ -473,9 +473,51 @@
   });
   function edButtons() { ed.undo.disabled = !ED.pages.some((p) => p.anns.length); }
 
+  // ---------- Zoom (phones): two fingers zoom and move the pages; the toolbar keeps its size ----------
+  let zoom = 1;
+  function setZoom(z) {
+    zoom = Math.min(4, Math.max(1, z));
+    ed.pages.style.setProperty("--z", zoom);
+    ed.pages.classList.toggle("zoomed", zoom > 1.01);
+  }
+  (() => {
+    let pinch = null, settle = 0;
+    const two = (e) => { const [a, b] = e.touches; return { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; };
+    ed.pages.addEventListener("touchstart", (e) => {
+      if (e.touches.length !== 2) return;
+      commitText();
+      const g = two(e), r = ed.pages.getBoundingClientRect();
+      // The point under the fingers, in unzoomed page coordinates, stays under the fingers.
+      pinch = { d0: g.d, z0: zoom, px: (g.x - r.left + ed.pages.scrollLeft) / zoom, py: (g.y - r.top) / zoom, top: r.top + scrollY };
+    }, { passive: true });
+    ed.pages.addEventListener("touchmove", (e) => {
+      if (!pinch || e.touches.length !== 2) return;
+      e.preventDefault();
+      const g = two(e);
+      setZoom(pinch.z0 * g.d / pinch.d0);
+      const r = ed.pages.getBoundingClientRect();
+      ed.pages.scrollLeft = pinch.px * zoom - (g.x - r.left);
+      scrollTo(scrollX, pinch.top + pinch.py * zoom - g.y);
+    }, { passive: false });
+    const end = (e) => {
+      if (!pinch || e.touches.length >= 2) return;
+      pinch = null;
+      clearTimeout(settle);
+      settle = setTimeout(() => {
+        for (const pg of ED.pages) {
+          const r = pg.box.getBoundingClientRect();
+          if (r.bottom > -600 && r.top < innerHeight + 600) sharpen(pg);
+        }
+      }, 250);
+    };
+    ed.pages.addEventListener("touchend", end);
+    ed.pages.addEventListener("touchcancel", end);
+  })();
+
   function closeEditor() {
     commitText(true);
     ED.gen++;
+    setZoom(1);
     if (ED.io) ED.io.disconnect();
     for (const p of ED.pages) { if (p.pc) p.pc.width = p.pc.height = 0; if (p.ov) p.ov.width = p.ov.height = 0; }
     if (ED.task) ED.task.destroy();
@@ -518,7 +560,7 @@
       }
       ed.root.hidden = false;
       ED.io = new IntersectionObserver((ents) => {
-        for (const en of ents) if (en.isIntersecting) renderPage(ED.pages[+en.target.dataset.i], gen);
+        for (const en of ents) if (en.isIntersecting) { const pg = ED.pages[+en.target.dataset.i]; if (pg.drawn) sharpen(pg); else renderPage(pg, gen); }
       }, { rootMargin: "600px 0px" });
       for (const pg of ED.pages) ED.io.observe(pg.box);
       setStatus(""); edHint(); edButtons(); updateGo();
@@ -527,24 +569,34 @@
     }
   }
 
+  // Pixels wide the page image should be: its on-screen width (zoom included) × screen density, capped for memory.
+  const wantPx = (pg) => Math.min((pg.box.clientWidth || 800) * Math.min(devicePixelRatio || 1, 2), 3200);
+
   async function renderPage(pg, gen) {
     if (pg.drawn) return;
     pg.drawn = true;
-    const css = pg.box.clientWidth || 800;
-    const scale = Math.min(css * Math.min(devicePixelRatio || 1, 2), 2400) / pg.vp.width;
+    const scale = wantPx(pg) / pg.vp.width;
     const vp = pg.page.getViewport({ scale });
     const pc = canvas(Math.ceil(vp.width), Math.ceil(vp.height));
-    const ov = canvas(pc.width, pc.height);
-    ov.className = "ov";
     const ctx = pc.getContext("2d");
     ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, pc.width, pc.height);
     try { await pg.page.render({ canvas: pc, canvasContext: ctx, viewport: vp, background: "#ffffff" }).promise; }
     catch { pg.drawn = false; return; }
     if (gen !== ED.gen) return;
-    pg.pc = pc; pg.ov = ov; pg.k = pc.width / pg.vp.width;
-    pg.box.prepend(pc); pg.box.appendChild(ov);
-    bindOverlay(pg);
+    const old = pg.pc;
+    pg.pc = pc; pg.k = pc.width / pg.vp.width;
+    if (old) { old.replaceWith(pc); old.width = old.height = 0; } else pg.box.prepend(pc);
+    if (!pg.ov) {
+      pg.ov = canvas(pc.width, pc.height);
+      pg.ov.className = "ov";
+      pg.box.appendChild(pg.ov);
+      bindOverlay(pg);
+    } else { pg.ov.width = pc.width; pg.ov.height = pc.height; }
     drawOverlay(pg);
+  }
+  // After zooming in, draw the page again at the higher resolution so text stays sharp.
+  function sharpen(pg) {
+    if (pg.drawn && pg.pc && wantPx(pg) > pg.pc.width * 1.25) { pg.drawn = false; renderPage(pg, ED.gen); }
   }
 
   // Draw the marks of one page onto ctx. k = pixels per page unit. src = canvas with the page image (for blur).
