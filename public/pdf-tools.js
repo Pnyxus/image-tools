@@ -41,6 +41,7 @@
       edBlack: "Black out", edBlur: "Blur", edErase: "Remove", edColor: "Color", edSize: "Size",
       szS: "Small", szM: "Medium", szL: "Large", edUndo: "Undo",
       hintNone: "Pick a tool, then click or drag on a page.",
+      hintPinch: "Two fingers: zoom and move the page.",
       hint_text: "Click where the text should go, type, then press Enter. Shift+Enter starts a new line.",
       hint_highlight: "Drag over the text you want to highlight.",
       hint_draw: "Draw with the mouse or your finger.",
@@ -86,6 +87,7 @@
       edBlack: "Μαύρισμα", edBlur: "Θόλωμα", edErase: "Αφαίρεση", edColor: "Χρώμα", edSize: "Μέγεθος",
       szS: "Μικρό", szM: "Μεσαίο", szL: "Μεγάλο", edUndo: "Αναίρεση",
       hintNone: "Διαλέξτε εργαλείο και πατήστε ή σύρετε πάνω στη σελίδα.",
+      hintPinch: "Δύο δάχτυλα: ζουμ και μετακίνηση της σελίδας.",
       hint_text: "Πατήστε εκεί που θέλετε το κείμενο, γράψτε και πατήστε Enter. Με Shift+Enter αλλάζετε γραμμή.",
       hint_highlight: "Σύρετε πάνω στο κείμενο που θέλετε να επισημάνετε.",
       hint_draw: "Σχεδιάστε με το ποντίκι ή με το δάχτυλο.",
@@ -451,7 +453,7 @@
     undo: $("#edUndo"), hint: $("#edHint"),
   };
 
-  function edHint() { ed.hint.textContent = t(ED.tool ? "hint_" + ED.tool : "hintNone"); }
+  function edHint() { ed.hint.textContent = t(ED.tool ? "hint_" + ED.tool : "hintNone") + (KP.touch ? " " + t("hintPinch") : ""); }
   function setEdTool(name) {
     commitText();
     ED.tool = ED.tool === name ? "" : name;
@@ -615,16 +617,19 @@
   function bindOverlay(pg) {
     const ov = pg.ov;
     const pos = (e) => { const r = ov.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * pg.vp.width, (e.clientY - r.top) / r.height * pg.vp.height]; };
-    let drag = null;
+    // Phones: one finger uses the tool, two fingers zoom and move the page (CSS touch-action: pinch-zoom).
+    // A second finger, or the browser taking over for a zoom (pointercancel), throws away the mark in progress.
+    const fingers = new Set();
+    let drag = null, tap = null;
     ov.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") fingers.add(e.pointerId);
+      if (fingers.size > 1) { drag = null; tap = null; drawOverlay(pg); return; }
       if (!ED.tool || busy || (e.pointerType === "mouse" && e.button !== 0)) return;
       const [x, y] = pos(e);
-      if (ED.tool === "text") { e.preventDefault(); startText(pg, x, y); return; }
-      if (ED.tool === "erase") {
-        for (let i = pg.anns.length - 1; i >= 0; i--) {
-          const b = bbox(pg.anns[i]);
-          if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { pg.anns.splice(i, 1); drawOverlay(pg); edButtons(); break; }
-        }
+      if (ED.tool === "text" || ED.tool === "erase") {
+        // Acted on when the finger lifts, so the first finger of a pinch doesn't add text or remove a mark.
+        if (ED.tool === "text") e.preventDefault();
+        tap = { id: e.pointerId, x, y, cx: e.clientX, cy: e.clientY };
         return;
       }
       commitText();
@@ -636,13 +641,27 @@
       drawOverlay(pg, drag);
     });
     ov.addEventListener("pointermove", (e) => {
+      if (tap && Math.hypot(e.clientX - tap.cx, e.clientY - tap.cy) > 10) tap = null;
       if (!drag) return;
       const [x, y] = pos(e);
       if (drag.type === "draw") drag.pts.push([x, y]);
       else Object.assign(drag, { x: Math.min(x, drag.x0), y: Math.min(y, drag.y0), w: Math.abs(x - drag.x0), h: Math.abs(y - drag.y0) });
       drawOverlay(pg, drag);
     });
-    const end = () => {
+    const lift = (e) => { fingers.delete(e.pointerId); };
+    ov.addEventListener("pointerup", (e) => {
+      lift(e);
+      if (tap && tap.id === e.pointerId) {
+        const { x, y } = tap; tap = null;
+        if (ED.tool === "text") startText(pg, x, y);
+        else if (ED.tool === "erase") {
+          for (let i = pg.anns.length - 1; i >= 0; i--) {
+            const b = bbox(pg.anns[i]);
+            if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) { pg.anns.splice(i, 1); drawOverlay(pg); edButtons(); break; }
+          }
+        }
+        return;
+      }
       if (!drag) return;
       const a = drag; drag = null;
       if (a.type === "draw") {
@@ -652,9 +671,12 @@
         delete a.x0; delete a.y0;
         addAnn(pg, a);
       } else drawOverlay(pg);
-    };
-    ov.addEventListener("pointerup", end);
-    ov.addEventListener("pointercancel", end);
+    });
+    ov.addEventListener("pointercancel", (e) => {
+      lift(e);
+      tap = null;
+      if (drag) { drag = null; drawOverlay(pg); }
+    });
   }
 
   // Text: a small box appears where you click; Enter adds it to the page.
