@@ -41,7 +41,7 @@
       edBlack: "Black out", edBlur: "Blur", edErase: "Remove", edColor: "Color", edSize: "Size",
       szS: "Small", szM: "Medium", szL: "Large", edUndo: "Undo",
       hintNone: "Pick a tool, then click or drag on a page.",
-      hintPinch: "Two fingers: zoom and move the page.",
+      hintPinch: "Two fingers: zoom and move the page.", hintOff: "Tap the tool again to scroll with one finger.",
       hint_text: "Click where the text should go, type, then press Enter. Shift+Enter starts a new line.",
       hint_highlight: "Drag over the text you want to highlight.",
       hint_draw: "Draw with the mouse or your finger.",
@@ -87,7 +87,7 @@
       edBlack: "Μαύρισμα", edBlur: "Θόλωμα", edErase: "Αφαίρεση", edColor: "Χρώμα", edSize: "Μέγεθος",
       szS: "Μικρό", szM: "Μεσαίο", szL: "Μεγάλο", edUndo: "Αναίρεση",
       hintNone: "Διαλέξτε εργαλείο και πατήστε ή σύρετε πάνω στη σελίδα.",
-      hintPinch: "Δύο δάχτυλα: ζουμ και μετακίνηση της σελίδας.",
+      hintPinch: "Δύο δάχτυλα: ζουμ και μετακίνηση της σελίδας.", hintOff: "Πατήστε ξανά το εργαλείο για κύλιση με ένα δάχτυλο.",
       hint_text: "Πατήστε εκεί που θέλετε το κείμενο, γράψτε και πατήστε Enter. Με Shift+Enter αλλάζετε γραμμή.",
       hint_highlight: "Σύρετε πάνω στο κείμενο που θέλετε να επισημάνετε.",
       hint_draw: "Σχεδιάστε με το ποντίκι ή με το δάχτυλο.",
@@ -112,6 +112,7 @@
       document.getElementById("tab-" + b.dataset.tab).hidden = !on;
     }
     if (name === "pdf") loadLibs().catch(() => {});
+    lockZoom();
     try { history.replaceState(null, "", name === "images" ? location.pathname + location.search : "#" + name); } catch { /* ignore */ }
   }
   tabBtns.forEach((b) => b.addEventListener("click", () => {
@@ -453,7 +454,11 @@
     undo: $("#edUndo"), hint: $("#edHint"),
   };
 
-  function edHint() { ed.hint.textContent = t(ED.tool ? "hint_" + ED.tool : "hintNone") + (KP.touch ? " " + t("hintPinch") : ""); }
+  function edHint() {
+    let h = t(ED.tool ? "hint_" + ED.tool : "hintNone");
+    if (KP.touch) h += " " + t("hintPinch") + (ED.tool ? " " + t("hintOff") : "");
+    ed.hint.textContent = h;
+  }
   function setEdTool(name) {
     commitText();
     ED.tool = ED.tool === name ? "" : name;
@@ -474,6 +479,15 @@
   function edButtons() { ed.undo.disabled = !ED.pages.some((p) => p.anns.length); }
 
   // ---------- Zoom (phones): two fingers zoom and move the pages; the toolbar keeps its size ----------
+  // While the editor is open, the browser's own pinch-zoom of the whole screen is switched off:
+  // it fought with the page zoom below (a zoomed-in screen could not be zoomed out over a page).
+  const viewport = document.querySelector('meta[name="viewport"]');
+  const VP = viewport ? viewport.content : "";
+  function lockZoom() {
+    if (!viewport) return;
+    const on = !ed.root.hidden && !document.getElementById("tab-pdf").hidden;
+    viewport.content = on ? VP + ",maximum-scale=1,user-scalable=no" : VP;
+  }
   let zoom = 1;
   function setZoom(z) {
     zoom = Math.min(4, Math.max(1, z));
@@ -524,6 +538,7 @@
     Object.assign(ED, { doc: null, task: null, file: null, pages: [], hist: [], io: null });
     ed.pages.innerHTML = "";
     ed.root.hidden = true;
+    lockZoom();
     updateGo();
   }
 
@@ -559,6 +574,7 @@
         ED.pages.push(pg);
       }
       ed.root.hidden = false;
+      lockZoom();
       ED.io = new IntersectionObserver((ents) => {
         for (const en of ents) if (en.isIntersecting) { const pg = ED.pages[+en.target.dataset.i]; if (pg.drawn) sharpen(pg); else renderPage(pg, gen); }
       }, { rootMargin: "600px 0px" });
