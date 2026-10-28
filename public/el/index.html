@@ -109,6 +109,7 @@ footer a{color:inherit}
 .how{margin-top:18px}
 .faq h3{font-size:1rem;margin:14px 0 4px}
 .faq p{margin:0;color:var(--muted);font-size:.9rem}
+.faq a{color:var(--accent);overflow-wrap:anywhere}
 .how ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:.9rem}
 [hidden]{display:none!important}
 .privacy .btn,.hbtns .btn{padding:6px 12px;font-size:.85rem}
@@ -433,10 +434,12 @@ footer a{color:inherit}
     <p data-i18n="a5">Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.</p>
     <h3 data-i18n="q6">Γιατί λέγεται Kratopix;</h3>
     <p data-i18n="a6">Το Kratopix λεγόταν KeepPix μέχρι τον Οκτώβριο του 2026. Το όνομα βγαίνει από το «κρατάω»: τα αρχεία σας μένουν σε εσάς.</p>
+    <h3 data-i18n="q7">Είναι το Kratopix ανοιχτού κώδικα;</h3>
+    <p><span data-i18n="a7">Ναι. Όλος ο κώδικάς του είναι δημόσιος με την άδεια AGPL-3.0, οπότε ο καθένας μπορεί να ελέγξει ότι τα αρχεία σας δεν φεύγουν ποτέ από τη συσκευή σας:</span> <a href="https://github.com/Pnyxus/image-tools" target="_blank" rel="noopener">github.com/Pnyxus/image-tools</a></p>
   </section>
 
   <footer>
-    <span data-i18n="footer">Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό</span>
+    <span><a href="https://github.com/Pnyxus/image-tools" target="_blank" rel="noopener" data-i18n="openSource">Ανοιχτός κώδικας</a> · <span data-i18n="footer">Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό</span></span>
     <a href="/privacy/" data-i18n="privacyLink">Πολιτική απορρήτου</a>
     <span><span data-i18n="madeBy">Κατασκευή:</span> <a href="https://pnyxus.gr" target="_blank" rel="noopener">pnyxus.gr</a></span>
   </footer>
@@ -501,7 +504,9 @@ footer a{color:inherit}
       a5: "Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.",
       q6: "Why is it called Kratopix?",
       a6: "Kratopix was called KeepPix until October 2026. The name comes from the Greek “κρατάω” (I keep): your files stay with you.",
-      footer: "Open source · No cookies · No analytics · No accounts", madeBy: "Made by", privacyLink: "Privacy policy",
+      q7: "Is Kratopix open source?",
+      a7: "Yes. All of its code is public under the AGPL-3.0 license, so anyone can check that your files never leave your device:",
+      openSource: "Open source", footer: "No cookies · No analytics · No accounts", madeBy: "Made by", privacyLink: "Privacy policy",
       themeAuto: "Theme: automatic (follows your device)", themeLight: "Theme: light", themeDark: "Theme: dark",
     },
     el: {
@@ -555,7 +560,9 @@ footer a{color:inherit}
       a5: "Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.",
       q6: "Γιατί λέγεται Kratopix;",
       a6: "Το Kratopix λεγόταν KeepPix μέχρι τον Οκτώβριο του 2026. Το όνομα βγαίνει από το «κρατάω»: τα αρχεία σας μένουν σε εσάς.",
-      footer: "Ανοιχτός κώδικας · Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:", privacyLink: "Πολιτική απορρήτου",
+      q7: "Είναι το Kratopix ανοιχτού κώδικα;",
+      a7: "Ναι. Όλος ο κώδικάς του είναι δημόσιος με την άδεια AGPL-3.0, οπότε ο καθένας μπορεί να ελέγξει ότι τα αρχεία σας δεν φεύγουν ποτέ από τη συσκευή σας:",
+      openSource: "Ανοιχτός κώδικας", footer: "Χωρίς cookies · Χωρίς analytics · Χωρίς λογαριασμό", madeBy: "Κατασκευή:", privacyLink: "Πολιτική απορρήτου",
       themeAuto: "Θέμα: αυτόματο (όπως η συσκευή)", themeLight: "Θέμα: φωτεινό", themeDark: "Θέμα: σκοτεινό",
     },
   };

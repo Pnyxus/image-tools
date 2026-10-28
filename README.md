@@ -3,6 +3,8 @@
 Privacy-first image tools: resize, compress, crop and convert images entirely in the browser.
 Files never leave the user's device.
 
+Kratopix is open source under the [GNU AGPL-3.0](LICENSE). You can read every line that runs in your browser and check the privacy promise for yourself.
+
 Formerly **KeepPix** (keeppix.app), renamed 26 Oct 2026. The name comes from Greek κρατάω, "I keep".
 
 ## Features (v1)
@@ -67,10 +69,29 @@ keeppix.app stays registered and redirects to kratopix.app:
 
 ## Releasing a new version
 
-When you change any file in `public/`, bump `VERSION` in `public/sw.js` (v8 → v9) so installed copies pick up the update.
+When you change any file in `public/`, bump `VERSION` in `public/sw.js` (for example v27 → v28) so installed copies pick up the update.
 
 ## Roadmap
 
 - Better codecs via WebAssembly (MozJPEG, AVIF)
 - PDF: split / extract pages, rotate, reorder by thumbnail
 - Manual crop box
+
+## Contributing
+
+Bug reports and ideas are welcome as GitHub issues. Pull requests are welcome too; please keep to the project rules:
+
+- Nothing may send a request outside kratopix.app: no analytics, CDNs, web fonts or external scripts. The network counter in the app must stay at 0.
+- Every new piece of visible text needs an English and a Greek string in the `STR` table in `public/index.html`.
+- After editing `public/index.html`, run `node tools/build-el.mjs` to regenerate the Greek page.
+- Bump `VERSION` in `public/sw.js` for any change in `public/`.
+
+## License
+
+Copyright © 2026 Pnyxus (https://pnyxus.gr)
+
+Kratopix is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License, version 3, as published by the Free Software Foundation. See [LICENSE](LICENSE). In short: you may use, study, change and share it, but if you publish a modified version, including as a website, you must make its source code available under the same license.
+
+Bundled libraries keep their own licenses: pdf-lib (MIT) and PDF.js (Apache-2.0). See `public/vendor/THIRD-PARTY-LICENSES.txt`.
+
+The name "Kratopix" and the Kratopix shield logo are not covered by the code license. If you publish your own version, please give it a different name and logo.
