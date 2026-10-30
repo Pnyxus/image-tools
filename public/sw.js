@@ -2,12 +2,13 @@
 // It only ever stores and serves the app's own files (same origin).
 // User images are never seen here: they are processed in the page and never requested over the network.
 
-const VERSION = "v27";
+const VERSION = "v28";
 const CACHE = `kratopix-${VERSION}`;
 const APP_SHELL = [
   "/",
   "/el/",
   "/privacy/",
+  "/beta/",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
