@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'none'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'">
+<title>Become a beta tester — Kratopix</title>
+<meta name="description" content="Help test the Kratopix Android app before it goes public on Google Play. Two steps: join the testers group, then opt in on Google Play.">
+<link rel="canonical" href="https://kratopix.app/beta/">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0f766e" id="themeColor">
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("kratopix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+:root{--bg:#f6f7f5;--panel:#fff;--ink:#1c2321;--muted:#5f6b67;--line:#dfe4e1;--accent:#0f766e;color-scheme:light dark}
+:root[data-theme="light"]{color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#111615;--panel:#1a2120;--ink:#e7ecea;--muted:#9aa6a2;--line:#2c3633;--accent:#2dd4bf}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#111615;--panel:#1a2120;--ink:#e7ecea;--muted:#9aa6a2;--line:#2c3633;--accent:#2dd4bf}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;-webkit-tap-highlight-color:transparent}
+.bar{position:sticky;top:0;display:flex;align-items:center;gap:12px;background:#0f766e;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;min-height:56px}
+:root[data-theme="dark"] .bar{background:#1a2120}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bar{background:#1a2120}}
+.bar a{color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem}
+.bar .lang{margin-left:auto;font-weight:500;font-size:.9rem;border:1px solid rgba(255,255,255,.4);border-radius:10px;padding:6px 10px}
+main{max-width:760px;margin:0 auto;padding:20px 16px calc(40px + env(safe-area-inset-bottom))}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:4px 20px 16px;margin-bottom:18px}
+h1{font-size:1.5rem;margin:16px 0 4px}
+h2{font-size:1.05rem;margin:20px 0 4px}
+p,li{color:var(--ink)}
+.muted{color:var(--muted);font-size:.9rem}
+a{color:var(--accent)}
+ul{padding-left:20px}
+.steps{list-style:none;padding:0;margin:12px 0 0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 18px 48px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--bg);font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps strong{display:block;margin-bottom:2px}
+.btn{display:inline-block;margin-top:8px;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:600;border-radius:10px;padding:10px 16px}
+.btn:hover{filter:brightness(1.08)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="/" aria-label="Back to Kratopix"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Kratopix</a>
+  <a class="lang" href="#el" lang="el">Ελληνικά</a>
+</div>
+<main>
+<section id="en" lang="en">
+  <h1>Become a beta tester</h1>
+  <p>Kratopix is coming to Google Play as an Android app. Before it goes public, Google asks for people to test it. You can help, and get the app before everyone else.</p>
+  <p class="muted">You need an Android phone or tablet and a Google account. On iPhone or a computer, just use <a href="/">kratopix.app</a> in your browser.</p>
+
+  <h2>How to join (2 minutes)</h2>
+  <ol class="steps">
+    <li><strong>Join the testers group</strong>Open the group with the same Google account you use on your phone, and tap “Join group”.<br><a class="btn" href="https://groups.google.com/g/kratopix-beta-testers" target="_blank" rel="noopener">Open the testers group</a></li>
+    <li><strong>Opt in on Google Play</strong>Open the testing page and tap “Become a tester”. If it says the page was not found, wait a few minutes after step 1 and try again.<br><a class="btn" href="https://play.google.com/apps/testing/app.kratopix.twa" target="_blank" rel="noopener">Become a tester</a></li>
+    <li><strong>Install Kratopix</strong>On the same page, tap “download it on Google Play”, or search for Kratopix in the Play Store. Updates come through Google Play like any other app.</li>
+  </ol>
+
+  <h2>Good to know</h2>
+  <ul>
+    <li>The test app is the same Kratopix as the website: your files still never leave your device.</li>
+    <li>The testers group and the Play testing page are run by Google. Joining shares your Google account email with Google and with us, as the group owner. We use it only for the test.</li>
+    <li>You can leave at any time from the same testing page (“Leave the program”) and by leaving the group.</li>
+  </ul>
+
+  <h2>Feedback</h2>
+  <p>Found a bug or have an idea? Write to <a href="mailto:kgeorgangelis@gmail.com">kgeorgangelis@gmail.com</a> or leave private feedback for testers on the app's Play Store page. Thank you for helping!</p>
+</section>
+
+<section id="el" lang="el">
+  <h1>Γίνετε beta tester</h1>
+  <p>Το Kratopix έρχεται στο Google Play ως εφαρμογή για Android. Πριν γίνει δημόσιο, η Google ζητά να το δοκιμάσουν κάποιοι χρήστες. Μπορείτε να βοηθήσετε και να έχετε την εφαρμογή πριν από όλους.</p>
+  <p class="muted">Χρειάζεστε κινητό ή tablet Android και λογαριασμό Google. Σε iPhone ή υπολογιστή, απλώς χρησιμοποιήστε το <a href="/el/">kratopix.app</a> στον browser.</p>
+
+  <h2>Πώς θα μπείτε (2 λεπτά)</h2>
+  <ol class="steps">
+    <li><strong>Μπείτε στην ομάδα των testers</strong>Ανοίξτε την ομάδα με τον ίδιο λογαριασμό Google που έχετε στο κινητό σας και πατήστε «Συμμετοχή στην ομάδα» (Join group).<br><a class="btn" href="https://groups.google.com/g/kratopix-beta-testers" target="_blank" rel="noopener">Άνοιγμα ομάδας testers</a></li>
+    <li><strong>Δηλώστε συμμετοχή στο Google Play</strong>Ανοίξτε τη σελίδα δοκιμών και πατήστε «Γίνετε δοκιμαστής» (Become a tester). Αν λέει ότι η σελίδα δεν βρέθηκε, περιμένετε λίγα λεπτά μετά το βήμα 1 και δοκιμάστε ξανά.<br><a class="btn" href="https://play.google.com/apps/testing/app.kratopix.twa" target="_blank" rel="noopener">Γίνετε δοκιμαστής</a></li>
+    <li><strong>Εγκαταστήστε το Kratopix</strong>Στην ίδια σελίδα, πατήστε «λήψη από το Google Play» ή ψάξτε Kratopix στο Play Store. Οι ενημερώσεις έρχονται από το Google Play όπως σε κάθε εφαρμογή.</li>
+  </ol>
+
+  <h2>Καλό να ξέρετε</h2>
+  <ul>
+    <li>Η δοκιμαστική εφαρμογή είναι το ίδιο Kratopix με τον ιστότοπο: τα αρχεία σας και πάλι δεν φεύγουν ποτέ από τη συσκευή σας.</li>
+    <li>Την ομάδα testers και τη σελίδα δοκιμών του Play τις διαχειρίζεται η Google. Με τη συμμετοχή, το email του λογαριασμού Google σας γίνεται γνωστό στην Google και σε εμάς, ως διαχειριστές της ομάδας. Το χρησιμοποιούμε μόνο για τη δοκιμή.</li>
+    <li>Μπορείτε να αποχωρήσετε όποτε θέλετε από την ίδια σελίδα δοκιμών («Αποχώρηση από το πρόγραμμα») και φεύγοντας από την ομάδα.</li>
+  </ul>
+
+  <h2>Σχόλια</h2>
+  <p>Βρήκατε πρόβλημα ή έχετε μια ιδέα; Γράψτε στο <a href="mailto:kgeorgangelis@gmail.com">kgeorgangelis@gmail.com</a> ή αφήστε ιδιωτικό σχόλιο για testers στη σελίδα της εφαρμογής στο Play Store. Ευχαριστούμε που βοηθάτε!</p>
+</section>
+</main>
+<script>
+// Greek visitors (or the Greek app) see the Greek text first
+(function () {
+  var saved = null;
+  try { saved = localStorage.getItem("kratopix-lang"); } catch (e) { /* storage blocked */ }
+  var el = saved ? saved === "el" : (navigator.languages || [navigator.language || ""]).some(function (l) { return /^el\b/i.test(l); });
+  var lang = document.querySelector(".lang");
+  if (el && location.hash !== "#en") {
+    var main = document.querySelector("main");
+    main.insertBefore(document.getElementById("el"), main.firstChild);
+    document.documentElement.lang = "el";
+    document.title = "Γίνετε beta tester — Kratopix";
+    lang.textContent = "English"; lang.href = "#en"; lang.lang = "en";
+    document.querySelector(".bar a").setAttribute("aria-label", "Πίσω στο Kratopix");
+    document.querySelector(".bar a").href = "/el/";
+  }
+  var dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.getElementById("themeColor").content = dark ? "#1a2120" : "#0f766e";
+})();
+</script>
+</body>
+</html>
