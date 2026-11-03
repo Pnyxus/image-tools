@@ -688,7 +688,7 @@
     // Phones: one finger uses the tool, two fingers zoom and move the page (CSS touch-action: pinch-zoom).
     // A second finger, or the browser taking over for a zoom (pointercancel), throws away the mark in progress.
     const fingers = new Set();
-    let drag = null, tap = null;
+    let drag = null, tap = null, textAt = 0;
     ov.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "touch") fingers.add(e.pointerId);
       if (fingers.size > 1) { drag = null; tap = null; drawOverlay(pg); return; }
@@ -721,7 +721,7 @@
       lift(e);
       if (tap && tap.id === e.pointerId) {
         const { x, y } = tap; tap = null;
-        if (ED.tool === "text") startText(pg, x, y);
+        if (ED.tool === "text") { e.preventDefault(); textAt = performance.now(); startText(pg, x, y); }
         else if (ED.tool === "erase") {
           for (let i = pg.anns.length - 1; i >= 0; i--) {
             const b = bbox(pg.anns[i]);
@@ -739,6 +739,13 @@
         delete a.x0; delete a.y0;
         addAnn(pg, a);
       } else drawOverlay(pg);
+    });
+    // Backup for browsers that don't deliver the press and release above as expected:
+    // a plain click on the page also opens the text box (once per click).
+    ov.addEventListener("click", (e) => {
+      if (ED.tool !== "text" || busy || performance.now() - textAt < 600) return;
+      const [x, y] = pos(e);
+      startText(pg, x, y);
     });
     ov.addEventListener("pointercancel", (e) => {
       lift(e);
@@ -765,16 +772,33 @@
       ta.style.width = Math.max(m.w * s + 12, 60) + "px";
       ta.style.height = m.h * s + 4 + "px";
     };
-    ta.addEventListener("input", fit);
+    let shift = false;
+    ta.addEventListener("input", (e) => {
+      // Phone keyboards often don't report Enter as a key press, only the new line it typed:
+      // treat that like Enter (Shift+Enter on a computer keyboard still starts a new line).
+      if ((e.inputType === "insertLineBreak" || e.inputType === "insertParagraph") && !shift) {
+        const i = ta.selectionStart;
+        if (ta.value[i - 1] === "\n") ta.value = ta.value.slice(0, i - 1) + ta.value.slice(i);
+        commitText();
+        return;
+      }
+      fit();
+    });
     ta.addEventListener("keydown", (e) => {
+      shift = e.key === "Enter" && e.shiftKey;
+      if (e.isComposing || e.keyCode === 229) return;
       if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); commitText(); }
       else if (e.key === "Escape") { e.preventDefault(); commitText(true); }
     });
-    ta.addEventListener("blur", () => setTimeout(() => { if (typing && typing.ta === ta) commitText(); }, 0));
+    // Leaving the box adds its text. An empty box stays put: some phones briefly take the focus
+    // away right after the tap that opened it, which used to close it before you could type.
+    ta.addEventListener("blur", () => setTimeout(() => { if (typing && typing.ta === ta && ta.value.trim()) commitText(); }, 0));
     pg.box.appendChild(ta);
     typing = { pg, ta, x, y, size, color };
     fit();
     ta.focus();
+    // If the browser moves the focus elsewhere while finishing the click, take it back.
+    requestAnimationFrame(() => { if (typing && typing.ta === ta && document.activeElement !== ta) ta.focus({ preventScroll: true }); });
   }
   function commitText(cancel) {
     if (!typing) return;
