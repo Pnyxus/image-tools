@@ -29,14 +29,14 @@
 "image":"https://kratopix.app/og.jpg","publisher":{"@type":"Organization","name":"Pnyxus","url":"https://pnyxus.gr"}}
 </script>
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0f766e" id="themeColor">
+<meta name="theme-color" content="#1a2120" id="themeColor">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kratopix">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23111615'/%3E%3Cpath d='M256 88L398 140V252C398 338 338 398 256 428C174 398 114 338 114 252V140Z' fill='%232dd4bf'/%3E%3Crect x='170' y='168' width='172' height='146' rx='24' fill='%23111615'/%3E%3Cpath d='M188 296L238 236L270 272L294 248L326 296Z' fill='%232dd4bf'/%3E%3Ccircle cx='300' cy='206' r='15' fill='%23fff'/%3E%3C/svg%3E%0A">
-<script>try{var t=localStorage.getItem("kratopix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>var t="dark";try{t=localStorage.getItem("kratopix-theme")||"dark";}catch(e){}if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;</script>
 <style>
 :root{
   --bg:#f6f7f5; --panel:#ffffff; --ink:#1c2321; --muted:#5f6b67; --line:#dfe4e1;
@@ -626,6 +626,7 @@ footer a{color:inherit}
     light: SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
     dark: SVG('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
   };
+  // Dark is the default; "auto" (follow the device) is only used when chosen and saved
   let theme = document.documentElement.dataset.theme || "auto";
   function applyTheme() {
     if (theme === "auto") delete document.documentElement.dataset.theme;
@@ -640,7 +641,7 @@ footer a{color:inherit}
   darkMQ.addEventListener?.("change", () => { if (theme === "auto") applyTheme(); });
   themeBtn.addEventListener("click", () => {
     theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
-    try { if (theme === "auto") localStorage.removeItem("kratopix-theme"); else localStorage.setItem("kratopix-theme", theme); } catch { /* storage blocked */ }
+    try { localStorage.setItem("kratopix-theme", theme); } catch { /* storage blocked */ }
     applyTheme();
   });
 
