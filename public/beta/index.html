@@ -8,9 +8,9 @@
 <meta name="description" content="Help test the Kratopix Android app before it goes public on Google Play. Two steps: join the testers group, then opt in on Google Play.">
 <link rel="canonical" href="https://kratopix.app/beta/">
 <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0f766e" id="themeColor">
+<meta name="theme-color" content="#1a2120" id="themeColor">
 <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
-<script>try{var t=localStorage.getItem("kratopix-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>var t="dark";try{t=localStorage.getItem("kratopix-theme")||"dark";}catch(e){}if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;</script>
 <style>
 :root{--bg:#f6f7f5;--panel:#fff;--ink:#1c2321;--muted:#5f6b67;--line:#dfe4e1;--accent:#0f766e;color-scheme:light dark}
 :root[data-theme="light"]{color-scheme:light}
