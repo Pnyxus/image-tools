@@ -160,6 +160,21 @@ footer a{color:inherit}
 .editor[data-tool="erase"] .edpage .ov{cursor:pointer}
 .edpage .pno{position:absolute;right:6px;bottom:4px;font-size:.75rem;color:#666;pointer-events:none}
 .edpage textarea{position:absolute;margin:0;padding:0;border:1px dashed var(--accent);background:rgba(255,255,255,.85);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;line-height:1.25;resize:none;overflow:hidden;outline:none;min-width:4em;white-space:pre;z-index:2}
+.editor[data-tool="sign"] .edpage .ov{cursor:copy}
+.editor[data-tool="sign"] .edlab{display:none}
+.sigdlg{width:min(560px,calc(100vw - 24px));max-width:none;border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--panel);color:var(--ink)}
+.sigdlg::backdrop{background:rgba(0,0,0,.55)}
+.sigdlg h3{margin:0 0 10px;font-size:1.05rem}
+.sigpad{position:relative;height:190px;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.sigpad canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.sigline{position:absolute;left:8%;right:8%;bottom:28%;border-bottom:1px solid #c9cfcc;pointer-events:none}
+.sigph{position:absolute;left:0;right:0;top:40%;text-align:center;color:#8a918e;font-size:.9rem;pointer-events:none}
+.sigrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.sigrow.end{justify-content:flex-end;margin-bottom:0}
+.ink{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:transparent;padding:4px;cursor:pointer}
+.ink i{display:block;width:100%;height:100%;border-radius:50%}
+.ink[aria-pressed="true"]{border-color:var(--accent)}
+.sigdlg .check{margin:4px 0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 /* Header: the app bar (logo, theme, language) and the privacy pills */
 .appbar{display:contents}
@@ -359,6 +374,7 @@ footer a{color:inherit}
           <button class="chip" data-ed="text" aria-pressed="false" data-pi18n="edText">Text</button>
           <button class="chip" data-ed="highlight" aria-pressed="false" data-pi18n="edHighlight">Highlight</button>
           <button class="chip" data-ed="draw" aria-pressed="false" data-pi18n="edDraw">Draw</button>
+          <button class="chip" data-ed="sign" aria-pressed="false" data-pi18n="edSign">Signature</button>
           <button class="chip" data-ed="whiteout" aria-pressed="false" data-pi18n="edWhite">White-out</button>
           <button class="chip" data-ed="blackout" aria-pressed="false" data-pi18n="edBlack">Black out</button>
           <button class="chip" data-ed="blur" aria-pressed="false" data-pi18n="edBlur">Blur</button>
@@ -369,10 +385,28 @@ footer a{color:inherit}
           <label class="edlab"><span data-pi18n="edSize">Size</span>
             <select id="edSize"><option value="s" data-pi18n="szS">Small</option><option value="m" selected data-pi18n="szM">Medium</option><option value="l" data-pi18n="szL">Large</option></select></label>
           <button class="btn ghost" id="edUndo" type="button" data-pi18n="edUndo">Undo</button>
+          <button class="btn ghost" id="edSigNew" type="button" data-pi18n="sigChange" hidden>Change signature</button>
         </div>
         <p class="hint" id="edHint"></p>
       </div>
       <div class="edpages" id="edPages"></div>
+      <dialog id="sigDlg" class="sigdlg" aria-labelledby="sigTitle">
+        <h3 id="sigTitle" data-pi18n="sigTitle">Your signature</h3>
+        <div class="sigpad"><canvas id="sigPad"></canvas><span class="sigline"></span><span class="sigph" id="sigPh" data-pi18n="sigHere">Sign here with your mouse or finger</span></div>
+        <div class="sigrow">
+          <button class="ink" type="button" data-ink="#111111" aria-pressed="true" data-pi18n-label="inkBlack" aria-label="Black"><i style="background:#111111"></i></button>
+          <button class="ink" type="button" data-ink="#1a3fb0" aria-pressed="false" data-pi18n-label="inkBlue" aria-label="Blue"><i style="background:#1a3fb0"></i></button>
+          <button class="btn ghost" id="sigClear" type="button" data-pi18n="sigClear">Clear</button>
+          <button class="btn ghost" id="sigImg" type="button" data-pi18n="sigImg">Use a picture</button>
+          <input id="sigFile" class="sr" type="file" accept="image/*" tabindex="-1" aria-hidden="true">
+        </div>
+        <label class="check"><input type="checkbox" id="sigKeep"> <span data-pi18n="sigKeep">Remember on this device</span></label>
+        <p class="hint" data-pi18n="sigNote">The signature is added to the PDF as a picture. It isn’t a certified digital signature. If you choose to remember it, it is kept only in this browser and you can remove it here at any time.</p>
+        <div class="sigrow end">
+          <button class="btn ghost" id="sigCancel" type="button" data-pi18n="sigCancel">Cancel</button>
+          <button class="btn" id="sigOk" type="button" data-pi18n="sigOk">Use signature</button>
+        </div>
+      </dialog>
     </div>
 
     <div class="panel" style="margin-top:14px">
@@ -428,7 +462,7 @@ footer a{color:inherit}
     <h3 data-i18n="q3">Can I make a passport or ID photo (35×45)?</h3>
     <p data-i18n="a3">Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.</p>
     <h3 data-i18n="q4">How do I compress a PDF or turn photos into a PDF?</h3>
-    <p data-i18n="a4">Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, compress a PDF to a target size, in color or black and white, or edit a PDF: add text, highlight, draw, white-out, black out or blur parts of a page.</p>
+    <p data-i18n="a4">Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, compress a PDF to a target size, in color or black and white, or edit a PDF: add text or your signature, highlight, draw, white-out, black out or blur parts of a page.</p>
     <h3 data-i18n="q5">Is it free, and does it work on my phone?</h3>
     <p data-i18n="a5">Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.</p>
     <h3 data-i18n="q6">Why is it called Kratopix?</h3>
@@ -500,7 +534,7 @@ footer a{color:inherit}
       q3: "Can I make a passport or ID photo (35×45)?",
       a3: "Yes. The “ID / passport photo 35×45” preset crops your photo to the right shape for applications and online forms, such as gov.gr.",
       q4: "How do I compress a PDF or turn photos into a PDF?",
-      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, compress a PDF to a target size, in color or black and white, or edit a PDF: add text, highlight, draw, white-out, black out or blur parts of a page.",
+      a4: "Open the PDF tab. You can turn images into one PDF (A4, Letter or fit to image), merge several PDFs, compress a PDF to a target size, in color or black and white, or edit a PDF: add text or your signature, highlight, draw, white-out, black out or blur parts of a page.",
       q5: "Is it free, and does it work on my phone?",
       a5: "Yes. It is free, with no account and no ads. It works in any modern browser on a phone or computer, and you can install it as an app to use it offline.",
       q6: "Why is it called Kratopix?",
@@ -558,7 +592,7 @@ footer a{color:inherit}
       q3: "Μπορώ να φτιάξω φωτογραφία για διαβατήριο ή ταυτότητα (3,5×4,5);",
       a3: "Ναι. Η ρύθμιση «Φωτογραφία αίτησης 3,5×4,5» περικόπτει τη φωτογραφία στο σωστό σχήμα για αιτήσεις και ηλεκτρονικές φόρμες, όπως το gov.gr.",
       q4: "Πώς συμπιέζω ένα PDF ή φτιάχνω PDF από φωτογραφίες;",
-      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF, να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο, ή να επεξεργαστείτε ένα PDF: να προσθέσετε κείμενο, να επισημάνετε, να σχεδιάσετε, να σβήσετε με λευκό, να μαυρίσετε ή να θολώσετε σημεία μιας σελίδας.",
+      a4: "Ανοίξτε την καρτέλα PDF. Μπορείτε να κάνετε εικόνες ένα PDF (A4, Letter ή στο μέγεθος της εικόνας), να ενώσετε πολλά PDF, να συμπιέσετε ένα PDF σε συγκεκριμένο μέγεθος, έγχρωμο ή ασπρόμαυρο, ή να επεξεργαστείτε ένα PDF: να προσθέσετε κείμενο ή την υπογραφή σας, να επισημάνετε, να σχεδιάσετε, να σβήσετε με λευκό, να μαυρίσετε ή να θολώσετε σημεία μιας σελίδας.",
       q5: "Είναι δωρεάν και δουλεύει στο κινητό;",
       a5: "Ναι. Είναι δωρεάν, χωρίς λογαριασμό και χωρίς διαφημίσεις. Δουλεύει σε κάθε σύγχρονο browser σε κινητό ή υπολογιστή, και μπορείτε να την εγκαταστήσετε ως εφαρμογή για χρήση χωρίς internet.",
       q6: "Γιατί λέγεται Kratopix;",
