@@ -36,7 +36,7 @@
       noteNoFit: "Couldn’t get under the size limit even at the strongest setting — this is the smallest version.",
       noteBigger: "This PDF was already well optimized: the original is smaller, keep that one.",
       noteLevel: (l) => `Used “${l}” compression to fit the size limit.`,
-      toolEdit: "Edit PDF", dropPdf1: "Drop a PDF here or click to choose", dropSubEdit: "Open one PDF, then add text, highlights, drawings, or hide parts of a page.",
+      toolEdit: "Edit PDF", dropPdf1: "Drop a PDF here or click to choose", dropSubEdit: "Open one PDF, then add text, your signature, highlights, drawings, or hide parts of a page.",
       goEdit: "Save PDF", edText: "Text", edHighlight: "Highlight", edDraw: "Draw", edWhite: "White-out",
       edBlack: "Black out", edBlur: "Blur", edErase: "Remove", edColor: "Color", edSize: "Size",
       szS: "Small", szM: "Medium", szL: "Large", edUndo: "Undo",
@@ -49,6 +49,12 @@
       hint_blackout: "Drag a box over what you want to hide.",
       hint_blur: "Drag a box over what you want to blur.",
       hint_erase: "Click a mark to remove it.",
+      hint_sign: "Click the page to place your signature. Drag it to move it, drag its round corner to resize it.",
+      edSign: "Signature", sigTitle: "Your signature", sigHere: "Sign here with your mouse or finger",
+      inkBlack: "Black", inkBlue: "Blue", sigClear: "Clear", sigImg: "Use a picture", sigKeep: "Remember on this device",
+      sigNote: "The signature is added to the PDF as a picture. It isn’t a certified digital signature. If you choose to remember it, it is kept only in this browser and you can remove it here at any time.",
+      sigCancel: "Cancel", sigOk: "Use signature", sigChange: "Change signature",
+      sigEmpty: "Sign in the box first, or choose a picture of your signature.",
       editNote: "White-out, black out and blur really remove what’s underneath: those pages are saved as images, so their text can’t be selected or copied afterwards. Other pages stay as they were.",
       noteFlat: (n) => (n === 1 ? "1 page with hidden areas was saved as an image. The hidden content is gone from the file." : `${n} pages with hidden areas were saved as images. The hidden content is gone from the file.`),
       noEdits: "Add at least one change before saving.",
@@ -82,7 +88,7 @@
       noteNoFit: "Δεν χώρεσε στο όριο ούτε με την ισχυρότερη ρύθμιση — αυτή είναι η μικρότερη εκδοχή.",
       noteBigger: "Αυτό το PDF ήταν ήδη βελτιστοποιημένο: το αρχικό είναι μικρότερο, κρατήστε εκείνο.",
       noteLevel: (l) => `Χρησιμοποιήθηκε συμπίεση «${l}» για να χωρέσει στο όριο.`,
-      toolEdit: "Επεξεργασία PDF", dropPdf1: "Σύρετε ένα PDF εδώ ή πατήστε για επιλογή", dropSubEdit: "Ανοίξτε ένα PDF και προσθέστε κείμενο, επισήμανση, σχέδιο ή κρύψτε σημεία μιας σελίδας.",
+      toolEdit: "Επεξεργασία PDF", dropPdf1: "Σύρετε ένα PDF εδώ ή πατήστε για επιλογή", dropSubEdit: "Ανοίξτε ένα PDF και προσθέστε κείμενο, υπογραφή, επισήμανση, σχέδιο ή κρύψτε σημεία μιας σελίδας.",
       goEdit: "Αποθήκευση PDF", edText: "Κείμενο", edHighlight: "Επισήμανση", edDraw: "Σχέδιο", edWhite: "Λευκό",
       edBlack: "Μαύρισμα", edBlur: "Θόλωμα", edErase: "Αφαίρεση", edColor: "Χρώμα", edSize: "Μέγεθος",
       szS: "Μικρό", szM: "Μεσαίο", szL: "Μεγάλο", edUndo: "Αναίρεση",
@@ -95,6 +101,12 @@
       hint_blackout: "Σύρετε ένα πλαίσιο πάνω σε ό,τι θέλετε να κρύψετε.",
       hint_blur: "Σύρετε ένα πλαίσιο πάνω σε ό,τι θέλετε να θολώσετε.",
       hint_erase: "Πατήστε ένα σημάδι για να το αφαιρέσετε.",
+      hint_sign: "Πατήστε στη σελίδα για να βάλετε την υπογραφή σας. Σύρετέ τη για να τη μετακινήσετε, σύρετε τη στρογγυλή γωνία της για να αλλάξετε το μέγεθος.",
+      edSign: "Υπογραφή", sigTitle: "Η υπογραφή σας", sigHere: "Υπογράψτε εδώ με το ποντίκι ή το δάχτυλο",
+      inkBlack: "Μαύρο", inkBlue: "Μπλε", sigClear: "Καθαρισμός", sigImg: "Από εικόνα", sigKeep: "Να τη θυμάται αυτή η συσκευή",
+      sigNote: "Η υπογραφή μπαίνει στο PDF ως εικόνα. Δεν είναι πιστοποιημένη ψηφιακή υπογραφή. Αν επιλέξετε να τη θυμάται, φυλάσσεται μόνο σε αυτόν τον browser και μπορείτε να τη σβήσετε από εδώ όποτε θέλετε.",
+      sigCancel: "Άκυρο", sigOk: "Χρήση υπογραφής", sigChange: "Αλλαγή υπογραφής",
+      sigEmpty: "Υπογράψτε πρώτα στο πλαίσιο ή διαλέξτε μια εικόνα της υπογραφής σας.",
       editNote: "Το λευκό, το μαύρισμα και το θόλωμα αφαιρούν πραγματικά ό,τι υπάρχει από κάτω: αυτές οι σελίδες αποθηκεύονται ως εικόνες, οπότε το κείμενό τους δεν θα επιλέγεται μετά. Οι υπόλοιπες σελίδες μένουν όπως ήταν.",
       noteFlat: (n) => (n === 1 ? "1 σελίδα με κρυμμένα σημεία αποθηκεύτηκε ως εικόνα. Το κρυμμένο περιεχόμενο δεν υπάρχει πια στο αρχείο." : `${n} σελίδες με κρυμμένα σημεία αποθηκεύτηκαν ως εικόνες. Το κρυμμένο περιεχόμενο δεν υπάρχει πια στο αρχείο.`),
       noEdits: "Κάντε τουλάχιστον μία αλλαγή πριν την αποθήκευση.",
@@ -285,6 +297,7 @@
   function applyLang() {
     for (const n of document.querySelectorAll("[data-pi18n]")) n.textContent = t(n.dataset.pi18n);
     for (const n of document.querySelectorAll("[data-pi18n-ph]")) n.placeholder = t(n.dataset.pi18nPh);
+    for (const n of document.querySelectorAll("[data-pi18n-label]")) { n.setAttribute("aria-label", t(n.dataset.pi18nLabel)); n.title = t(n.dataset.pi18nLabel); }
     el.dropTitle.textContent = t(TOOLS[tool].drop + (KP.touch ? "Tap" : ""));
     el.dropSub.textContent = t(TOOLS[tool].sub);
     el.drop.setAttribute("aria-label", t(TOOLS[tool].drop));
@@ -451,7 +464,7 @@
   const ED = { doc: null, task: null, file: null, pages: [], hist: [], tool: "", gen: 0, io: null };
   const ed = {
     root: $("#pdfEditor"), tools: $("#edTools"), pages: $("#edPages"), color: $("#edColor"), size: $("#edSize"),
-    undo: $("#edUndo"), hint: $("#edHint"),
+    undo: $("#edUndo"), hint: $("#edHint"), sigNew: $("#edSigNew"),
   };
 
   function edHint() {
@@ -461,10 +474,15 @@
   }
   function setEdTool(name) {
     commitText();
+    const was = ED.tool;
     ED.tool = ED.tool === name ? "" : name;
     for (const b of ed.tools.querySelectorAll("[data-ed]")) b.setAttribute("aria-pressed", String(b.dataset.ed === ED.tool));
     if (ED.tool) ed.root.dataset.tool = ED.tool; else delete ed.root.dataset.tool;
+    ed.sigNew.hidden = ED.tool !== "sign";
+    // Signatures show a frame and a resize handle only while the Signature tool is on.
+    if ((was === "sign") !== (ED.tool === "sign")) for (const pg of ED.pages) drawOverlay(pg);
     edHint();
+    if (ED.tool === "sign" && !SIG) openPad();
   }
   ed.tools.addEventListener("click", (e) => { const b = e.target.closest("[data-ed]"); if (b && !busy) setEdTool(b.dataset.ed); });
   ed.undo.addEventListener("click", () => {
@@ -477,6 +495,162 @@
     edButtons();
   });
   function edButtons() { ed.undo.disabled = !ED.pages.some((p) => p.anns.length); }
+
+  // ---------- Signature ----------
+  // You draw your signature (or pick a picture of it) once, then tap pages to place it.
+  // It stays in memory until the page is closed. Only if you tick "Remember on this device"
+  // is it kept in this browser's storage (localStorage), never sent anywhere.
+  const SIG_KEY = "kratopix-signature";
+  let SIG = null; // { c: canvas with the trimmed signature (transparent background), png: bytes, url }
+  const pad = {
+    dlg: $("#sigDlg"), c: $("#sigPad"), ph: $("#sigPh"), keep: $("#sigKeep"), file: $("#sigFile"),
+    strokes: [], img: null, ink: "#111111", k: 2, cur: null,
+  };
+  async function sigFromUrl(url) {
+    const img = new Image(); img.src = url; await img.decode();
+    const c = canvas(img.naturalWidth, img.naturalHeight); c.getContext("2d").drawImage(img, 0, 0);
+    return { c, url, png: null };
+  }
+  try {
+    const u = localStorage.getItem(SIG_KEY);
+    if (u && u.startsWith("data:image/png")) sigFromUrl(u).then((s) => { if (!SIG) SIG = s; }, () => {});
+  } catch { /* storage blocked */ }
+
+  function padSize() {
+    const r = pad.c.getBoundingClientRect();
+    pad.k = Math.max(2, Math.min(devicePixelRatio || 1, 3));
+    pad.c.width = Math.round(r.width * pad.k); pad.c.height = Math.round(r.height * pad.k);
+    padDraw();
+  }
+  function padDraw() {
+    const ctx = pad.c.getContext("2d"), k = pad.k;
+    ctx.clearRect(0, 0, pad.c.width, pad.c.height);
+    if (pad.img) {
+      // Fit the picture inside the box, leaving a small margin.
+      const W = pad.c.width, H = pad.c.height, s = Math.min(W * 0.9 / pad.img.width, H * 0.85 / pad.img.height);
+      const w = pad.img.width * s, h = pad.img.height * s;
+      ctx.drawImage(pad.img, (W - w) / 2, (H - h) / 2, w, h);
+    }
+    ctx.lineCap = ctx.lineJoin = "round";
+    for (const st of pad.strokes) {
+      ctx.strokeStyle = st.ink; ctx.lineWidth = 3 * k;
+      ctx.beginPath();
+      const p = st.pts;
+      ctx.moveTo(p[0][0] * k, p[0][1] * k);
+      if (p.length === 1) ctx.lineTo(p[0][0] * k + 0.01, p[0][1] * k);
+      // Smooth the line through the midpoints of the recorded points.
+      for (let i = 1; i < p.length - 1; i++) ctx.quadraticCurveTo(p[i][0] * k, p[i][1] * k, (p[i][0] + p[i + 1][0]) / 2 * k, (p[i][1] + p[i + 1][1]) / 2 * k);
+      if (p.length > 1) ctx.lineTo(p[p.length - 1][0] * k, p[p.length - 1][1] * k);
+      ctx.stroke();
+    }
+    pad.ph.hidden = !!(pad.img || pad.strokes.length);
+  }
+  function openPad() {
+    commitText();
+    pad.strokes = []; pad.img = null; pad.cur = null;
+    if (SIG) pad.img = SIG.c;
+    let kept = false;
+    try { kept = !!localStorage.getItem(SIG_KEY); } catch { /* storage blocked */ }
+    pad.keep.checked = kept;
+    pad.dlg.showModal();
+    padSize();
+  }
+  function closePad() {
+    pad.dlg.close();
+    // No signature yet and the box was closed: switch the tool off again.
+    if (!SIG && ED.tool === "sign") setEdTool("sign");
+  }
+  // The pad's drawing, cut down to just the ink, on a transparent background.
+  function trimPad() {
+    const { width: W, height: H } = pad.c, d = pad.c.getContext("2d").getImageData(0, 0, W, H).data;
+    let x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 8) {
+      if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+    if (x1 < 0) return null;
+    const m = Math.round(2 * pad.k);
+    x0 = Math.max(0, x0 - m); y0 = Math.max(0, y0 - m); x1 = Math.min(W - 1, x1 + m); y1 = Math.min(H - 1, y1 + m);
+    const c = canvas(x1 - x0 + 1, y1 - y0 + 1);
+    c.getContext("2d").drawImage(pad.c, x0, y0, c.width, c.height, 0, 0, c.width, c.height);
+    return c;
+  }
+  // A photo or scan of a signature on paper: make the paper transparent and keep the ink.
+  async function sigFromPicture(f) {
+    const bmp = await loadBitmap(f);
+    const s = Math.min(1, 1400 / Math.max(bmp.width, bmp.height));
+    const c = canvas(Math.max(1, Math.round(bmp.width * s)), Math.max(1, Math.round(bmp.height * s)));
+    const ctx = c.getContext("2d");
+    ctx.drawImage(bmp, 0, 0, c.width, c.height);
+    if (bmp.close) bmp.close();
+    const id = ctx.getImageData(0, 0, c.width, c.height), d = id.data;
+    // Paper is usually the brightest part of the picture: measure it rather than assume pure white.
+    const hist = new Uint32Array(256);
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 128) hist[(d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114) | 0]++;
+    let n = 0, paper = 255;
+    const total = c.width * c.height;
+    for (let v = 255; v >= 0; v--) { n += hist[v]; if (n >= total * 0.5) { paper = v; break; } }
+    const hi = Math.max(60, paper - 25), lo = Math.max(0, hi - 90);
+    let ink = 0;
+    for (let i = 0; i < d.length; i += 4) {
+      const L = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
+      const a = L >= hi ? 0 : L <= lo ? 1 : (hi - L) / (hi - lo);
+      d[i + 3] = Math.round(d[i + 3] * a);
+      if (d[i + 3] > 8) ink++;
+    }
+    if (!ink) throw new Error(t("sigEmpty"));
+    ctx.putImageData(id, 0, 0);
+    return c;
+  }
+
+  pad.dlg.addEventListener("cancel", (e) => { e.preventDefault(); closePad(); });
+  $("#sigCancel").addEventListener("click", closePad);
+  $("#sigClear").addEventListener("click", () => { pad.strokes = []; pad.img = null; padDraw(); });
+  $("#sigImg").addEventListener("click", () => pad.file.click());
+  pad.file.addEventListener("change", async () => {
+    const f = pad.file.files[0]; pad.file.value = "";
+    if (!f) return;
+    try { pad.img = await sigFromPicture(f); pad.strokes = []; padDraw(); }
+    catch (e) { setStatus(e && e.message ? e.message : t("errImg", f.name), true); }
+  });
+  for (const b of pad.dlg.querySelectorAll("[data-ink]")) b.addEventListener("click", () => {
+    pad.ink = b.dataset.ink;
+    for (const o of pad.dlg.querySelectorAll("[data-ink]")) o.setAttribute("aria-pressed", String(o === b));
+  });
+  $("#sigOk").addEventListener("click", async () => {
+    if (!(SIG && pad.img === SIG.c && !pad.strokes.length)) { // unchanged: keep the full-resolution one
+      const c = trimPad();
+      if (!c) { pad.ph.textContent = t("sigEmpty"); pad.ph.hidden = false; return; }
+      SIG = { c, png: await canvasBytes(c, "image/png"), url: c.toDataURL("image/png") };
+    }
+    const url = SIG.url;
+    try { if (pad.keep.checked) localStorage.setItem(SIG_KEY, url); else localStorage.removeItem(SIG_KEY); }
+    catch { /* storage blocked or full: keep it for this visit only */ }
+    pad.dlg.close();
+    pad.ph.textContent = t("sigHere");
+    if (ED.tool !== "sign") setEdTool("sign");
+  });
+  ed.sigNew.addEventListener("click", () => { if (!busy) openPad(); });
+  (() => {
+    const at = (e) => { const r = pad.c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    pad.c.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (pad.cur) return; // one finger at a time
+      e.preventDefault();
+      pad.c.setPointerCapture(e.pointerId);
+      pad.cur = { id: e.pointerId, ink: pad.ink, pts: [at(e)] };
+      pad.strokes.push(pad.cur);
+      padDraw();
+    });
+    pad.c.addEventListener("pointermove", (e) => {
+      if (!pad.cur || pad.cur.id !== e.pointerId) return;
+      for (const ev of e.getCoalescedEvents ? e.getCoalescedEvents() : [e]) pad.cur.pts.push(at(ev));
+      padDraw();
+    });
+    const end = (e) => { if (pad.cur && pad.cur.id === e.pointerId) pad.cur = null; };
+    pad.c.addEventListener("pointerup", end);
+    pad.c.addEventListener("pointercancel", end);
+    addEventListener("resize", () => { if (pad.dlg.open) padSize(); });
+  })();
 
   // ---------- Zoom (phones): two fingers zoom and move the pages; the toolbar keeps its size ----------
   // While the editor is open, the browser's own pinch-zoom of the whole screen is switched off:
@@ -530,6 +704,7 @@
 
   function closeEditor() {
     commitText(true);
+    if (pad.dlg.open) pad.dlg.close();
     ED.gen++;
     setZoom(1);
     if (ED.io) ED.io.disconnect();
@@ -644,6 +819,9 @@
       a.pts.forEach(([px, py], i) => (i ? ctx.lineTo(px * k, py * k) : ctx.moveTo(px * k, py * k)));
       if (a.pts.length === 1) ctx.lineTo(a.pts[0][0] * k + 0.01, a.pts[0][1] * k);
       ctx.stroke();
+    } else if (a.type === "sign") {
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(a.sig.c, a.x * k, a.y * k, a.w * k, a.h * k);
     } else if (a.type === "text") {
       ctx.fillStyle = a.color; ctx.textBaseline = "top"; ctx.font = `${a.size * k}px ${FONT}`;
       a.text.split("\n").forEach((ln, i) => ctx.fillText(ln, a.x * k, (a.y + i * a.size * 1.25 + a.size * 0.1) * k));
@@ -662,8 +840,18 @@
         ctx.save(); ctx.strokeStyle = "rgba(15,118,110,.6)"; ctx.setLineDash([4, 3]);
         ctx.strokeRect(a.x * pg.k, a.y * pg.k, a.w * pg.k, a.h * pg.k); ctx.restore();
       } else paintAnn(ctx, a, pg.k, pg.pc);
+      if (a.type === "sign" && ED.tool === "sign") {
+        // Frame and round resize handle, sized in screen pixels.
+        const k = pg.k, px = pg.pc.width / (pg.box.clientWidth || pg.pc.width);
+        ctx.save(); ctx.strokeStyle = "rgba(15,118,110,.8)"; ctx.lineWidth = px; ctx.setLineDash([5 * px, 4 * px]);
+        ctx.strokeRect(a.x * k, a.y * k, a.w * k, a.h * k);
+        ctx.setLineDash([]); ctx.fillStyle = "#0f766e"; ctx.strokeStyle = "#fff"; ctx.lineWidth = 2 * px;
+        ctx.beginPath(); ctx.arc((a.x + a.w) * k, (a.y + a.h) * k, HANDLE * px, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.restore();
+      }
     }
   }
+  const HANDLE = 9; // resize handle radius, screen pixels
 
   function measureText(text, size) {
     const c = measureText.c || (measureText.c = canvas(1, 1).getContext("2d"));
@@ -689,11 +877,31 @@
     // A second finger, or the browser taking over for a zoom (pointercancel), throws away the mark in progress.
     const fingers = new Set();
     let drag = null, tap = null, textAt = 0;
+    let mv = null; // moving or resizing a signature
+    const undoMove = () => { if (mv) { Object.assign(mv.a, mv.orig); mv = null; drawOverlay(pg); } };
     ov.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "touch") fingers.add(e.pointerId);
-      if (fingers.size > 1) { drag = null; tap = null; drawOverlay(pg); return; }
+      if (fingers.size > 1) { drag = null; tap = null; undoMove(); drawOverlay(pg); return; }
       if (!ED.tool || busy || (e.pointerType === "mouse" && e.button !== 0)) return;
       const [x, y] = pos(e);
+      if (ED.tool === "sign") {
+        commitText();
+        e.preventDefault();
+        // Grab the topmost signature under the pointer (its corner handle resizes it), else place a new one on release.
+        const u = pg.vp.width / pg.box.clientWidth, grab = (HANDLE + (e.pointerType === "touch" ? 10 : 4)) * u;
+        for (let i = pg.anns.length - 1; i >= 0; i--) {
+          const a = pg.anns[i];
+          if (a.type !== "sign") continue;
+          const corner = Math.hypot(x - (a.x + a.w), y - (a.y + a.h)) <= grab;
+          if (corner || (x >= a.x && x <= a.x + a.w && y >= a.y && y <= a.y + a.h)) {
+            ov.setPointerCapture(e.pointerId);
+            mv = { a, id: e.pointerId, mode: corner ? "size" : "move", x0: x, y0: y, orig: { x: a.x, y: a.y, w: a.w, h: a.h } };
+            return;
+          }
+        }
+        if (SIG) tap = { id: e.pointerId, x, y, cx: e.clientX, cy: e.clientY };
+        return;
+      }
       if (ED.tool === "text" || ED.tool === "erase") {
         // Acted on when the finger lifts, so the first finger of a pinch doesn't add text or remove a mark.
         if (ED.tool === "text") e.preventDefault();
@@ -710,6 +918,19 @@
     });
     ov.addEventListener("pointermove", (e) => {
       if (tap && Math.hypot(e.clientX - tap.cx, e.clientY - tap.cy) > 10) tap = null;
+      if (mv && mv.id === e.pointerId) {
+        const [x, y] = pos(e), a = mv.a, o = mv.orig, W = pg.vp.width, H = pg.vp.height;
+        if (mv.mode === "move") {
+          a.x = Math.min(W - o.w / 2, Math.max(-o.w / 2, o.x + x - mv.x0));
+          a.y = Math.min(H - o.h / 2, Math.max(-o.h / 2, o.y + y - mv.y0));
+        } else {
+          // Keep the shape: the width follows the pointer, the height follows the width.
+          const r = o.h / o.w, w = Math.max(20, Math.min(W * 1.2, o.w + Math.max(x - mv.x0, (y - mv.y0) / r)));
+          a.w = w; a.h = w * r;
+        }
+        drawOverlay(pg);
+        return;
+      }
       if (!drag) return;
       const [x, y] = pos(e);
       if (drag.type === "draw") drag.pts.push([x, y]);
@@ -719,9 +940,15 @@
     const lift = (e) => { fingers.delete(e.pointerId); };
     ov.addEventListener("pointerup", (e) => {
       lift(e);
+      if (mv && mv.id === e.pointerId) { mv = null; return; }
       if (tap && tap.id === e.pointerId) {
         const { x, y } = tap; tap = null;
-        if (ED.tool === "text") { e.preventDefault(); textAt = performance.now(); startText(pg, x, y); }
+        if (ED.tool === "sign" && SIG) {
+          const W = pg.vp.width, H = pg.vp.height, r = SIG.c.height / SIG.c.width;
+          let w = Math.min(170, W * 0.4), h = w * r;
+          if (h > H * 0.25) { h = H * 0.25; w = h / r; }
+          addAnn(pg, { type: "sign", sig: SIG, x: Math.min(W - w, Math.max(0, x - w / 2)), y: Math.min(H - h, Math.max(0, y - h / 2)), w, h });
+        } else if (ED.tool === "text") { e.preventDefault(); textAt = performance.now(); startText(pg, x, y); }
         else if (ED.tool === "erase") {
           for (let i = pg.anns.length - 1; i >= 0; i--) {
             const b = bbox(pg.anns[i]);
@@ -750,6 +977,7 @@
     ov.addEventListener("pointercancel", (e) => {
       lift(e);
       tap = null;
+      undoMove();
       if (drag) { drag = null; drawOverlay(pg); }
     });
   }
@@ -823,6 +1051,7 @@
     const src = await loadPdfLib(f);
     const out = await PDFDocument.create();
     let flat = 0;
+    const sigImgs = new Map(); // each signature picture is stored once in the file, however often it is used
     for (const pg of ED.pages) {
       setStatus(t("pageOf", f.name, pg.i + 1, ED.pages.length));
       const anns = pg.anns;
@@ -854,6 +1083,11 @@
           const pts = a.pts.length === 1 ? [a.pts[0], [a.pts[0][0] + 0.01, a.pts[0][1]]] : a.pts;
           const path = pts.map(([x, y], i) => { const p = P(x, y); return `${i ? "L" : "M"}${p.x.toFixed(2)} ${(-p.y).toFixed(2)}`; }).join(" ");
           page.drawSvgPath(path, { x: 0, y: 0, borderColor: hexRgb(a.color), borderWidth: a.lw, borderLineCap: 1 });
+        } else if (a.type === "sign") {
+          let img = sigImgs.get(a.sig);
+          if (!img) { img = await out.embedPng(a.sig.png || (a.sig.png = await canvasBytes(a.sig.c, "image/png"))); sigImgs.set(a.sig, img); }
+          const p = P(a.x, a.y + a.h);
+          page.drawImage(img, { x: p.x, y: p.y, width: a.w, height: a.h, rotate: degrees(pg.rot) });
         } else if (a.type === "text") {
           // Text is placed as a sharp image so every language (Greek included) shows correctly.
           const k = 4, c = canvas(Math.ceil(a.w * k) + 2, Math.ceil(a.h * k) + 2);
